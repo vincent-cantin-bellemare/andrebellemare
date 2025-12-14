@@ -1,0 +1,28 @@
+Nouvelle demande d'achat!
+=========================
+
+TOILE CONCERNÉE
+---------------
+Titre: {{ painting.title }}
+SKU: {{ painting.sku }}
+Prix: {{ painting.price_cad }} $ CAD
+Dimensions: {{ painting.dimensions }}
+
+ACHETEUR POTENTIEL
+------------------
+Nom: {{ message.name }}
+Courriel: {{ message.email }}
+{% if message.phone %}Téléphone: {{ message.phone }}{% endif %}
+
+{% if message.message %}
+MESSAGE:
+--------
+{{ message.message }}
+{% endif %}
+
+Date de la demande: {{ message.created_at|date:"d/m/Y à H:i" }}
+
+---
+Cette demande a été envoyée via le site andrebellemare.com
+Connectez-vous à l'administration pour marquer ce message comme lu.
+

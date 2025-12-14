@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - André Bellemare{% endblock %}
+{% block meta_description %}Questions fréquentes sur l'achat de toiles, la livraison et le processus d'acquisition des œuvres d'André Bellemare.{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 text-sm">
+        <ol class="flex items-center space-x-2 text-warm-500">
+            <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
+            <li><span>/</span></li>
+            <li class="text-charcoal dark:text-white">FAQ</li>
+        </ol>
+    </nav>
+    
+    <h1 class="font-display text-4xl text-charcoal dark:text-white mb-8">Questions fréquentes</h1>
+    
+    {% if faqs %}
+    <div class="space-y-4">
+        {% for faq in faqs %}
+        <details class="group bg-white dark:bg-warm-800 rounded-xl border border-warm-200 dark:border-warm-700 overflow-hidden">
+            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                <h2 class="font-medium text-lg text-charcoal dark:text-white pr-8">{{ faq.question }}</h2>
+                <span class="flex-shrink-0 w-8 h-8 bg-warm-100 dark:bg-warm-700 rounded-full flex items-center justify-center group-open:rotate-180 transition-transform">
+                    <svg class="w-4 h-4 text-warm-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </span>
+            </summary>
+            <div class="px-6 pb-6 text-warm-600 dark:text-warm-400 prose prose-warm dark:prose-invert max-w-none">
+                {{ faq.answer|linebreaks }}
+            </div>
+        </details>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-warm-500">Aucune question fréquente pour le moment.</p>
+    {% endif %}
+    
+    <!-- Contact CTA -->
+    <div class="mt-12 bg-warm-50 dark:bg-warm-800 rounded-2xl p-8 text-center">
+        <h3 class="font-display text-2xl text-charcoal dark:text-white mb-4">Vous ne trouvez pas votre réponse?</h3>
+        <p class="text-warm-600 dark:text-warm-400 mb-6">N'hésitez pas à me contacter directement, je vous répondrai avec plaisir.</p>
+        <a href="{% url 'contact:contact' %}" class="inline-flex items-center px-6 py-3 bg-charcoal dark:bg-warm-600 text-white rounded-lg font-medium hover:bg-warm-700 transition-colors">
+            Me contacter
+            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+        </a>
+    </div>
+</div>
+{% endblock %}
+

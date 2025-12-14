@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Galerie - André Bellemare{% endblock %}
+{% block meta_description %}Explorez toutes les toiles d'André Bellemare, artiste peintre à Boucherville. Art original et unique.{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 text-sm">
+        <ol class="flex items-center space-x-2 text-warm-500">
+            <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
+            <li><span>/</span></li>
+            <li class="text-charcoal dark:text-white">Galerie</li>
+        </ol>
+    </nav>
+    
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-display text-4xl text-charcoal dark:text-white mb-4">Toutes les toiles</h1>
+        <p class="text-warm-600 dark:text-warm-400">Découvrez l'ensemble de ma collection</p>
+    </div>
+    
+    <!-- Filters -->
+    <div class="flex flex-wrap items-center gap-4 mb-8 p-4 bg-white dark:bg-warm-800 rounded-xl">
+        <form method="get" class="flex flex-wrap items-center gap-4 w-full">
+            <!-- Category filter -->
+            <div class="flex-1 min-w-[150px]">
+                <label class="text-sm text-warm-500 block mb-1">Catégorie</label>
+                <select name="category" onchange="this.form.submit()" class="w-full px-3 py-2 border border-warm-200 dark:border-warm-600 rounded-lg bg-white dark:bg-warm-700 text-sm">
+                    <option value="">Toutes</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.slug }}" {% if current_filters.category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Finish filter -->
+            <div class="flex-1 min-w-[150px]">
+                <label class="text-sm text-warm-500 block mb-1">Finition</label>
+                <select name="finish" onchange="this.form.submit()" class="w-full px-3 py-2 border border-warm-200 dark:border-warm-600 rounded-lg bg-white dark:bg-warm-700 text-sm">
+                    <option value="">Toutes</option>
+                    {% for finish in finishes %}
+                    <option value="{{ finish.pk }}" {% if current_filters.finish == finish.pk|stringformat:"s" %}selected{% endif %}>{{ finish.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Status filter -->
+            <div class="flex-1 min-w-[150px]">
+                <label class="text-sm text-warm-500 block mb-1">Disponibilité</label>
+                <select name="status" onchange="this.form.submit()" class="w-full px-3 py-2 border border-warm-200 dark:border-warm-600 rounded-lg bg-white dark:bg-warm-700 text-sm">
+                    <option value="">Tous</option>
+                    <option value="available" {% if current_filters.status == 'available' %}selected{% endif %}>Disponible</option>
+                    <option value="sold" {% if current_filters.status == 'sold' %}selected{% endif %}>Vendu</option>
+                </select>
+            </div>
+            
+            <!-- Sort -->
+            <div class="flex-1 min-w-[150px]">
+                <label class="text-sm text-warm-500 block mb-1">Trier par</label>
+                <select name="sort" onchange="this.form.submit()" class="w-full px-3 py-2 border border-warm-200 dark:border-warm-600 rounded-lg bg-white dark:bg-warm-700 text-sm">
+                    <option value="-created_at" {% if current_filters.sort == '-created_at' %}selected{% endif %}>Plus récent</option>
+                    <option value="created_at" {% if current_filters.sort == 'created_at' %}selected{% endif %}>Plus ancien</option>
+                    <option value="price_cad" {% if current_filters.sort == 'price_cad' %}selected{% endif %}>Prix croissant</option>
+                    <option value="-price_cad" {% if current_filters.sort == '-price_cad' %}selected{% endif %}>Prix décroissant</option>
+                    <option value="title" {% if current_filters.sort == 'title' %}selected{% endif %}>Titre A-Z</option>
+                </select>
+            </div>
+            
+            <!-- Reset -->
+            {% if current_filters.category or current_filters.finish or current_filters.status or current_filters.sort != '-created_at' %}
+            <div class="flex-none">
+                <label class="text-sm text-transparent block mb-1">Reset</label>
+                <a href="{% url 'gallery:gallery' %}" class="inline-block px-4 py-2 text-sm text-warm-500 hover:text-charcoal dark:hover:text-white">
+                    Réinitialiser
+                </a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+    
+    <!-- Results count -->
+    <p class="text-warm-500 mb-6">{{ page_obj.paginator.count }} toile{{ page_obj.paginator.count|pluralize }}</p>
+    
+    <!-- Paintings Grid -->
+    {% if paintings %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+        {% for painting in paintings %}
+        {% include 'components/painting_card.html' with painting=painting %}
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav class="flex justify-center">
+        <ul class="flex items-center gap-2">
+            {% if page_obj.has_previous %}
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                   class="px-4 py-2 rounded-lg border border-warm-200 dark:border-warm-600 hover:bg-warm-50 dark:hover:bg-warm-700">
+                    Précédent
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li><span class="px-4 py-2 rounded-lg bg-charcoal dark:bg-warm-600 text-white">{{ num }}</span></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li>
+                    <a href="?page={{ num }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="px-4 py-2 rounded-lg border border-warm-200 dark:border-warm-600 hover:bg-warm-50 dark:hover:bg-warm-700">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li>
+                <a href="?page={{ page_obj.next_page_number }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                   class="px-4 py-2 rounded-lg border border-warm-200 dark:border-warm-600 hover:bg-warm-50 dark:hover:bg-warm-700">
+                    Suivant
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    
+    {% else %}
+    <div class="text-center py-16">
+        <svg class="w-16 h-16 mx-auto text-warm-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        <p class="text-warm-500">Aucune toile trouvée.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

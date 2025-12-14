@@ -1,0 +1,75 @@
+{
+    "name": "André Bellemare - Django",
+    "dockerComposeFile": ["../docker-compose.yml", "docker-compose.devcontainer.yml"],
+    "service": "web-devcontainer",
+    "workspaceFolder": "/app",
+    
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {}
+    },
+    
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-python.debugpy",
+                "batisteo.vscode-django",
+                "bradlc.vscode-tailwindcss",
+                "esbenp.prettier-vscode",
+                "formulahendry.auto-rename-tag",
+                "formulahendry.auto-close-tag",
+                "EditorConfig.EditorConfig",
+                "eamodio.gitlens",
+                "usernamehw.errorlens",
+                "streetsidesoftware.code-spell-checker",
+                "streetsidesoftware.code-spell-checker-french"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.linting.enabled": true,
+                "python.linting.pylintEnabled": false,
+                "python.linting.flake8Enabled": true,
+                "python.formatting.provider": "black",
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.python"
+                },
+                "[django-html]": {
+                    "editor.defaultFormatter": "batisteo.vscode-django"
+                },
+                "files.associations": {
+                    "**/*.html": "django-html",
+                    "**/templates/**/*.html": "django-html",
+                    "**/templates/**/*": "django-txt"
+                },
+                "emmet.includeLanguages": {
+                    "django-html": "html"
+                },
+                "tailwindCSS.includeLanguages": {
+                    "django-html": "html"
+                },
+                "cSpell.language": "en,fr"
+            }
+        }
+    },
+    
+    "forwardPorts": [8000, 5432],
+    "portsAttributes": {
+        "8000": {
+            "label": "Django",
+            "onAutoForward": "notify"
+        },
+        "5432": {
+            "label": "PostgreSQL",
+            "onAutoForward": "ignore"
+        }
+    },
+    
+    "postCreateCommand": "pip install --no-cache-dir -r requirements.txt && python manage.py migrate",
+    "postStartCommand": "python manage.py runserver 0.0.0.0:8000",
+    
+    "remoteUser": "root"
+}
+

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Termes et conditions - André Bellemare{% endblock %}
+{% block meta_description %}Conditions d'utilisation du site andrebellemare.com et modalités d'achat des œuvres d'art.{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 text-sm">
+        <ol class="flex items-center space-x-2 text-warm-500">
+            <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
+            <li><span>/</span></li>
+            <li class="text-charcoal dark:text-white">Termes et conditions</li>
+        </ol>
+    </nav>
+    
+    <article class="prose prose-lg prose-warm dark:prose-invert max-w-none">
+        <h1 class="font-display text-4xl text-charcoal dark:text-white">Termes et conditions</h1>
+        
+        <p class="text-warm-500">Dernière mise à jour : Décembre 2024</p>
+        
+        <h2 class="font-display">1. Présentation</h2>
+        <p>
+            Le site andrebellemare.com est exploité par André Bellemare, artiste peintre indépendant 
+            basé à Boucherville, Québec, Canada. En utilisant ce site, vous acceptez les présents 
+            termes et conditions.
+        </p>
+        
+        <h2 class="font-display">2. Processus d'achat</h2>
+        <p>
+            L'acquisition d'une toile fonctionne de la manière suivante :
+        </p>
+        <ol>
+            <li>Vous sélectionnez une toile disponible sur le site</li>
+            <li>Vous cliquez sur « Acheter » et remplissez le formulaire de contact</li>
+            <li>L'artiste vous contacte pour confirmer votre intérêt et organiser les détails</li>
+            <li>Vous effectuez un don du montant indiqué à la <strong>Maison du Père</strong></li>
+            <li>Sur présentation du reçu de don, la toile vous est remise</li>
+        </ol>
+        
+        <h3>Don à la Maison du Père</h3>
+        <p>
+            Le prix affiché pour chaque toile correspond au montant du don à effectuer à la 
+            Maison du Père, un organisme de bienfaisance enregistré qui vient en aide aux 
+            personnes en situation d'itinérance à Montréal. Vous recevrez un reçu fiscal 
+            pour votre don directement de la Maison du Père.
+        </p>
+        
+        <h2 class="font-display">3. Propriété intellectuelle</h2>
+        <p>
+            Toutes les œuvres présentées sur ce site sont des créations originales d'André 
+            Bellemare et sont protégées par le droit d'auteur. L'achat d'une toile vous 
+            confère la propriété physique de l'œuvre, mais les droits de reproduction 
+            demeurent la propriété de l'artiste.
+        </p>
+        <p>
+            Il est interdit de :
+        </p>
+        <ul>
+            <li>Reproduire les œuvres à des fins commerciales</li>
+            <li>Modifier ou altérer les images des œuvres</li>
+            <li>Utiliser les images à des fins publicitaires sans autorisation</li>
+        </ul>
+        
+        <h2 class="font-display">4. Contenu du site</h2>
+        <p>
+            Les informations présentes sur ce site (descriptions, dimensions, prix) sont 
+            fournies à titre indicatif et peuvent être modifiées sans préavis. Les couleurs 
+            affichées peuvent varier légèrement selon les écrans. En cas de doute, contactez 
+            l'artiste pour plus de détails.
+        </p>
+        
+        <h2 class="font-display">5. Protection des données personnelles</h2>
+        <p>
+            Les informations personnelles collectées via les formulaires de contact sont 
+            utilisées uniquement pour :
+        </p>
+        <ul>
+            <li>Répondre à vos demandes</li>
+            <li>Organiser la livraison de votre toile</li>
+            <li>Vous informer de nouvelles créations (si vous y consentez)</li>
+        </ul>
+        <p>
+            Ces données ne sont jamais vendues ou partagées à des tiers.
+        </p>
+        
+        <h2 class="font-display">6. Limitation de responsabilité</h2>
+        <p>
+            André Bellemare s'efforce de maintenir le site accessible et à jour, mais ne 
+            peut garantir l'absence d'erreurs ou d'interruptions. L'artiste ne saurait être 
+            tenu responsable des dommages directs ou indirects résultant de l'utilisation 
+            de ce site.
+        </p>
+        
+        <h2 class="font-display">7. Modification des termes</h2>
+        <p>
+            Ces termes et conditions peuvent être modifiés à tout moment. Les modifications 
+            entrent en vigueur dès leur publication sur le site. Il est conseillé de 
+            consulter régulièrement cette page.
+        </p>
+        
+        <h2 class="font-display">8. Droit applicable</h2>
+        <p>
+            Ces termes sont régis par les lois en vigueur au Québec, Canada. Tout litige 
+            sera soumis à la compétence exclusive des tribunaux du Québec.
+        </p>
+        
+        <h2 class="font-display">9. Contact</h2>
+        <p>
+            Pour toute question concernant ces termes et conditions :
+        </p>
+        <ul>
+            <li>Téléphone : <a href="tel:{{ contact_phone }}">{{ contact_phone }}</a></li>
+            <li>Adresse : {{ contact_address }}</li>
+            <li><a href="{% url 'contact:contact' %}">Formulaire de contact</a></li>
+        </ul>
+    </article>
+</div>
+{% endblock %}
+

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Livraison et retour - André Bellemare{% endblock %}
+{% block meta_description %}Informations sur la livraison et la politique de retour des toiles d'André Bellemare.{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 text-sm">
+        <ol class="flex items-center space-x-2 text-warm-500">
+            <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
+            <li><span>/</span></li>
+            <li class="text-charcoal dark:text-white">Livraison et retour</li>
+        </ol>
+    </nav>
+    
+    <article class="prose prose-lg prose-warm dark:prose-invert max-w-none">
+        <h1 class="font-display text-4xl text-charcoal dark:text-white">Livraison et retour</h1>
+        
+        <h2 class="font-display">Livraison</h2>
+        
+        <h3>Livraison locale (Boucherville et environs)</h3>
+        <p>
+            Pour les résidents de Boucherville et des municipalités avoisinantes (Longueuil, 
+            Saint-Bruno-de-Montarville, Varennes, Sainte-Julie), je vous offre la <strong>livraison 
+            gratuite</strong> et personnalisée. Je vous contacterai pour convenir d'un moment 
+            qui vous convient afin de vous remettre votre toile en main propre.
+        </p>
+        
+        <h3>Livraison au Québec</h3>
+        <p>
+            Pour les autres régions du Québec, des frais de livraison s'appliquent selon la 
+            destination et la taille de l'œuvre. Ces frais seront communiqués lors de la 
+            finalisation de votre commande. Chaque toile est soigneusement emballée pour 
+            assurer son transport en toute sécurité.
+        </p>
+        
+        <h3>Cueillette sur place</h3>
+        <p>
+            Vous pouvez également venir chercher votre toile directement à mon atelier à 
+            Boucherville. C'est l'occasion de découvrir mon espace de création et d'échanger 
+            sur l'art. Contactez-moi pour prendre rendez-vous.
+        </p>
+        
+        <h3>Emballage</h3>
+        <p>
+            Toutes les toiles sont emballées avec le plus grand soin :
+        </p>
+        <ul>
+            <li>Protection des coins avec des protecteurs spéciaux</li>
+            <li>Emballage dans du papier bulle</li>
+            <li>Carton de protection rigide</li>
+            <li>Instructions d'accrochage incluses</li>
+        </ul>
+        
+        <h2 class="font-display">Politique de retour</h2>
+        
+        <p>
+            Chaque toile est une <strong>œuvre originale et unique</strong>. Pour cette raison, 
+            les retours ne sont généralement pas acceptés, sauf en cas de dommage survenu 
+            pendant le transport.
+        </p>
+        
+        <h3>Dommages lors du transport</h3>
+        <p>
+            Si votre toile arrive endommagée, veuillez me contacter dans les 48 heures suivant 
+            la réception avec des photos du dommage. Nous trouverons ensemble une solution 
+            satisfaisante.
+        </p>
+        
+        <h3>Avant l'achat</h3>
+        <p>
+            Pour éviter toute déception, je vous encourage à :
+        </p>
+        <ul>
+            <li>Consulter attentivement les photos et les dimensions de chaque toile</li>
+            <li>Me contacter si vous avez des questions sur une œuvre</li>
+            <li>Demander des photos supplémentaires si nécessaire</li>
+        </ul>
+        
+        <h2 class="font-display">Contact</h2>
+        <p>
+            Pour toute question concernant la livraison ou les retours, n'hésitez pas à me 
+            contacter au <a href="tel:{{ contact_phone }}">{{ contact_phone }}</a> ou via 
+            le <a href="{% url 'contact:contact' %}">formulaire de contact</a>.
+        </p>
+    </article>
+</div>
+{% endblock %}
+

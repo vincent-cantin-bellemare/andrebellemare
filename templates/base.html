@@ -1,0 +1,539 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="{% block meta_description %}André Bellemare, artiste peintre à Boucherville. Découvrez ses toiles originales et uniques. Chaque achat est un don à la Maison du Père.{% endblock %}">
+    <meta name="author" content="André Bellemare">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ site_url }}{% block canonical %}{{ request.path }}{% endblock %}">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}{{ site_name }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Artiste peintre à Boucherville - Toiles originales{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ site_url }}{{ request.path }}">
+    <meta property="og:image" content="{% block og_image %}{{ site_url }}{% static 'images/og-default.jpg' %}{% endblock %}">
+    <meta property="og:locale" content="fr_CA">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'display': ['Playfair Display', 'Georgia', 'serif'],
+                        'body': ['Source Sans 3', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        cream: '#FDFBF7',
+                        charcoal: '#2D2D2D',
+                        warm: {
+                            50: '#FDF8F3',
+                            100: '#F5EDE4',
+                            200: '#E8DCD0',
+                            300: '#D4C4B0',
+                            400: '#B8A088',
+                            500: '#9C8268',
+                            600: '#7D6650',
+                            700: '#5E4D3D',
+                            800: '#3F342A',
+                            900: '#201B16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- JSON-LD Structured Data -->
+    {% block json_ld %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Artist",
+        "name": "André Bellemare",
+        "url": "{{ site_url }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "987 rue De Nogent",
+            "addressLocality": "Boucherville",
+            "addressRegion": "QC",
+            "addressCountry": "CA"
+        },
+        "telephone": "{{ contact_phone }}",
+        "sameAs": ["{{ contact_facebook }}"]
+    }
+    </script>
+    {% endblock %}
+    
+    <style>
+        body {
+            font-family: 'Source Sans 3', system-ui, sans-serif;
+        }
+        .font-display {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+        
+        /* Form styles */
+        .form-input, .form-textarea {
+            @apply w-full px-4 py-3 border border-warm-200 rounded-lg focus:ring-2 focus:ring-warm-400 focus:border-transparent transition-all duration-200 bg-white dark:bg-warm-800 dark:border-warm-700 dark:text-white;
+        }
+        
+        /* Image loading animation */
+        .img-loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Zoom effect */
+        .zoom-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .zoom-lens {
+            position: absolute;
+            border: 2px solid #fff;
+            width: 150px;
+            height: 150px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            border-radius: 50%;
+            background-repeat: no-repeat;
+        }
+        .zoom-container:hover .zoom-lens {
+            opacity: 1;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-cream dark:bg-warm-900 text-charcoal dark:text-warm-100 min-h-screen flex flex-col font-body">
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-cream/95 dark:bg-warm-900/95 backdrop-blur-sm border-b border-warm-200 dark:border-warm-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <!-- Logo -->
+                <a href="{% url 'core:home' %}" class="font-display text-xl md:text-2xl font-semibold text-charcoal dark:text-white hover:text-warm-600 dark:hover:text-warm-300 transition-colors">
+                    André Bellemare
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'core:home' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">Accueil</a>
+                    
+                    <!-- Categories Dropdown -->
+                    <div class="relative group">
+                        <button class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors flex items-center">
+                            Galerie
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-48 bg-white dark:bg-warm-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-warm-200 dark:border-warm-700">
+                            <a href="{% url 'gallery:gallery' %}" class="block px-4 py-3 text-charcoal dark:text-warm-200 hover:bg-warm-50 dark:hover:bg-warm-700 first:rounded-t-lg">
+                                Toutes les toiles
+                            </a>
+                            {% for cat in all_categories %}
+                            <a href="{{ cat.get_absolute_url }}" class="block px-4 py-3 text-charcoal dark:text-warm-200 hover:bg-warm-50 dark:hover:bg-warm-700 last:rounded-b-lg">
+                                {{ cat.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'core:about' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">À propos</a>
+                    <a href="{% url 'contact:contact' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">Contact</a>
+                    
+                    <!-- Search -->
+                    <form action="{% url 'gallery:search' %}" method="get" class="relative">
+                        <input type="search" name="q" placeholder="Rechercher..." 
+                               class="w-40 pl-4 pr-10 py-2 text-sm border border-warm-200 dark:border-warm-600 rounded-full bg-white dark:bg-warm-800 focus:ring-2 focus:ring-warm-400 focus:border-transparent focus:w-56 transition-all duration-200">
+                        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-warm-400 hover:text-warm-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </button>
+                    </form>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-warm-100 dark:hover:bg-warm-700 transition-colors">
+                        <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                        </svg>
+                        <svg class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-warm-800 border-t border-warm-200 dark:border-warm-700">
+            <div class="px-4 py-3 space-y-3">
+                <a href="{% url 'core:home' %}" class="block py-2 text-charcoal dark:text-warm-200">Accueil</a>
+                <a href="{% url 'gallery:gallery' %}" class="block py-2 text-charcoal dark:text-warm-200">Galerie</a>
+                {% for cat in all_categories %}
+                <a href="{{ cat.get_absolute_url }}" class="block py-2 pl-4 text-warm-500 dark:text-warm-400">{{ cat.name }}</a>
+                {% endfor %}
+                <a href="{% url 'core:about' %}" class="block py-2 text-charcoal dark:text-warm-200">À propos</a>
+                <a href="{% url 'contact:contact' %}" class="block py-2 text-charcoal dark:text-warm-200">Contact</a>
+                <form action="{% url 'gallery:search' %}" method="get" class="pt-2">
+                    <input type="search" name="q" placeholder="Rechercher..." class="w-full px-4 py-2 border border-warm-200 rounded-lg">
+                </form>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-charcoal dark:bg-warm-950 text-warm-300 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About -->
+                <div class="md:col-span-2">
+                    <h3 class="font-display text-xl text-white mb-4">André Bellemare</h3>
+                    <p class="text-warm-400 mb-4">
+                        Artiste peintre à Boucherville. Chaque toile vendue soutient la Maison du Père.
+                    </p>
+                    <a href="{{ contact_facebook }}" target="_blank" rel="noopener" class="inline-flex items-center text-warm-300 hover:text-white transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Facebook
+                    </a>
+                </div>
+                
+                <!-- Links -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Navigation</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'gallery:gallery' %}" class="text-warm-400 hover:text-white transition-colors">Galerie</a></li>
+                        <li><a href="{% url 'core:about' %}" class="text-warm-400 hover:text-white transition-colors">À propos</a></li>
+                        <li><a href="{% url 'contact:contact' %}" class="text-warm-400 hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="{% url 'core:faq' %}" class="text-warm-400 hover:text-white transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Contact</h4>
+                    <ul class="space-y-2 text-warm-400">
+                        <li>{{ contact_address }}</li>
+                        <li>
+                            <a href="tel:{{ contact_phone }}" class="hover:text-white transition-colors">{{ contact_phone }}</a>
+                        </li>
+                    </ul>
+                    <div class="mt-4">
+                        <a href="{% url 'core:delivery' %}" class="text-warm-400 hover:text-white transition-colors text-sm">Livraison et retour</a><br>
+                        <a href="{% url 'core:terms' %}" class="text-warm-400 hover:text-white transition-colors text-sm">Termes et conditions</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-warm-700 mt-8 pt-8 text-center text-warm-500 text-sm">
+                © 2025 - andrebellemare.com tous droits réservés
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Purchase Modal -->
+    <div id="purchase-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white dark:bg-warm-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-display text-2xl">Acheter cette toile</h3>
+                    <button id="close-modal" class="p-2 hover:bg-warm-100 dark:hover:bg-warm-700 rounded-full transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="modal-painting-info" class="mb-6 p-4 bg-warm-50 dark:bg-warm-700 rounded-lg">
+                    <!-- Filled by JavaScript -->
+                </div>
+                
+                <form id="purchase-form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="painting_id" id="modal-painting-id">
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Nom complet *</label>
+                            <input type="text" name="name" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Courriel *</label>
+                            <input type="email" name="email" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Téléphone</label>
+                            <input type="tel" name="phone" class="form-input">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Message (optionnel)</label>
+                            <textarea name="message" rows="3" class="form-textarea"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <button type="submit" class="w-full bg-charcoal dark:bg-warm-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-warm-700 transition-colors">
+                            Envoyer ma demande
+                        </button>
+                    </div>
+                    
+                    <p class="mt-4 text-sm text-warm-500 text-center">
+                        L'artiste vous contactera pour finaliser l'achat.
+                    </p>
+                </form>
+                
+                <div id="modal-success" class="hidden text-center py-8">
+                    <svg class="w-16 h-16 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <h4 class="font-display text-xl mb-2">Demande envoyée!</h4>
+                    <p class="text-warm-500">L'artiste vous contactera sous peu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Lightbox -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/95">
+        <button id="lightbox-close" class="absolute top-4 right-4 text-white p-2 hover:bg-white/10 rounded-full transition-colors">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        <button id="lightbox-prev" class="absolute left-4 text-white p-2 hover:bg-white/10 rounded-full transition-colors">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <button id="lightbox-next" class="absolute right-4 text-white p-2 hover:bg-white/10 rounded-full transition-colors">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+        <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-[90vw] object-contain">
+        <div id="lightbox-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm"></div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        // Check saved preference
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+        
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Purchase modal
+        const modal = document.getElementById('purchase-modal');
+        const closeModal = document.getElementById('close-modal');
+        const purchaseForm = document.getElementById('purchase-form');
+        const modalSuccess = document.getElementById('modal-success');
+        
+        window.openPurchaseModal = function(paintingId, title, price, imageUrl) {
+            document.getElementById('modal-painting-id').value = paintingId;
+            document.getElementById('modal-painting-info').innerHTML = `
+                <div class="flex items-center gap-4">
+                    <img src="${imageUrl}" alt="${title}" class="w-20 h-20 object-cover rounded-lg">
+                    <div>
+                        <h4 class="font-medium">${title}</h4>
+                        <p class="text-warm-500">${price} $ CAD</p>
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            purchaseForm.classList.remove('hidden');
+            modalSuccess.classList.add('hidden');
+        };
+        
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+        
+        purchaseForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(purchaseForm);
+            
+            try {
+                const response = await fetch('{% url "contact:purchase_inquiry" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    purchaseForm.classList.add('hidden');
+                    modalSuccess.classList.remove('hidden');
+                } else {
+                    alert('Erreur: ' + JSON.stringify(data.errors));
+                }
+            } catch (error) {
+                alert('Une erreur est survenue. Veuillez réessayer.');
+            }
+        });
+        
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
+        const lightboxCounter = document.getElementById('lightbox-counter');
+        let lightboxImages = [];
+        let lightboxIndex = 0;
+        
+        window.openLightbox = function(images, index) {
+            lightboxImages = images;
+            lightboxIndex = index;
+            updateLightbox();
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+        };
+        
+        function updateLightbox() {
+            lightboxImg.src = lightboxImages[lightboxIndex];
+            lightboxCounter.textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
+            lightboxPrev.style.display = lightboxImages.length > 1 ? 'block' : 'none';
+            lightboxNext.style.display = lightboxImages.length > 1 ? 'block' : 'none';
+        }
+        
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+        });
+        
+        lightboxPrev.addEventListener('click', () => {
+            lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+            updateLightbox();
+        });
+        
+        lightboxNext.addEventListener('click', () => {
+            lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+            updateLightbox();
+        });
+        
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.add('hidden');
+                lightbox.classList.remove('flex');
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('hidden')) {
+                if (e.key === 'Escape') lightboxClose.click();
+                if (e.key === 'ArrowLeft') lightboxPrev.click();
+                if (e.key === 'ArrowRight') lightboxNext.click();
+            }
+            if (!modal.classList.contains('hidden') && e.key === 'Escape') {
+                closeModal.click();
+            }
+        });
+        
+        // Lazy loading with blur placeholder
+        document.addEventListener('DOMContentLoaded', () => {
+            const lazyImages = document.querySelectorAll('img[data-src]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('img-loading');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            lazyImages.forEach(img => imageObserver.observe(img));
+        });
+        
+        // Image zoom on hover
+        window.initZoom = function(container, imageUrl) {
+            const lens = container.querySelector('.zoom-lens');
+            const img = container.querySelector('img');
+            
+            const ratio = 2.5;
+            lens.style.backgroundImage = `url(${imageUrl})`;
+            
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                lens.style.left = (x - 75) + 'px';
+                lens.style.top = (y - 75) + 'px';
+                
+                const bgX = -((x * ratio) - 75);
+                const bgY = -((y * ratio) - 75);
+                lens.style.backgroundPosition = `${bgX}px ${bgY}px`;
+                lens.style.backgroundSize = `${img.offsetWidth * ratio}px ${img.offsetHeight * ratio}px`;
+            });
+        };
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

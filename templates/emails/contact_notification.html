@@ -1,0 +1,16 @@
+Nouveau message de contact
+========================
+
+De: {{ message.name }}
+Courriel: {{ message.email }}
+{% if message.phone %}Téléphone: {{ message.phone }}{% endif %}
+
+Date: {{ message.created_at|date:"d/m/Y à H:i" }}
+
+Message:
+--------
+{{ message.message }}
+
+---
+Ce message a été envoyé via le formulaire de contact du site andrebellemare.com
+

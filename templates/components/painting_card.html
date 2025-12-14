@@ -1,0 +1,57 @@
+{% load thumbnail %}
+
+<article class="group bg-white dark:bg-warm-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+    <a href="{{ painting.get_absolute_url }}" class="block relative aspect-square overflow-hidden">
+        {% if painting.primary_image %}
+            {% thumbnail painting.primary_image.image "400x400" crop="center" as thumb %}
+            <img src="{{ thumb.url }}" 
+                 alt="{{ painting.title }}"
+                 loading="lazy"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            {% endthumbnail %}
+        {% else %}
+            <div class="w-full h-full bg-warm-200 dark:bg-warm-700 flex items-center justify-center">
+                <svg class="w-12 h-12 text-warm-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+            </div>
+        {% endif %}
+        
+        <!-- Status Badge -->
+        {% if painting.status == 'sold' %}
+        <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <span class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium text-sm uppercase tracking-wide">Vendu</span>
+        </div>
+        {% elif painting.status == 'not_for_sale' %}
+        <div class="absolute top-3 right-3">
+            <span class="bg-warm-600 text-white px-3 py-1 rounded-full text-xs font-medium">Collection privée</span>
+        </div>
+        {% endif %}
+    </a>
+    
+    <div class="p-4">
+        <a href="{{ painting.get_absolute_url }}" class="block">
+            <h3 class="font-display text-lg text-charcoal dark:text-white group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors line-clamp-1">
+                {{ painting.title }}
+            </h3>
+        </a>
+        
+        <div class="flex items-center justify-between mt-2">
+            <div>
+                {% if painting.category %}
+                <p class="text-sm text-warm-400">{{ painting.category.name }}</p>
+                {% endif %}
+                <p class="text-sm text-warm-500">{{ painting.dimensions }}</p>
+            </div>
+            <p class="font-semibold text-charcoal dark:text-white">{{ painting.price_cad|floatformat:0 }} $</p>
+        </div>
+        
+        {% if painting.status == 'available' %}
+        <button onclick="openPurchaseModal({{ painting.pk }}, '{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "200x200" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
+                class="mt-4 w-full py-2 px-4 bg-charcoal dark:bg-warm-600 text-white rounded-lg text-sm font-medium hover:bg-warm-700 transition-colors">
+            Acheter
+        </button>
+        {% endif %}
+    </div>
+</article>
+

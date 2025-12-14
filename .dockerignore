@@ -1,0 +1,72 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+
+# Environment
+.env
+.env.*
+env.example
+
+# Docker
+docker-compose*.yml
+Dockerfile
+.dockerignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__
+*.py[cod]
+*.pyo
+*.so
+.Python
+.venv
+venv
+ENV
+*.egg-info
+.eggs
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+staticfiles/
+media/
+
+# Volumes
+volumes/
+
+# Dev Container
+.devcontainer/
+
+# Makefile
+Makefile
+
+# Tests
+.pytest_cache
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+package-lock.json
+
+# Temporary files
+tmp/
+*.tmp
+

@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}{{ painting.title }} - André Bellemare{% endblock %}
+
+{% block meta_description %}{{ painting.description|truncatewords:25 }}{% endblock %}
+
+{% block og_title %}{{ painting.title }} - André Bellemare{% endblock %}
+{% block og_description %}{{ painting.description|truncatewords:25 }}{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block og_image %}{% if painting.primary_image %}{{ site_url }}{{ painting.primary_image.image.url }}{% endif %}{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "VisualArtwork",
+    "name": "{{ painting.title }}",
+    "description": "{{ painting.description|escapejs }}",
+    "creator": {
+        "@type": "Person",
+        "name": "André Bellemare"
+    },
+    "artMedium": "{% if painting.finish %}{{ painting.finish.name }}{% endif %}",
+    "artform": "Peinture",
+    {% if painting.primary_image %}
+    "image": "{{ site_url }}{{ painting.primary_image.image.url }}",
+    {% endif %}
+    "offers": {
+        "@type": "Offer",
+        "price": "{{ painting.price_cad }}",
+        "priceCurrency": "CAD",
+        "availability": "{% if painting.status == 'available' %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 text-sm">
+        <ol class="flex items-center space-x-2 text-warm-500">
+            <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
+            <li><span>/</span></li>
+            {% if painting.category %}
+            <li><a href="{{ painting.category.get_absolute_url }}" class="hover:text-charcoal dark:hover:text-white">{{ painting.category.name }}</a></li>
+            <li><span>/</span></li>
+            {% endif %}
+            <li class="text-charcoal dark:text-white">{{ painting.title }}</li>
+        </ol>
+    </nav>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Images -->
+        <div class="space-y-4">
+            <!-- Main Image with Zoom -->
+            {% if painting.primary_image %}
+            <div class="zoom-container relative aspect-square bg-warm-100 dark:bg-warm-800 rounded-2xl overflow-hidden cursor-crosshair" id="main-image-container">
+                {% thumbnail painting.primary_image.image "800x800" crop="center" as thumb %}
+                <img src="{{ thumb.url }}" 
+                     alt="{{ painting.title }}"
+                     id="main-image"
+                     class="w-full h-full object-contain"
+                     onclick="openLightbox([{% for img in painting.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}], 0)">
+                {% endthumbnail %}
+                <div class="zoom-lens"></div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const container = document.getElementById('main-image-container');
+                    initZoom(container, '{{ painting.primary_image.image.url }}');
+                });
+            </script>
+            {% endif %}
+            
+            <!-- Thumbnails -->
+            {% if painting.images.count > 1 %}
+            <div class="grid grid-cols-5 gap-2">
+                {% for image in painting.images.all %}
+                <button onclick="changeMainImage('{{ image.image.url }}', {{ forloop.counter0 }})"
+                        class="aspect-square rounded-lg overflow-hidden border-2 {% if image.is_primary %}border-charcoal dark:border-warm-400{% else %}border-transparent{% endif %} hover:border-warm-400 transition-colors">
+                    {% thumbnail image.image "100x100" crop="center" as thumb %}
+                    <img src="{{ thumb.url }}" alt="" class="w-full h-full object-cover">
+                    {% endthumbnail %}
+                </button>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Details -->
+        <div class="lg:sticky lg:top-24 lg:self-start">
+            <!-- Status Badge -->
+            {% if painting.status == 'sold' %}
+            <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Vendu</span>
+            {% elif painting.status == 'not_for_sale' %}
+            <span class="inline-block bg-warm-100 text-warm-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Collection privée</span>
+            {% else %}
+            <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Disponible</span>
+            {% endif %}
+            
+            <h1 class="font-display text-3xl md:text-4xl text-charcoal dark:text-white mb-4">{{ painting.title }}</h1>
+            
+            <p class="text-3xl font-semibold text-charcoal dark:text-white mb-6">{{ painting.price_cad|floatformat:0 }} $ CAD</p>
+            
+            <div class="prose prose-warm dark:prose-invert mb-8">
+                <p>{{ painting.description|linebreaks }}</p>
+            </div>
+            
+            <!-- Details Table -->
+            <dl class="grid grid-cols-2 gap-4 py-6 border-y border-warm-200 dark:border-warm-700 mb-8">
+                <div>
+                    <dt class="text-sm text-warm-500">SKU</dt>
+                    <dd class="font-medium text-charcoal dark:text-white">{{ painting.sku }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm text-warm-500">Dimensions</dt>
+                    <dd class="font-medium text-charcoal dark:text-white">{{ painting.dimensions }}</dd>
+                </div>
+                {% if painting.category %}
+                <div>
+                    <dt class="text-sm text-warm-500">Catégorie</dt>
+                    <dd class="font-medium text-charcoal dark:text-white">
+                        <a href="{{ painting.category.get_absolute_url }}" class="hover:text-warm-600">{{ painting.category.name }}</a>
+                    </dd>
+                </div>
+                {% endif %}
+                {% if painting.finish %}
+                <div>
+                    <dt class="text-sm text-warm-500">Finition</dt>
+                    <dd class="font-medium text-charcoal dark:text-white">{{ painting.finish.name }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+            
+            <!-- Purchase Button -->
+            {% if painting.status == 'available' %}
+            <button onclick="openPurchaseModal({{ painting.pk }}, '{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "200x200" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
+                    class="w-full py-4 px-8 bg-charcoal dark:bg-warm-600 text-white rounded-xl text-lg font-medium hover:bg-warm-700 transition-colors mb-4">
+                Acheter cette toile
+            </button>
+            <p class="text-sm text-warm-500 text-center mb-8">
+                Le montant sera versé à la Maison du Père
+            </p>
+            {% endif %}
+            
+            <!-- Share Buttons -->
+            <div class="flex items-center gap-4">
+                <span class="text-sm text-warm-500">Partager:</span>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                   target="_blank" rel="noopener"
+                   class="p-2 hover:bg-warm-100 dark:hover:bg-warm-700 rounded-full transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </a>
+                <a href="https://pinterest.com/pin/create/button/?url={{ request.build_absolute_uri }}&media={% if painting.primary_image %}{{ site_url }}{{ painting.primary_image.image.url }}{% endif %}&description={{ painting.title }}" 
+                   target="_blank" rel="noopener"
+                   class="p-2 hover:bg-warm-100 dark:hover:bg-warm-700 rounded-full transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Related Paintings -->
+    {% if related_paintings %}
+    <section class="mt-20">
+        <h2 class="font-display text-2xl text-charcoal dark:text-white mb-8">Vous aimerez aussi</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for painting in related_paintings %}
+            {% include 'components/painting_card.html' with painting=painting %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+{% block extra_js %}
+<script>
+    let currentImageIndex = 0;
+    const images = [{% for img in painting.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+    
+    function changeMainImage(url, index) {
+        currentImageIndex = index;
+        const mainImg = document.getElementById('main-image');
+        mainImg.src = url;
+        
+        // Update thumbnail borders
+        const thumbnails = document.querySelectorAll('.grid.grid-cols-5 button');
+        thumbnails.forEach((thumb, i) => {
+            if (i === index) {
+                thumb.classList.add('border-charcoal', 'dark:border-warm-400');
+                thumb.classList.remove('border-transparent');
+            } else {
+                thumb.classList.remove('border-charcoal', 'dark:border-warm-400');
+                thumb.classList.add('border-transparent');
+            }
+        });
+        
+        // Reinitialize zoom
+        const container = document.getElementById('main-image-container');
+        initZoom(container, url);
+    }
+</script>
+{% endblock %}
+{% endblock %}
+

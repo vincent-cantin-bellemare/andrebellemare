@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}À propos - André Bellemare{% endblock %}
+{% block meta_description %}Découvrez André Bellemare, artiste peintre à Boucherville. Son parcours, sa vision artistique et son engagement envers la Maison du Père.{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumb -->
+    <nav class="mb-8 text-sm">
+        <ol class="flex items-center space-x-2 text-warm-500">
+            <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
+            <li><span>/</span></li>
+            <li class="text-charcoal dark:text-white">À propos</li>
+        </ol>
+    </nav>
+    
+    <article class="prose prose-lg prose-warm dark:prose-invert max-w-none">
+        <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-white mb-8">André Bellemare</h1>
+        
+        <div class="text-xl text-warm-600 dark:text-warm-300 mb-12 leading-relaxed">
+            <p>
+                La vie est belle, même lorsque les temps sont durs. Alors ajoutons-y de la couleur, 
+                de la lumière et un peu de joie. Peindre est pour moi une façon simple et sincère 
+                d'embellir le monde.
+            </p>
+        </div>
+        
+        <div class="bg-warm-50 dark:bg-warm-800 rounded-2xl p-8 mb-12">
+            <blockquote class="font-display text-2xl italic text-charcoal dark:text-warm-100 border-none m-0">
+                "Je vis ma vie à ma façon, et je la peins sans prétention, pour le plaisir de vous réjouir."
+            </blockquote>
+        </div>
+        
+        <h2 class="font-display">Un art engagé</h2>
+        <p>
+            Chaque toile que vous accueillez chez vous est bien plus qu'une œuvre d'art. 
+            C'est un geste de générosité. Pour acquérir une de mes toiles, il vous suffit 
+            de faire un don du montant indiqué à la <strong>Maison du Père</strong>, 
+            un organisme qui vient en aide aux personnes en situation d'itinérance à Montréal.
+        </p>
+        <p>
+            Et savoir que mes toiles vont égayer vos foyers tout en offrant du réconfort 
+            à ceux qui n'ont ni toit, ni salon... me touche profondément. Tout le monde y gagne: 
+            vous recevez une œuvre unique et ensemble nous aidons ceux qui en ont le plus besoin.
+        </p>
+        
+        <h2 class="font-display">Mon univers artistique</h2>
+        <p>
+            Mes toiles explorent différents univers : l'abstraction où les couleurs et les formes 
+            se libèrent, les scènes de banlieue qui capturent la poésie du quotidien, les capsules 
+            historiques qui nous connectent à notre patrimoine, et bien d'autres thèmes qui 
+            m'inspirent au fil de mes créations.
+        </p>
+        <p>
+            J'utilise diverses techniques et finitions, de l'époxy à l'encre sur toile et mortier, 
+            chaque œuvre est une exploration et une aventure artistique unique.
+        </p>
+        
+        {% if settings.video_url %}
+        <h2 class="font-display">Découvrez mon atelier</h2>
+        <div class="aspect-video rounded-xl overflow-hidden bg-warm-200 dark:bg-warm-700">
+            {% if 'youtube.com' in settings.video_url or 'youtu.be' in settings.video_url %}
+            <iframe 
+                src="{{ settings.video_url|cut:'watch?v='|cut:'https://www.youtube.com/'|cut:'https://youtu.be/' }}"
+                class="w-full h-full"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            {% elif 'vimeo.com' in settings.video_url %}
+            <iframe 
+                src="{{ settings.video_url }}"
+                class="w-full h-full"
+                frameborder="0" 
+                allow="autoplay; fullscreen; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <h2 class="font-display">Me rencontrer</h2>
+        <p>
+            Basé à Boucherville, sur la Rive-Sud de Montréal, je suis toujours heureux d'échanger 
+            avec les amateurs d'art. N'hésitez pas à me contacter pour discuter d'une toile, 
+            organiser une visite de mon atelier ou simplement partager votre passion pour l'art.
+        </p>
+        
+        <div class="not-prose bg-charcoal dark:bg-warm-800 text-white rounded-2xl p-8 mt-12">
+            <h3 class="font-display text-2xl mb-4">Restons en contact</h3>
+            <p class="text-warm-300 mb-6">
+                Suivez-moi sur Facebook pour découvrir mes nouvelles créations et les coulisses de mon travail.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="{% url 'contact:contact' %}" class="inline-flex items-center px-6 py-3 bg-white text-charcoal rounded-lg font-medium hover:bg-warm-100 transition-colors">
+                    Me contacter
+                </a>
+                <a href="{{ contact_facebook }}" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 border border-white text-white rounded-lg font-medium hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    Facebook
+                </a>
+            </div>
+        </div>
+    </article>
+</div>
+{% endblock %}
+
