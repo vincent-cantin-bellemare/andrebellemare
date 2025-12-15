@@ -86,3 +86,6 @@ class Command(BaseCommand):
                 self.style.ERROR(f'✗ {error_count} error(s) occurred')
             )
 
+
+
+

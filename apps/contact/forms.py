@@ -66,3 +66,6 @@ class PurchaseInquiryForm(forms.ModelForm):
 
 
 
+
+
+

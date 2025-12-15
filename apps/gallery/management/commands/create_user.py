@@ -51,3 +51,6 @@ class Command(BaseCommand):
             self.style.SUCCESS(f'Successfully created user {email}')
         )
 
+
+
+

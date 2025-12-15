@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     zlib1g-dev \
     libpng-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -47,6 +48,8 @@ RUN echo '#!/bin/bash\ncd /app && python3 manage.py shell "$@"' > /usr/local/bin
 
 # Run gunicorn (default for production)
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "config.wsgi:application"]
+
+
 
 
 

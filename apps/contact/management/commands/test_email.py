@@ -36,3 +36,6 @@ class Command(BaseCommand):
                 self.style.ERROR(f'✗ Failed to send email: {str(e)}')
             )
 
+
+
+

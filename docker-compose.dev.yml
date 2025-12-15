@@ -1,3 +1,5 @@
+name: andrebellemare-devcontainer
+
 services:
   db:
     image: postgres:16-alpine
@@ -15,13 +17,15 @@ services:
       timeout: 5s
       retries: 5
 
-  web:
-    build: .
-    restart: unless-stopped
-    ports:
-      - "8000:8000"
+  web-devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app:cached
+      - ./volumes/django/media:/app/media
     environment:
-      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-not-for-production}
+      - SECRET_KEY=dev-secret-key-not-for-production
       - DEBUG=True
       - ALLOWED_HOSTS=localhost,127.0.0.1
       - POSTGRES_DB=${POSTGRES_DB:-andrebellemare}
@@ -36,18 +40,17 @@ services:
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD:-}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-}
       - SITE_URL=${SITE_URL:-http://localhost:8000}
-    volumes:
-      - .:/app
-      - ./volumes/django/media:/app/media
-      - ./staticfiles:/app/staticfiles
     depends_on:
       db:
         condition: service_healthy
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+    # IMPORTANT: Ne PAS mettre runserver ici!
+    # Le devcontainer utilise sleep infinity et VS Code lance le serveur via postStartCommand
+    # Le runserver est géré par devcontainer.json (postStartCommand)
+    # Ne PAS modifier cette commande pour ajouter runserver - cela casserait le fonctionnement du devcontainer
+    command: sleep infinity
 
 volumes:
   postgres_data:
   postgres_backup:
   django_media:
+

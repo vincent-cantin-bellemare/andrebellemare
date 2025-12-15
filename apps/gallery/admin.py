@@ -107,3 +107,6 @@ class PaintingImageAdmin(admin.ModelAdmin):
 
 
 
+
+
+
