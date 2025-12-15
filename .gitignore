@@ -28,7 +28,8 @@ volumes/
 
 # IDE
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
 *.swp
 *.swo
 *~
@@ -58,13 +59,3 @@ htmlcov/
 
 # mypy
 .mypy_cache/
-
-
-
-
-
-
-
-
-
-

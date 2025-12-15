@@ -1,13 +1,13 @@
 {
     "name": "André Bellemare - Django",
-    "dockerComposeFile": ["../docker-compose.dev.yml"],
+    "dockerComposeFile": [
+        "../docker-compose.dev.yml"
+    ],
     "service": "web-devcontainer",
     "workspaceFolder": "/app",
-    
     "features": {
         "ghcr.io/devcontainers/features/git:1": {}
     },
-    
     "customizations": {
         "vscode": {
             "extensions": [
@@ -68,8 +68,10 @@
             }
         }
     },
-    
-    "forwardPorts": [8000, 5432],
+    "forwardPorts": [
+        8000,
+        5432
+    ],
     "portsAttributes": {
         "8000": {
             "label": "Django",
@@ -80,13 +82,7 @@
             "onAutoForward": "ignore"
         }
     },
-    
     "postCreateCommand": "pip install --no-cache-dir -r requirements.txt && python manage.py migrate",
     "postStartCommand": "python manage.py runserver 0.0.0.0:8000",
-    
     "remoteUser": "root"
 }
-
-
-
-

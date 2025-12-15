@@ -1,0 +1,22 @@
+# Cursor Rules for André Bellemare Project
+
+## File Formatting Rules
+
+**IMPORTANT**: After any file modification, ALWAYS remove trailing blank lines at the end of files.
+
+- When editing any `.py` or `.html` file, ensure the file ends with exactly one newline character
+- Remove all trailing blank lines (empty lines) at the end of files
+- Do NOT trim trailing whitespace on lines that contain content (only remove completely empty lines)
+- Files should end with a single newline, not multiple blank lines
+
+## Code Style
+
+- All comments must be in English
+- All user-facing text and documentation should be in French
+- Follow Django best practices
+- Use type hints where appropriate
+
+## File Organization
+
+- Documentation files go in the `docs/` directory in the project root
+- Keep templates organized in `templates/` with subdirectories for components, pages, and emails
