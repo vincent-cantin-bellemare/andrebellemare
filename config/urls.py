@@ -9,6 +9,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 
 from apps.core.sitemaps import StaticViewSitemap, PaintingSitemap, CategorySitemap
+from apps.core import views as core_views
 
 sitemaps = {
     'static': StaticViewSitemap,
@@ -17,6 +18,10 @@ sitemaps = {
 }
 
 urlpatterns = [
+    # WordPress honeypot (must be before other URLs for priority)
+    path('wp-admin.php', core_views.wordpress_honeypot_view, name='honeypot'),
+    path('wp-login.php', core_views.wordpress_honeypot_view, name='honeypot'),
+    
     # Admin at /alexandre/
     path('alexandre/', admin.site.urls),
     
@@ -39,6 +44,8 @@ if settings.DEBUG:
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
+
+
 
 
 

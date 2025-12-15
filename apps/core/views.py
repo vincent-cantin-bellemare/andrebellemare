@@ -4,6 +4,7 @@ from django.http import HttpResponse
 
 from apps.gallery.models import Painting, Category
 from apps.contact.models import FAQ, Testimonial
+from apps.core.models import WordPressHoneypotAttempt
 
 
 class HomeView(TemplateView):
@@ -75,6 +76,72 @@ def robots_txt(request):
         f"Sitemap: {request.build_absolute_uri('/sitemap.xml')}",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
+
+
+def wordpress_honeypot_view(request):
+    """WordPress honeypot - capture and log access attempts"""
+    # Get client IP
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip_address = x_forwarded_for.split(',')[0].strip()
+    else:
+        ip_address = request.META.get('REMOTE_ADDR', '')
+    
+    # Get user agent
+    user_agent = request.META.get('HTTP_USER_AGENT', '')
+    
+    # Get attempted URL
+    url_attempted = request.path
+    
+    # Save attempt to database
+    WordPressHoneypotAttempt.objects.create(
+        ip_address=ip_address,
+        user_agent=user_agent,
+        url_attempted=url_attempted
+    )
+    
+    return render(request, 'pages/honeypot.html', {
+        'ip_address': ip_address,
+        'user_agent': user_agent,
+    })
+
+
+def custom_404_view(request, exception):
+    """Custom 404 error page"""
+    # Get random paintings for display
+    paintings = Painting.objects.filter(
+        is_active=True
+    ).prefetch_related('images').filter(images__isnull=False).distinct()[:4]
+    
+    return render(request, 'pages/404.html', {
+        'paintings': paintings,
+    }, status=404)
+
+
+def custom_403_view(request, exception):
+    """Custom 403 error page"""
+    # Get random paintings for display
+    paintings = Painting.objects.filter(
+        is_active=True
+    ).prefetch_related('images').filter(images__isnull=False).distinct()[:4]
+    
+    return render(request, 'pages/403.html', {
+        'paintings': paintings,
+    }, status=403)
+
+
+def custom_500_view(request):
+    """Custom 500 error page"""
+    # Get random paintings for display
+    paintings = Painting.objects.filter(
+        is_active=True
+    ).prefetch_related('images').filter(images__isnull=False).distinct()[:4]
+    
+    return render(request, 'pages/500.html', {
+        'paintings': paintings,
+    }, status=500)
+
+
 
 
 

@@ -150,6 +150,13 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
 
+# Custom error handlers
+handler404 = 'apps.core.views.custom_404_view'
+handler403 = 'apps.core.views.custom_403_view'
+handler500 = 'apps.core.views.custom_500_view'
+
+
+
 
 
 
