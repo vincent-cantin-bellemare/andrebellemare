@@ -133,6 +133,8 @@ THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil_engine.Engine'
 THUMBNAIL_QUALITY = 85
 THUMBNAIL_FORMAT = 'JPEG'
+THUMBNAIL_PREFIX = 'cache/'
+THUMBNAIL_DEBUG = DEBUG  # Enable debug in development
 
 # Debug toolbar (development only)
 if DEBUG:
