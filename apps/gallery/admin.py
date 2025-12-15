@@ -104,3 +104,5 @@ class PaintingImageAdmin(admin.ModelAdmin):
         return '-'
     image_preview.short_description = 'Aperçu'
 
+
+

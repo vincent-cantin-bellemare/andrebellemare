@@ -13,3 +13,5 @@ urlpatterns = [
     path('robots.txt', views.robots_txt, name='robots'),
 ]
 
+
+

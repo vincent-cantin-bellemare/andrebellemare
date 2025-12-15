@@ -1,0 +1,29 @@
+{
+  "paintings": [
+    {
+      "sku": "AB-0001",
+      "title": "Titre de la toile",
+      "description": "Description de la toile. Cette œuvre capture l'essence fugace d'un moment suspendu dans le temps.",
+      "price_cad": 500.00,
+      "dimensions": "24\" x 36\"",
+      "category": "Abstraction",
+      "finish": "Époxy",
+      "status": "available",
+      "is_featured": true,
+      "image_filename": "image1.jpg"
+    },
+    {
+      "sku": "AB-0002",
+      "title": "Autre toile",
+      "description": "Une autre description pour cette toile magnifique.",
+      "price_cad": 750.00,
+      "dimensions": "30\" x 40\"",
+      "category": "Banlieue",
+      "finish": "Acrylique",
+      "status": "available",
+      "is_featured": false,
+      "image_filename": "image2.jpg",
+      "image_filenames": ["image2.jpg", "image2_detail.jpg"]
+    }
+  ]
+}

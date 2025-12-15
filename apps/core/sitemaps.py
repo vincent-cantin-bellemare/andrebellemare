@@ -36,3 +36,5 @@ class CategorySitemap(Sitemap):
     def items(self):
         return Category.objects.all()
 
+
+

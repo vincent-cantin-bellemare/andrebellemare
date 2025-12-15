@@ -19,3 +19,5 @@ python-dotenv==1.0.0
 # Development
 django-debug-toolbar==4.2.0
 
+
+

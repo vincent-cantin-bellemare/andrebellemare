@@ -12,5 +12,8 @@ def site_settings(request):
         'contact_phone': settings.CONTACT_PHONE,
         'contact_facebook': settings.CONTACT_FACEBOOK,
         'all_categories': Category.objects.all(),
+        'MEDIA_URL': settings.MEDIA_URL,
     }
+
+
 

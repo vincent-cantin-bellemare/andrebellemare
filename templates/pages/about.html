@@ -17,6 +17,13 @@
     <article class="prose prose-lg prose-warm dark:prose-invert max-w-none">
         <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-white mb-8">André Bellemare</h1>
         
+        <div class="mb-12">
+            <img src="{{ MEDIA_URL }}andre_bellemare.avif" 
+                 onerror="this.onerror=null; this.src='{{ MEDIA_URL }}andre_bellemare.jpg'; this.onerror=function(){this.src='{{ MEDIA_URL }}andre_bellemare.png'; this.onerror=null;}"
+                 alt="André Bellemare" 
+                 class="w-full max-w-md mx-auto rounded-2xl shadow-lg">
+        </div>
+        
         <div class="text-xl text-warm-600 dark:text-warm-300 mb-12 leading-relaxed">
             <p>
                 La vie est belle, même lorsque les temps sont durs. Alors ajoutons-y de la couleur, 
@@ -31,7 +38,7 @@
             </blockquote>
         </div>
         
-        <h2 class="font-display">Un art engagé</h2>
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-12">Un art engagé</h2>
         <p>
             Chaque toile que vous accueillez chez vous est bien plus qu'une œuvre d'art. 
             C'est un geste de générosité. Pour acquérir une de mes toiles, il vous suffit 
@@ -44,7 +51,7 @@
             vous recevez une œuvre unique et ensemble nous aidons ceux qui en ont le plus besoin.
         </p>
         
-        <h2 class="font-display">Mon univers artistique</h2>
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-12">Mon univers artistique</h2>
         <p>
             Mes toiles explorent différents univers : l'abstraction où les couleurs et les formes 
             se libèrent, les scènes de banlieue qui capturent la poésie du quotidien, les capsules 
@@ -57,7 +64,7 @@
         </p>
         
         {% if settings.video_url %}
-        <h2 class="font-display">Découvrez mon atelier</h2>
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-12">Découvrez mon atelier</h2>
         <div class="aspect-video rounded-xl overflow-hidden bg-warm-200 dark:bg-warm-700">
             {% if 'youtube.com' in settings.video_url or 'youtu.be' in settings.video_url %}
             <iframe 
@@ -79,7 +86,7 @@
         </div>
         {% endif %}
         
-        <h2 class="font-display">Me rencontrer</h2>
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-12">Me rencontrer</h2>
         <p>
             Basé à Boucherville, sur la Rive-Sud de Montréal, je suis toujours heureux d'échanger 
             avec les amateurs d'art. N'hésitez pas à me contacter pour discuter d'une toile, 
@@ -106,4 +113,6 @@
     </article>
 </div>
 {% endblock %}
+
+
 

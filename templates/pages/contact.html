@@ -38,6 +38,24 @@
             </div>
             {% endif %}
             
+            {% if form.non_field_errors %}
+            <div class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl p-6 mb-8">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-red-600 dark:text-red-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-red-800 dark:text-red-200">Erreur lors de l'envoi</h3>
+                        <ul class="text-red-700 dark:text-red-300 text-sm mt-1">
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
             <form method="post" class="space-y-6">
                 {% csrf_token %}
                 
@@ -99,7 +117,7 @@
                         </div>
                         <div>
                             <h3 class="font-medium text-charcoal dark:text-white">Adresse</h3>
-                            <p class="text-warm-600 dark:text-warm-400">{{ contact_address }}</p>
+                            <a href="https://www.google.com/maps/place/Docteur+Andre+Bellemare/@45.5850848,-73.4466295,17z/data=!3m1!4b1!4m6!3m5!1s0x4cc902cdf1b6b407:0xa192375f34aaefd1!8m2!3d45.5850848!4d-73.4440546!16s%2Fg%2F1ts1m7h_?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D" target="_blank" rel="noopener" class="text-warm-600 dark:text-warm-400 hover:text-charcoal dark:hover:text-white transition-colors">{{ contact_address }}</a>
                         </div>
                     </div>
                     
@@ -150,4 +168,6 @@
     </div>
 </div>
 {% endblock %}
+
+
 

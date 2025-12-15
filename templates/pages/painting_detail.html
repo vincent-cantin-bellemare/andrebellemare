@@ -3,7 +3,7 @@
 
 {% block title %}{{ painting.title }} - André Bellemare{% endblock %}
 
-{% block meta_description %}{{ painting.description|truncatewords:25 }}{% endblock %}
+{% block meta_description %}Découvrez "{{ painting.title }}" par André Bellemare{% if painting.category %} - Catégorie {{ painting.category.name }}{% endif %}. Prix: {{ painting.price_cad|floatformat:0 }} $ CAD. Toile originale disponible.{% endblock %}
 
 {% block og_title %}{{ painting.title }} - André Bellemare{% endblock %}
 {% block og_description %}{{ painting.description|truncatewords:25 }}{% endblock %}
@@ -208,4 +208,6 @@
 </script>
 {% endblock %}
 {% endblock %}
+
+
 

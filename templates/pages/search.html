@@ -2,6 +2,7 @@
 {% load thumbnail %}
 
 {% block title %}Recherche: {{ query }} - André Bellemare{% endblock %}
+{% block meta_description %}{% if query %}Résultats de recherche pour "{{ query }}" - Toiles d'André Bellemare{% else %}Rechercher une toile dans la galerie d'André Bellemare{% endif %}{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -95,4 +96,6 @@
     {% endif %}
 </div>
 {% endblock %}
+
+
 

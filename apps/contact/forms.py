@@ -63,3 +63,5 @@ class PurchaseInquiryForm(forms.ModelForm):
         self.fields['message'].required = False
         self.fields['phone'].required = False
 
+
+

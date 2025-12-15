@@ -3,6 +3,20 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 
+def painting_image_upload_to(instance, filename):
+    """
+    Generate upload path for painting images using format: paintings/[painting_id].ext
+    """
+    # Get file extension
+    ext = filename.split('.')[-1] if '.' in filename else 'jpg'
+    # Use painting ID if available, otherwise use a placeholder
+    if instance.painting_id:
+        return f'paintings/{instance.painting_id}.{ext}'
+    # Fallback to date-based path if painting not yet saved
+    from django.utils import timezone
+    return f'paintings/{timezone.now().year}/{timezone.now().month}/{filename}'
+
+
 class Category(models.Model):
     """Category for paintings (e.g., Abstraction, Banlieue, etc.)"""
     
@@ -145,7 +159,7 @@ class PaintingImage(models.Model):
         related_name='images',
         verbose_name='Toile'
     )
-    image = models.ImageField('Image', upload_to='paintings/%Y/%m/')
+    image = models.ImageField('Image', upload_to=painting_image_upload_to)
     alt_text = models.CharField('Texte alternatif', max_length=200, blank=True)
     is_primary = models.BooleanField('Image principale', default=False)
     order = models.PositiveIntegerField('Ordre', default=0)
@@ -166,4 +180,6 @@ class PaintingImage(models.Model):
                 is_primary=True
             ).exclude(pk=self.pk).update(is_primary=False)
         super().save(*args, **kwargs)
+
+
 

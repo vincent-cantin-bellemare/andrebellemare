@@ -1,11 +1,11 @@
 services:
   web-devcontainer:
     build:
-      context: ..
+      context: .
       dockerfile: Dockerfile
     volumes:
-      - ..:/app:cached
-      - ../volumes/django/media:/app/media
+      - .:/app:cached
+      - ./volumes/django/media:/app/media
     environment:
       - SECRET_KEY=dev-secret-key-not-for-production
       - DEBUG=True

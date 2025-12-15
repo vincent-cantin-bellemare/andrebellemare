@@ -9,3 +9,5 @@ urlpatterns = [
     path('api/purchase-inquiry/', views.purchase_inquiry, name='purchase_inquiry'),
 ]
 
+
+

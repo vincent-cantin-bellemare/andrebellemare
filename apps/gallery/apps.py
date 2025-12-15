@@ -6,3 +6,5 @@ class GalleryConfig(AppConfig):
     name = 'apps.gallery'
     verbose_name = 'Galerie'
 
+
+

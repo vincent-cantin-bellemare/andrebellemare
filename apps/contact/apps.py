@@ -6,3 +6,5 @@ class ContactConfig(AppConfig):
     name = 'apps.contact'
     verbose_name = 'Contact'
 
+
+

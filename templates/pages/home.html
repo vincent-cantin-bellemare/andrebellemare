@@ -2,6 +2,24 @@
 {% load thumbnail %}
 
 {% block title %}André Bellemare - Artiste peintre à Boucherville{% endblock %}
+{% block meta_description %}André Bellemare, artiste peintre à Boucherville. Découvrez ses toiles originales et uniques. Chaque achat est un don à la Maison du Père, organisme venant en aide aux personnes en situation d'itinérance à Montréal.{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "André Bellemare",
+    "url": "{{ site_url }}",
+    "description": "Site web de l'artiste peintre André Bellemare, basé à Boucherville, Québec",
+    "publisher": {
+        "@type": "Person",
+        "name": "André Bellemare",
+        "url": "{{ site_url }}"
+    }
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -148,4 +166,6 @@
     </div>
 </section>
 {% endblock %}
+
+
 

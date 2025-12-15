@@ -12,6 +12,11 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ site_url }}{% block canonical %}{{ request.path }}{% endblock %}">
     
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="fr" href="{{ site_url }}{{ request.path }}" />
+    <link rel="alternate" hreflang="fr-CA" href="{{ site_url }}{{ request.path }}" />
+    <link rel="alternate" hreflang="x-default" href="{{ site_url }}{{ request.path }}" />
+    
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}{{ site_name }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Artiste peintre à Boucherville - Toiles originales{% endblock %}">
@@ -249,7 +254,9 @@
                 <div>
                     <h4 class="font-semibold text-white mb-4">Contact</h4>
                     <ul class="space-y-2 text-warm-400">
-                        <li>{{ contact_address }}</li>
+                        <li>
+                            <a href="https://www.google.com/maps/place/Docteur+Andre+Bellemare/@45.5850848,-73.4466295,17z/data=!3m1!4b1!4m6!3m5!1s0x4cc902cdf1b6b407:0xa192375f34aaefd1!8m2!3d45.5850848!4d-73.4440546!16s%2Fg%2F1ts1m7h_?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D" target="_blank" rel="noopener" class="hover:text-white transition-colors">{{ contact_address }}</a>
+                        </li>
                         <li>
                             <a href="tel:{{ contact_phone }}" class="hover:text-white transition-colors">{{ contact_phone }}</a>
                         </li>
@@ -282,6 +289,18 @@
                 
                 <div id="modal-painting-info" class="mb-6 p-4 bg-warm-50 dark:bg-warm-700 rounded-lg">
                     <!-- Filled by JavaScript -->
+                </div>
+                
+                <div id="modal-error" class="hidden mb-6 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-red-800 dark:text-red-200 mb-1">Erreur lors de l'envoi</h4>
+                            <p id="modal-error-message" class="text-red-700 dark:text-red-300 text-sm"></p>
+                        </div>
+                    </div>
                 </div>
                 
                 <form id="purchase-form" method="post">
@@ -394,6 +413,9 @@
             modal.classList.add('flex');
             purchaseForm.classList.remove('hidden');
             modalSuccess.classList.add('hidden');
+            modalError.classList.add('hidden');
+            // Reset form
+            purchaseForm.reset();
         };
         
         closeModal.addEventListener('click', () => {
@@ -408,8 +430,22 @@
             }
         });
         
+        const modalError = document.getElementById('modal-error');
+        const modalErrorMessage = document.getElementById('modal-error-message');
+        
         purchaseForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Hide previous errors
+            modalError.classList.add('hidden');
+            modalErrorMessage.textContent = '';
+            
+            // Disable submit button
+            const submitButton = purchaseForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Envoi en cours...';
+            
             const formData = new FormData(purchaseForm);
             
             try {
@@ -425,11 +461,44 @@
                 if (data.success) {
                     purchaseForm.classList.add('hidden');
                     modalSuccess.classList.remove('hidden');
+                    modalError.classList.add('hidden');
                 } else {
-                    alert('Erreur: ' + JSON.stringify(data.errors));
+                    // Show error message
+                    let errorText = data.error_message || 'Une erreur est survenue lors de l\'envoi de votre demande.';
+                    
+                    // Fallback to parsing errors if error_message not available
+                    if (!data.error_message && data.errors) {
+                        const errorMessages = [];
+                        if (typeof data.errors === 'object') {
+                            for (const field in data.errors) {
+                                if (Array.isArray(data.errors[field])) {
+                                    errorMessages.push(...data.errors[field]);
+                                } else {
+                                    errorMessages.push(data.errors[field]);
+                                }
+                            }
+                        } else if (typeof data.errors === 'string') {
+                            errorMessages.push(data.errors);
+                        }
+                        if (errorMessages.length > 0) {
+                            errorText = errorMessages.join(' ');
+                        }
+                    }
+                    
+                    modalErrorMessage.textContent = errorText;
+                    modalError.classList.remove('hidden');
+                    
+                    // Scroll to error
+                    modalError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             } catch (error) {
-                alert('Une erreur est survenue. Veuillez réessayer.');
+                modalErrorMessage.textContent = 'Une erreur est survenue. Veuillez vérifier votre connexion et réessayer.';
+                modalError.classList.remove('hidden');
+                modalError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } finally {
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
             }
         });
         
@@ -536,4 +605,6 @@
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+
+
 
