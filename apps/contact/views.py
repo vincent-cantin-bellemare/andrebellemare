@@ -47,6 +47,16 @@ class ContactView(FormView):
             # Log the error for debugging
             logger.error(f'Error saving contact message: {str(e)}', exc_info=True)
             
+            # Check if it's an email error (message was saved but email failed)
+            if hasattr(e, '__class__') and ('email' in str(e).lower() or 'send_mail' in str(e).lower()):
+                # Message is saved but email failed - inform user
+                form.add_error(
+                    None,
+                    'Votre message a été enregistré, mais nous n\'avons pas pu envoyer la notification par courriel. '
+                    'L\'artiste sera informé de votre message. Si le problème persiste, contactez-nous directement.'
+                )
+                return self.form_invalid(form)
+            
             # Add user-friendly error message
             form.add_error(
                 None,
