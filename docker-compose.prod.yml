@@ -84,16 +84,9 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
-    command: tunnel --no-autoupdate run
-    depends_on:
-      web:
-        condition: service_started
-    networks:
-      - default
-    profiles:
-      - tunnel
+
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+
 
 # ============================================================================
 # Volumes
