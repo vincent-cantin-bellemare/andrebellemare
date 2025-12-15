@@ -24,12 +24,12 @@ class HomeView(TemplateView):
         hero_painting = Painting.objects.filter(
             is_active=True,
             is_featured=True
-        ).prefetch_related('images').first()
+        ).prefetch_related('images').filter(images__isnull=False).distinct().first()
         
         if not hero_painting or not hero_painting.primary_image:
             hero_painting = Painting.objects.filter(
                 is_active=True
-            ).prefetch_related('images').exclude(images__isnull=True).first()
+            ).prefetch_related('images').filter(images__isnull=False).distinct().first()
         
         context['hero_painting'] = hero_painting
         return context

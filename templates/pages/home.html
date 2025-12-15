@@ -24,31 +24,30 @@
 {% block content %}
 <!-- Hero Section -->
 <section class="relative py-20 md:py-32 overflow-hidden">
-    {% if hero_painting and hero_painting.primary_image %}
-    <!-- Background painting image -->
     <div class="absolute inset-0 z-0">
+        {% if hero_painting and hero_painting.primary_image %}
+        <!-- Background painting image -->
         {% thumbnail hero_painting.primary_image.image "1920x1080" crop="center" as hero_thumb %}
         <img src="{{ hero_thumb.url }}" 
              alt="{{ hero_painting.title }}"
              class="w-full h-full object-cover"
-             style="opacity: 0.25;">
+             style="opacity: 0.25; filter: blur(0px);">
         {% endthumbnail %}
+        {% endif %}
         <!-- Overlay gradient for text readability -->
         <div class="absolute inset-0 bg-gradient-to-br from-warm-100/85 via-warm-50/75 to-warm-100/85 dark:from-warm-900/90 dark:via-warm-800/85 dark:to-warm-900/90"></div>
+        <!-- Fallback gradient background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-warm-100 to-warm-50 dark:from-warm-900 dark:to-warm-800 -z-10"></div>
     </div>
-    {% else %}
-    <!-- Fallback gradient if no painting image -->
-    <div class="absolute inset-0 z-0 bg-gradient-to-br from-warm-100 to-warm-50 dark:from-warm-900 dark:to-warm-800"></div>
-    {% endif %}
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
-            <h1 class="font-display text-4xl md:text-6xl font-semibold text-charcoal dark:text-white mb-6 leading-tight animate-fade-in-up">
+            <h1 class="font-display text-4xl md:text-6xl font-semibold text-charcoal dark:text-white mb-6 leading-tight hero-title">
                 La vie est belle, même lorsque les temps sont durs
             </h1>
-            <p class="text-lg md:text-xl text-warm-600 dark:text-warm-300 mb-8 leading-relaxed animate-fade-in-up animation-delay-200">
+            <p class="text-lg md:text-xl text-warm-600 dark:text-warm-300 mb-8 leading-relaxed hero-text">
                 Alors ajoutons-y de la couleur, de la lumière et un peu de joie. Peindre est pour moi une façon simple et sincère d'embellir le monde.
             </p>
-            <div class="flex flex-wrap gap-4 animate-fade-in-up animation-delay-400">
+            <div class="flex flex-wrap gap-4 hero-buttons">
                 <a href="{% url 'gallery:gallery' %}" class="inline-flex items-center px-8 py-4 bg-charcoal dark:bg-warm-600 text-white rounded-lg font-medium hover:bg-warm-700 transition-all duration-300 hover:scale-105 hover:shadow-lg transform">
                     Découvrir la galerie
                     <svg class="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +184,25 @@
 
 {% block extra_css %}
 <style>
-    /* Fade in and slide up animation for hero */
+    /* Hero animations */
+    .hero-title {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    }
+    
+    .hero-text {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease-out 0.4s forwards;
+    }
+    
+    .hero-buttons {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease-out 0.6s forwards;
+    }
+    
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -197,34 +214,11 @@
         }
     }
     
-    .animate-fade-in-up {
-        animation: fadeInUp 0.8s ease-out forwards;
-        opacity: 0;
-    }
-    
-    .animation-delay-200 {
-        animation-delay: 0.2s;
-    }
-    
-    .animation-delay-400 {
-        animation-delay: 0.4s;
-    }
-    
     /* Scroll fade in animation */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
     .scroll-fade-in {
         opacity: 0;
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
     
     .scroll-fade-in.visible {
@@ -234,13 +228,23 @@
     
     .scroll-fade-in-card {
         opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
     
     .scroll-fade-in-card.visible {
         opacity: 1;
         transform: translateY(0);
+    }
+    
+    /* Smooth transitions for interactive elements */
+    a, button {
+        transition: all 0.3s ease;
+    }
+    
+    /* Ensure cards have proper transitions */
+    article {
+        transition: all 0.3s ease;
     }
 </style>
 {% endblock %}
@@ -254,8 +258,8 @@
         const cards = document.querySelectorAll('.scroll-fade-in-card');
         
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
         };
         
         const observer = new IntersectionObserver(function(entries) {
@@ -264,7 +268,6 @@
                     const delay = entry.target.dataset.delay ? parseInt(entry.target.dataset.delay) * 100 : 0;
                     setTimeout(() => {
                         entry.target.classList.add('visible');
-                        entry.target.style.transform = 'translateY(0)';
                     }, delay);
                     observer.unobserve(entry.target);
                 }
@@ -276,19 +279,26 @@
             observer.observe(section);
         });
         
-        // Observe cards
-        cards.forEach(card => {
+        // Observe cards with staggered delays
+        cards.forEach((card, index) => {
+            card.dataset.delay = index;
             observer.observe(card);
         });
         
-        // Check if sections are already visible on load
-        sections.forEach(section => {
-            const rect = section.getBoundingClientRect();
-            const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-            if (isVisible) {
-                section.classList.add('visible');
-            }
-        });
+        // Check if sections are already visible on load (for above-the-fold content)
+        function checkInitialVisibility() {
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
+                if (isVisible && !section.classList.contains('visible')) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+        
+        // Check immediately and after a short delay
+        checkInitialVisibility();
+        setTimeout(checkInitialVisibility, 100);
     });
 </script>
 {% endblock %}
