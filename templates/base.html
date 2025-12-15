@@ -93,7 +93,10 @@
         
         /* Form styles */
         .form-input, .form-textarea {
-            @apply w-full px-4 py-3 border border-warm-200 rounded-lg focus:ring-2 focus:ring-warm-400 focus:border-transparent transition-all duration-200 bg-white dark:bg-warm-800 dark:border-warm-700 dark:text-white;
+            @apply w-full px-5 py-4 text-base border-2 border-warm-200 rounded-xl focus:ring-2 focus:ring-warm-400 focus:border-warm-400 transition-all duration-200 bg-white dark:bg-warm-800 dark:border-warm-700 dark:text-white placeholder-warm-400 dark:placeholder-warm-500;
+        }
+        .form-input:focus, .form-textarea:focus {
+            @apply shadow-lg;
         }
         
         /* Image loading animation */
@@ -275,25 +278,31 @@
     </footer>
     
     <!-- Purchase Modal -->
-    <div id="purchase-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-warm-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-display text-2xl">Acheter cette toile</h3>
-                    <button id="close-modal" class="p-2 hover:bg-warm-100 dark:hover:bg-warm-700 rounded-full transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div id="purchase-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+        <div class="bg-white dark:bg-warm-800 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto transform transition-all">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <h3 class="font-display text-3xl text-charcoal dark:text-white mb-2">Acheter cette toile</h3>
+                        <p class="text-warm-500 dark:text-warm-400 text-sm">Remplissez le formulaire ci-dessous</p>
+                    </div>
+                    <button id="close-modal" class="p-2 hover:bg-warm-100 dark:hover:bg-warm-700 rounded-full transition-colors flex-shrink-0">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </button>
                 </div>
                 
-                <div id="modal-painting-info" class="mb-6 p-4 bg-warm-50 dark:bg-warm-700 rounded-lg">
+                <!-- Painting Info Card -->
+                <div id="modal-painting-info" class="mb-8 p-5 bg-gradient-to-br from-warm-50 to-warm-100 dark:from-warm-700 dark:to-warm-800 rounded-2xl border border-warm-200 dark:border-warm-600">
                     <!-- Filled by JavaScript -->
                 </div>
                 
-                <div id="modal-error" class="hidden mb-6 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                <!-- Error Message -->
+                <div id="modal-error" class="hidden mb-6 bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-800 rounded-xl p-4">
                     <div class="flex items-start">
-                        <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <div class="flex-1">
@@ -303,46 +312,73 @@
                     </div>
                 </div>
                 
+                <!-- Form -->
                 <form id="purchase-form" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="painting_id" id="modal-painting-id">
                     
-                    <div class="space-y-4">
+                    <div class="space-y-5">
                         <div>
-                            <label class="block text-sm font-medium mb-1">Nom complet *</label>
-                            <input type="text" name="name" required class="form-input">
+                            <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
+                                Nom complet <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="name" required 
+                                   placeholder="Votre nom complet"
+                                   class="form-input">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-1">Courriel *</label>
-                            <input type="email" name="email" required class="form-input">
+                            <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
+                                Courriel <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" name="email" required 
+                                   placeholder="votre@courriel.com"
+                                   class="form-input">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-1">Téléphone</label>
-                            <input type="tel" name="phone" class="form-input">
+                            <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
+                                Téléphone
+                            </label>
+                            <input type="tel" name="phone" 
+                                   placeholder="514-555-1234"
+                                   class="form-input">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-1">Message (optionnel)</label>
-                            <textarea name="message" rows="3" class="form-textarea"></textarea>
+                            <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
+                                Message <span class="text-warm-500 text-xs font-normal">(optionnel)</span>
+                            </label>
+                            <textarea name="message" rows="4" 
+                                      placeholder="Votre message pour l'artiste..."
+                                      class="form-textarea"></textarea>
                         </div>
                     </div>
                     
-                    <div class="mt-6">
-                        <button type="submit" class="w-full bg-charcoal dark:bg-warm-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-warm-700 transition-colors">
+                    <div class="mt-8">
+                        <button type="submit" class="w-full bg-charcoal dark:bg-warm-600 text-white py-4 px-8 rounded-xl text-lg font-semibold hover:bg-warm-700 dark:hover:bg-warm-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                             Envoyer ma demande
                         </button>
                     </div>
                     
-                    <p class="mt-4 text-sm text-warm-500 text-center">
-                        L'artiste vous contactera pour finaliser l'achat.
+                    <p class="mt-5 text-sm text-warm-500 dark:text-warm-400 text-center">
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        L'artiste vous contactera pour finaliser l'achat
                     </p>
                 </form>
                 
-                <div id="modal-success" class="hidden text-center py-8">
-                    <svg class="w-16 h-16 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <h4 class="font-display text-xl mb-2">Demande envoyée!</h4>
-                    <p class="text-warm-500">L'artiste vous contactera sous peu.</p>
+                <!-- Success Message -->
+                <div id="modal-success" class="hidden text-center py-12">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                        <svg class="w-12 h-12 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <h4 class="font-display text-2xl text-charcoal dark:text-white mb-3">Demande envoyée!</h4>
+                    <p class="text-warm-600 dark:text-warm-400 mb-6">L'artiste vous contactera sous peu.</p>
+                    <button onclick="document.getElementById('purchase-modal').classList.add('hidden')" 
+                            class="px-6 py-3 bg-charcoal dark:bg-warm-600 text-white rounded-xl font-medium hover:bg-warm-700 transition-colors">
+                        Fermer
+                    </button>
                 </div>
             </div>
         </div>
@@ -401,11 +437,14 @@
         window.openPurchaseModal = function(paintingId, title, price, imageUrl) {
             document.getElementById('modal-painting-id').value = paintingId;
             document.getElementById('modal-painting-info').innerHTML = `
-                <div class="flex items-center gap-4">
-                    <img src="${imageUrl}" alt="${title}" class="w-20 h-20 object-cover rounded-lg">
-                    <div>
-                        <h4 class="font-medium">${title}</h4>
-                        <p class="text-warm-500">${price} $ CAD</p>
+                <div class="flex items-center gap-5">
+                    <div class="flex-shrink-0">
+                        <img src="${imageUrl}" alt="${title}" class="w-24 h-24 object-cover rounded-xl shadow-md border-2 border-warm-200 dark:border-warm-600">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-display text-lg font-semibold text-charcoal dark:text-white mb-1 truncate">${title}</h4>
+                        <p class="text-2xl font-bold text-charcoal dark:text-white">${price} $ CAD</p>
+                        <p class="text-xs text-warm-500 dark:text-warm-400 mt-1">Le montant sera versé à la Maison du Père</p>
                     </div>
                 </div>
             `;

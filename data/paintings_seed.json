@@ -2,28 +2,159 @@
   "paintings": [
     {
       "sku": "AB-0001",
-      "title": "Titre de la toile",
-      "description": "Description de la toile. Cette œuvre capture l'essence fugace d'un moment suspendu dans le temps.",
+      "title": "Harmonie chromatique",
+      "description": "Cette œuvre capture l'essence fugace d'un moment suspendu dans le temps. Les couleurs se mélangent avec une grâce naturelle, créant une symphonie visuelle qui évoque l'émotion pure.",
       "price_cad": 500.00,
       "dimensions": "24\" x 36\"",
       "category": "Abstraction",
       "finish": "Époxy",
       "status": "available",
       "is_featured": true,
-      "image_filename": "image1.jpg"
+      "image_filename": "05fe93_020828b62f774ed09453be7dcd848faf~mv2.avif"
     },
     {
       "sku": "AB-0002",
-      "title": "Autre toile",
-      "description": "Une autre description pour cette toile magnifique.",
+      "title": "Rêverie urbaine",
+      "description": "Une exploration poétique des paysages urbains contemporains. Cette toile révèle la beauté cachée dans les structures architecturales et les espaces interstitiels de la ville moderne.",
       "price_cad": 750.00,
       "dimensions": "30\" x 40\"",
       "category": "Banlieue",
       "finish": "Acrylique",
       "status": "available",
       "is_featured": false,
-      "image_filename": "image2.jpg",
-      "image_filenames": ["image2.jpg", "image2_detail.jpg"]
+      "image_filename": "05fe93_0ec46fd5c37a471c95d4ffb95456d9df~mv2.avif"
+    },
+    {
+      "sku": "AB-0003",
+      "title": "Éclats de lumière",
+      "description": "Une composition dynamique où la lumière joue le rôle principal. Les reflets et les ombres créent une profondeur remarquable, invitant le spectateur à plonger dans un univers de contrastes saisissants.",
+      "price_cad": 650.00,
+      "dimensions": "20\" x 30\"",
+      "category": "Abstraction",
+      "finish": "Huile",
+      "status": "available",
+      "is_featured": true,
+      "image_filename": "05fe93_1a8dcade4445476aa9417a8d71c6cc14~mv2.avif"
+    },
+    {
+      "sku": "AB-0004",
+      "title": "Métamorphose",
+      "description": "Cette œuvre évoque la transformation constante de la nature et de l'esprit. Les formes organiques se transforment en structures géométriques, créant un dialogue entre le naturel et l'artificiel.",
+      "price_cad": 850.00,
+      "dimensions": "36\" x 48\"",
+      "category": "Abstraction",
+      "finish": "Mixte",
+      "status": "available",
+      "is_featured": false,
+      "image_filename": "05fe93_274d3315b2b14d4c98c602e1f130cae3~mv2.avif"
+    },
+    {
+      "sku": "AB-0005",
+      "title": "Horizon lointain",
+      "description": "Une évocation poétique des paysages infinis. Cette toile transporte le regard vers des horizons où le ciel et la terre se rencontrent dans une fusion harmonieuse de tons et de textures.",
+      "price_cad": 600.00,
+      "dimensions": "24\" x 32\"",
+      "category": "Paysage",
+      "finish": "Acrylique",
+      "status": "available",
+      "is_featured": true,
+      "image_filename": "05fe93_3add9f4c640a4f759c9d20139755e344~mv2.avif"
+    },
+    {
+      "sku": "AB-0006",
+      "title": "Rythmes intérieurs",
+      "description": "Une exploration des émotions intimes à travers des gestes picturaux spontanés. Cette œuvre révèle les rythmes cachés de l'âme, exprimés par des couleurs vibrantes et des mouvements fluides.",
+      "price_cad": 550.00,
+      "dimensions": "18\" x 24\"",
+      "category": "Abstraction",
+      "finish": "Époxy",
+      "status": "available",
+      "is_featured": false,
+      "image_filename": "05fe93_3badebece43e4b9ea27421037f9bf6a8~mv2.avif"
+    },
+    {
+      "sku": "AB-0007",
+      "title": "Architecture du silence",
+      "description": "Une méditation sur les espaces vides et leur pouvoir évocateur. Cette composition minimaliste invite à la contemplation, révélant la beauté dans la simplicité et le silence.",
+      "price_cad": 700.00,
+      "dimensions": "28\" x 36\"",
+      "category": "Abstraction",
+      "finish": "Huile",
+      "status": "available",
+      "is_featured": true,
+      "image_filename": "05fe93_49775a2e475f49ee8198d21cb87f70a5~mv2.avif"
+    },
+    {
+      "sku": "AB-0008",
+      "title": "Fluidité temporelle",
+      "description": "Cette œuvre capture l'essence du mouvement et du temps qui passe. Les couleurs se superposent et se mélangent, créant une sensation de flux continu et d'éternité momentanée.",
+      "price_cad": 800.00,
+      "dimensions": "32\" x 40\"",
+      "category": "Abstraction",
+      "finish": "Mixte",
+      "status": "available",
+      "is_featured": false,
+      "image_filename": "05fe93_51bc5fbb85f346f5a04cba0914a30d7d~mv2.avif"
+    },
+    {
+      "sku": "AB-0009",
+      "title": "Mémoires fragmentées",
+      "description": "Une exploration des souvenirs et de leur nature fragmentaire. Cette composition assemble des éléments disparates pour créer un tout cohérent, évoquant la manière dont notre mémoire reconstruit le passé.",
+      "price_cad": 675.00,
+      "dimensions": "22\" x 30\"",
+      "category": "Abstraction",
+      "finish": "Acrylique",
+      "status": "available",
+      "is_featured": true,
+      "image_filename": "05fe93_6070b02486bc4a83a1d10338832de97a~mv2.avif"
+    },
+    {
+      "sku": "AB-0010",
+      "title": "Dialogue des matières",
+      "description": "Une étude approfondie des textures et des matériaux. Cette œuvre met en valeur la richesse tactile de différentes techniques picturales, créant un dialogue visuel entre les surfaces lisses et rugueuses.",
+      "price_cad": 725.00,
+      "dimensions": "26\" x 34\"",
+      "category": "Abstraction",
+      "finish": "Époxy",
+      "status": "available",
+      "is_featured": false,
+      "image_filename": "05fe93_7a6bc7233bc0483ea9136f0963059a8c~mv2.avif"
+    },
+    {
+      "sku": "AB-0011",
+      "title": "Émergence",
+      "description": "Une évocation de la naissance et de la croissance. Cette toile représente l'émergence de nouvelles formes et de nouvelles possibilités, symbolisant le renouveau et la transformation perpétuelle.",
+      "price_cad": 625.00,
+      "dimensions": "20\" x 28\"",
+      "category": "Abstraction",
+      "finish": "Huile",
+      "status": "available",
+      "is_featured": true,
+      "image_filename": "05fe93_919056ecbdb34108913961140709dbcd~mv2.avif"
+    },
+    {
+      "sku": "AB-0012",
+      "title": "Contraste et équilibre",
+      "description": "Une composition qui explore l'harmonie entre les opposés. Les contrastes de couleurs et de formes créent un équilibre dynamique, révélant la beauté qui naît de la tension entre les éléments.",
+      "price_cad": 580.00,
+      "dimensions": "24\" x 30\"",
+      "category": "Abstraction",
+      "finish": "Acrylique",
+      "status": "available",
+      "is_featured": false,
+      "image_filename": "05fe93_9c58297fd1ec4bb3a89bdabd02bd2aa3~mv2.avif"
+    },
+    {
+      "sku": "AB-0013",
+      "title": "Résurgence",
+      "description": "Une œuvre qui célèbre la résilience et la renaissance. Cette composition évoque la capacité de transformation et de régénération, symbolisant l'espoir et la persévérance face aux défis.",
+      "price_cad": 775.00,
+      "dimensions": "30\" x 38\"",
+      "category": "Abstraction",
+      "finish": "Mixte",
+      "status": "available",
+      "is_featured": true,
+      "image_filename": "05fe93_f82ba28d35b14000a188e7b9c9a638c9~mv2.avif"
     }
   ]
 }

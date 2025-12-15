@@ -60,43 +60,43 @@
                 {% csrf_token %}
                 
                 <div>
-                    <label for="id_name" class="block text-sm font-medium text-charcoal dark:text-warm-200 mb-2">
+                    <label for="id_name" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Nom complet <span class="text-red-500">*</span>
                     </label>
                     {% render_field form.name class="form-input" %}
                     {% if form.name.errors %}
-                    <p class="mt-1 text-sm text-red-600">{{ form.name.errors.0 }}</p>
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.name.errors.0 }}</p>
                     {% endif %}
                 </div>
                 
                 <div>
-                    <label for="id_email" class="block text-sm font-medium text-charcoal dark:text-warm-200 mb-2">
+                    <label for="id_email" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Courriel <span class="text-red-500">*</span>
                     </label>
                     {% render_field form.email class="form-input" %}
                     {% if form.email.errors %}
-                    <p class="mt-1 text-sm text-red-600">{{ form.email.errors.0 }}</p>
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.email.errors.0 }}</p>
                     {% endif %}
                 </div>
                 
                 <div>
-                    <label for="id_phone" class="block text-sm font-medium text-charcoal dark:text-warm-200 mb-2">
+                    <label for="id_phone" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Téléphone
                     </label>
                     {% render_field form.phone class="form-input" %}
                 </div>
                 
                 <div>
-                    <label for="id_message" class="block text-sm font-medium text-charcoal dark:text-warm-200 mb-2">
+                    <label for="id_message" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Message <span class="text-red-500">*</span>
                     </label>
                     {% render_field form.message class="form-textarea" rows="6" %}
                     {% if form.message.errors %}
-                    <p class="mt-1 text-sm text-red-600">{{ form.message.errors.0 }}</p>
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.message.errors.0 }}</p>
                     {% endif %}
                 </div>
                 
-                <button type="submit" class="w-full py-4 px-6 bg-charcoal dark:bg-warm-600 text-white rounded-xl font-medium hover:bg-warm-700 transition-colors">
+                <button type="submit" class="w-full py-4 px-6 bg-charcoal dark:bg-warm-600 text-white rounded-xl text-base font-semibold hover:bg-warm-700 dark:hover:bg-warm-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                     Envoyer le message
                 </button>
             </form>

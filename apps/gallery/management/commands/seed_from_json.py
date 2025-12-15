@@ -30,7 +30,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--seeds-dir',
             type=str,
-            default='/volumes/django/media/seeds',
+            default=str(Path(settings.MEDIA_ROOT) / 'seeds'),
             help='Directory containing seed images',
         )
 
@@ -71,7 +71,7 @@ class Command(BaseCommand):
         self.stdout.write(f'Scanning images in {seeds_dir}...')
 
         # Get list of available images
-        image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG', '*.webp', '*.WEBP']
+        image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG', '*.webp', '*.WEBP', '*.avif', '*.AVIF']
         available_images = {}
         for ext in image_extensions:
             for img_path in seeds_dir.glob(ext):
