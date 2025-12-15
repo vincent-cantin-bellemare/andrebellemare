@@ -93,8 +93,9 @@
         
         /* Form styles */
         .form-input, .form-textarea {
-            @apply w-full px-5 py-4 md:px-6 md:py-5 text-base md:text-lg border-2 border-warm-200 rounded-xl focus:ring-2 focus:ring-warm-400 focus:border-warm-400 transition-all duration-200 bg-white dark:bg-warm-800 dark:border-warm-700 dark:text-white placeholder-warm-400 dark:placeholder-warm-500;
+            @apply w-full px-4 py-4 sm:px-5 sm:py-4 md:px-6 md:py-5 text-base md:text-lg border-2 border-warm-200 rounded-xl focus:ring-2 focus:ring-warm-400 focus:border-warm-400 transition-all duration-200 bg-white dark:bg-warm-800 dark:border-warm-700 dark:text-white placeholder-warm-400 dark:placeholder-warm-500;
             font-size: 16px; /* Prevents iOS zoom on focus */
+            min-height: 48px; /* Minimum touch target size for mobile */
         }
         .form-input:focus, .form-textarea:focus {
             @apply shadow-lg;
@@ -113,7 +114,7 @@
             @apply mt-2 text-sm text-red-600 dark:text-red-400 flex items-start;
         }
         .field-error-icon {
-            @apply w-4 h-4 mr-1.5 mt-0.5 flex-shrink-0;
+            @apply w-3.5 h-3.5 mr-1.5 mt-0.5 flex-shrink-0;
         }
         
         /* Image loading animation */
@@ -339,33 +340,37 @@
                             <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                                 Nom complet <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="name" required 
+                            <input type="text" name="name" id="modal-name"
                                    placeholder="Votre nom complet"
                                    class="form-input">
+                            <div class="error-container" data-field="name"></div>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                                 Courriel <span class="text-red-500">*</span>
                             </label>
-                            <input type="email" name="email" required 
+                            <input type="email" name="email" id="modal-email"
                                    placeholder="votre@courriel.com"
                                    class="form-input">
+                            <div class="error-container" data-field="email"></div>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                                 Téléphone
                             </label>
-                            <input type="tel" name="phone" 
+                            <input type="tel" name="phone" id="modal-phone"
                                    placeholder="514-555-1234"
                                    class="form-input">
+                            <div class="error-container" data-field="phone"></div>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                                 Message <span class="text-warm-500 text-xs font-normal">(optionnel)</span>
                             </label>
-                            <textarea name="message" rows="4" 
+                            <textarea name="message" id="modal-message" rows="4" 
                                       placeholder="Votre message pour l'artiste..."
                                       class="form-textarea"></textarea>
+                            <div class="error-container" data-field="message"></div>
                         </div>
                     </div>
                     
@@ -470,8 +475,17 @@
             purchaseForm.classList.remove('hidden');
             modalSuccess.classList.add('hidden');
             modalError.classList.add('hidden');
-            // Reset form
+            // Reset form and clear errors
             purchaseForm.reset();
+            // Clear any field errors
+            const errorContainers = purchaseForm.querySelectorAll('.error-container');
+            errorContainers.forEach(container => {
+                container.innerHTML = '';
+            });
+            const errorFields = purchaseForm.querySelectorAll('.form-input.error-field, .form-textarea.error-field');
+            errorFields.forEach(field => {
+                field.classList.remove('error-field');
+            });
         };
         
         closeModal.addEventListener('click', () => {
@@ -489,10 +503,39 @@
         const modalError = document.getElementById('modal-error');
         const modalErrorMessage = document.getElementById('modal-error-message');
         
+        // Function to clear all field errors
+        function clearFieldErrors() {
+            const errorContainers = purchaseForm.querySelectorAll('.error-container');
+            errorContainers.forEach(container => {
+                container.innerHTML = '';
+            });
+            const errorFields = purchaseForm.querySelectorAll('.form-input.error-field, .form-textarea.error-field');
+            errorFields.forEach(field => {
+                field.classList.remove('error-field');
+            });
+        }
+        
+        // Function to show field error
+        function showFieldError(fieldName, errorMessage) {
+            const field = purchaseForm.querySelector(`[name="${fieldName}"]`);
+            if (!field) return;
+            
+            field.classList.add('error-field');
+            const errorContainer = purchaseForm.querySelector(`.error-container[data-field="${fieldName}"]`);
+            if (errorContainer) {
+                errorContainer.innerHTML = `
+                    <p class="field-error">
+                        ${errorMessage}
+                    </p>
+                `;
+            }
+        }
+        
         purchaseForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Hide previous errors
+            // Clear previous errors
+            clearFieldErrors();
             modalError.classList.add('hidden');
             modalErrorMessage.textContent = '';
             
@@ -519,11 +562,37 @@
                     modalSuccess.classList.remove('hidden');
                     modalError.classList.add('hidden');
                 } else {
-                    // Show error message
+                    // Show field-specific errors if available
+                    if (data.errors && typeof data.errors === 'object') {
+                        let hasFieldErrors = false;
+                        for (const field in data.errors) {
+                            if (Array.isArray(data.errors[field]) && data.errors[field].length > 0) {
+                                showFieldError(field, data.errors[field][0]);
+                                hasFieldErrors = true;
+                            } else if (typeof data.errors[field] === 'string') {
+                                showFieldError(field, data.errors[field]);
+                                hasFieldErrors = true;
+                            }
+                        }
+                        
+                        // If there are field errors, scroll to first one
+                        if (hasFieldErrors) {
+                            const firstErrorField = purchaseForm.querySelector('.error-field');
+                            if (firstErrorField) {
+                                firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                firstErrorField.focus();
+                            }
+                        }
+                    }
+                    
+                    // Show general error message if no field-specific errors or as fallback
                     let errorText = data.error_message || 'Une erreur est survenue lors de l\'envoi de votre demande.';
                     
                     // Fallback to parsing errors if error_message not available
-                    if (!data.error_message && data.errors) {
+                    if (!data.error_message && data.errors && !Object.keys(data.errors).some(field => {
+                        const fieldErrors = data.errors[field];
+                        return (Array.isArray(fieldErrors) && fieldErrors.length > 0) || typeof fieldErrors === 'string';
+                    })) {
                         const errorMessages = [];
                         if (typeof data.errors === 'object') {
                             for (const field in data.errors) {
@@ -541,11 +610,12 @@
                         }
                     }
                     
-                    modalErrorMessage.textContent = errorText;
-                    modalError.classList.remove('hidden');
-                    
-                    // Scroll to error
-                    modalError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    // Only show general error if no field-specific errors were shown
+                    if (!data.errors || Object.keys(data.errors).length === 0) {
+                        modalErrorMessage.textContent = errorText;
+                        modalError.classList.remove('hidden');
+                        modalError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
                 }
             } catch (error) {
                 modalErrorMessage.textContent = 'Une erreur est survenue. Veuillez vérifier votre connexion et réessayer.';

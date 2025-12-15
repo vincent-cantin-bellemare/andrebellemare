@@ -1,9 +1,6 @@
 from django.contrib import admin
 from django.contrib import messages
 from django.utils.html import format_html
-from django.core.mail import send_mail
-from django.conf import settings
-from django.template.loader import render_to_string
 
 from .models import ContactMessage, FAQ, Testimonial, SiteSettings
 
@@ -54,25 +51,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
         
         for message in queryset:
             try:
-                if message.message_type == 'purchase' and message.painting:
-                    subject = f'[André Bellemare] Demande d\'achat - {message.painting.title}'
-                    body = render_to_string('emails/purchase_notification.html', {
-                        'message': message,
-                        'painting': message.painting,
-                    })
-                else:
-                    subject = f'[André Bellemare] Nouveau message de {message.name}'
-                    body = render_to_string('emails/contact_notification.html', {
-                        'message': message,
-                    })
-                
-                send_mail(
-                    subject,
-                    body,
-                    settings.DEFAULT_FROM_EMAIL,
-                    ['cantinbellemare@gmail.com', 'andrebellemare@live.com'],
-                    fail_silently=False,
-                )
+                message.send_notification_email(fail_silently=False)
                 count += 1
             except Exception as e:
                 errors.append(f'{message.name}: {str(e)}')

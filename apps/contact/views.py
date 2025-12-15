@@ -1,13 +1,14 @@
+import logging
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import FormView
 from django.http import JsonResponse
-from django.core.mail import send_mail
-from django.conf import settings
-from django.template.loader import render_to_string
 
 from .forms import ContactForm, PurchaseInquiryForm
 from .models import ContactMessage
 from apps.gallery.models import Painting
+
+logger = logging.getLogger(__name__)
 
 
 class ContactView(FormView):
@@ -24,12 +25,18 @@ class ContactView(FormView):
             message.save()
             
             # Send email notification (fail silently - don't break form submission)
-            self.send_notification_email(message)
+            message.send_notification_email()
             
             return super().form_valid(form)
         except Exception as e:
-            # If save fails, add error to form
-            form.add_error(None, 'Une erreur est survenue lors de l\'envoi de votre message. Veuillez réessayer.')
+            # Log the error for debugging
+            logger.error(f'Error saving contact message: {str(e)}', exc_info=True)
+            
+            # Add user-friendly error message
+            form.add_error(
+                None,
+                'Une erreur est survenue lors de l\'envoi de votre message. Veuillez réessayer. Si le problème persiste, contactez-nous directement.'
+            )
             return self.form_invalid(form)
     
     def get_client_ip(self):
@@ -37,23 +44,6 @@ class ContactView(FormView):
         if x_forwarded_for:
             return x_forwarded_for.split(',')[0]
         return self.request.META.get('REMOTE_ADDR')
-    
-    def send_notification_email(self, message):
-        """Send email notification to artist"""
-        try:
-            subject = f'[André Bellemare] Nouveau message de {message.name}'
-            body = render_to_string('emails/contact_notification.html', {
-                'message': message,
-            })
-            send_mail(
-                subject,
-                body,
-                settings.DEFAULT_FROM_EMAIL,
-                ['cantinbellemare@gmail.com', 'andrebellemare@live.com'],
-                fail_silently=True,
-            )
-        except Exception:
-            pass  # Don't break form submission if email fails
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -86,30 +76,19 @@ def purchase_inquiry(request):
             message.save()
             
             # Send email notification (fail silently - don't break form submission)
-            try:
-                subject = f'[André Bellemare] Demande d\'achat - {painting.title}'
-                body = render_to_string('emails/purchase_notification.html', {
-                    'message': message,
-                    'painting': painting,
-                })
-                send_mail(
-                    subject,
-                    body,
-                    settings.DEFAULT_FROM_EMAIL,
-                    ['cantinbellemare@gmail.com', 'andrebellemare@live.com'],
-                    fail_silently=True,
-                )
-            except Exception:
-                pass  # Email failure doesn't break the form submission
+            message.send_notification_email()
             
             return JsonResponse({
                 'success': True,
                 'message': 'Votre demande a été envoyée avec succès! L\'artiste vous contactera sous peu.'
             })
         except Exception as e:
+            # Log the error for debugging
+            logger.error(f'Error saving purchase inquiry: {str(e)}', exc_info=True)
+            
             return JsonResponse({
                 'success': False,
-                'error_message': 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
+                'error_message': 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer. Si le problème persiste, contactez-nous directement.'
             }, status=500)
     
     # Format errors for display

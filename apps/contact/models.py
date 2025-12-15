@@ -1,4 +1,7 @@
 from django.db import models
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
 
 
 class ContactMessage(models.Model):
@@ -43,6 +46,34 @@ class ContactMessage(models.Model):
     
     def __str__(self):
         return f"{self.name} - {self.get_message_type_display()} ({self.created_at.strftime('%Y-%m-%d')})"
+    
+    def send_notification_email(self, fail_silently=True):
+        """Send email notification to artist"""
+        try:
+            if self.message_type == 'purchase' and self.painting:
+                subject = f'[André Bellemare] Demande d\'achat - {self.painting.title}'
+                body = render_to_string('emails/purchase_notification.html', {
+                    'message': self,
+                    'painting': self.painting,
+                })
+            else:
+                subject = f'[André Bellemare] Nouveau message de {self.name}'
+                body = render_to_string('emails/contact_notification.html', {
+                    'message': self,
+                })
+            
+            send_mail(
+                subject,
+                body,
+                settings.DEFAULT_FROM_EMAIL,
+                ['cantinbellemare@gmail.com', 'andrebellemare@live.com'],
+                fail_silently=fail_silently,
+            )
+            return True
+        except Exception:
+            if not fail_silently:
+                raise
+            return False
 
 
 class FAQ(models.Model):

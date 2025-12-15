@@ -40,12 +40,10 @@ class PurchaseInquiryForm(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'class': 'form-input',
                 'placeholder': 'Votre nom complet',
-                'required': True,
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-input',
                 'placeholder': 'votre@courriel.com',
-                'required': True,
             }),
             'phone': forms.TextInput(attrs={
                 'class': 'form-input',
@@ -62,6 +60,11 @@ class PurchaseInquiryForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['message'].required = False
         self.fields['phone'].required = False
+        # Remove HTML required attribute to rely on backend validation
+        # Fields are still required at the form level, but HTML5 validation is disabled
+        for field_name in ['name', 'email']:
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs.pop('required', None)
 
 
 
