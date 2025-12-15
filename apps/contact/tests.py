@@ -58,10 +58,11 @@ class ContactMessageModelTest(TestCase):
         mail.outbox = []
         
         # Send email
-        result = message.send_notification_email(fail_silently=False)
+        email_sent, email_error = message.send_notification_email(fail_silently=False)
         
         # Check email was sent
-        self.assertTrue(result)
+        self.assertTrue(email_sent)
+        self.assertIsNone(email_error)
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn('Nouveau message de Jean Dupont', mail.outbox[0].subject)
         self.assertIn('jean.dupont@example.com', mail.outbox[0].body)
@@ -91,10 +92,11 @@ class ContactMessageModelTest(TestCase):
         mail.outbox = []
         
         # Send email
-        result = message.send_notification_email(fail_silently=False)
+        email_sent, email_error = message.send_notification_email(fail_silently=False)
         
         # Check email was sent
-        self.assertTrue(result)
+        self.assertTrue(email_sent)
+        self.assertIsNone(email_error)
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn('Demande d\'achat - Test Painting', mail.outbox[0].subject)
         self.assertIn('Test Painting', mail.outbox[0].body)
@@ -106,8 +108,10 @@ class ContactMessageModelTest(TestCase):
         
         # Mock send_mail to raise an exception
         with patch('apps.contact.models.send_mail', side_effect=Exception('Email error')):
-            result = message.send_notification_email(fail_silently=True)
-            self.assertFalse(result)
+            email_sent, email_error = message.send_notification_email(fail_silently=True)
+            self.assertFalse(email_sent)
+            self.assertIsNotNone(email_error)
+            self.assertIn('Email error', email_error)
     
     def test_send_notification_email_raises_when_not_silent(self):
         """Test that email failure raises exception when fail_silently=False"""

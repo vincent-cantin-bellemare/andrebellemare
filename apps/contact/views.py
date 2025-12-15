@@ -24,8 +24,20 @@ class ContactView(FormView):
             message.ip_address = self.get_client_ip()
             message.save()
             
-            # Send email notification (fail silently - don't break form submission)
-            message.send_notification_email()
+            # Send email notification - check if it succeeds
+            email_sent, email_error = message.send_notification_email(fail_silently=True)
+            
+            if not email_sent:
+                # Log the email error for debugging
+                logger.error(f'Failed to send contact notification email: {email_error}', exc_info=True)
+                
+                # Message is saved but email failed - inform user
+                form.add_error(
+                    None,
+                    'Votre message a été enregistré, mais nous n\'avons pas pu envoyer la notification par courriel. '
+                    'L\'artiste sera informé de votre message. Si le problème persiste, contactez-nous directement.'
+                )
+                return self.form_invalid(form)
             
             return super().form_valid(form)
         except Exception as e:
@@ -75,8 +87,19 @@ def purchase_inquiry(request):
         try:
             message.save()
             
-            # Send email notification (fail silently - don't break form submission)
-            message.send_notification_email()
+            # Send email notification - check if it succeeds
+            email_sent, email_error = message.send_notification_email(fail_silently=True)
+            
+            if not email_sent:
+                # Log the email error for debugging
+                logger.error(f'Failed to send purchase inquiry notification email: {email_error}', exc_info=True)
+                
+                # Message is saved but email failed - inform user
+                return JsonResponse({
+                    'success': False,
+                    'error_message': 'Votre demande a été enregistrée, mais nous n\'avons pas pu envoyer la notification par courriel. '
+                                   'L\'artiste sera informé de votre demande. Si le problème persiste, contactez-nous directement.'
+                }, status=200)  # 200 because message was saved successfully
             
             return JsonResponse({
                 'success': True,

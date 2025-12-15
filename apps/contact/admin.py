@@ -51,8 +51,11 @@ class ContactMessageAdmin(admin.ModelAdmin):
         
         for message in queryset:
             try:
-                message.send_notification_email(fail_silently=False)
-                count += 1
+                email_sent, email_error = message.send_notification_email(fail_silently=False)
+                if email_sent:
+                    count += 1
+                else:
+                    errors.append(f'{message.name}: {email_error or "Erreur inconnue"}')
             except Exception as e:
                 errors.append(f'{message.name}: {str(e)}')
         

@@ -48,7 +48,11 @@ class ContactMessage(models.Model):
         return f"{self.name} - {self.get_message_type_display()} ({self.created_at.strftime('%Y-%m-%d')})"
     
     def send_notification_email(self, fail_silently=True):
-        """Send email notification to artist"""
+        """Send email notification to artist
+        
+        Returns:
+            tuple: (success: bool, error_message: str or None)
+        """
         try:
             if self.message_type == 'purchase' and self.painting:
                 subject = f'[André Bellemare] Demande d\'achat - {self.painting.title}'
@@ -69,11 +73,12 @@ class ContactMessage(models.Model):
                 ['cantinbellemare@gmail.com', 'andrebellemare@live.com'],
                 fail_silently=fail_silently,
             )
-            return True
-        except Exception:
+            return True, None
+        except Exception as e:
+            error_message = str(e)
             if not fail_silently:
                 raise
-            return False
+            return False, error_message
 
 
 class FAQ(models.Model):
