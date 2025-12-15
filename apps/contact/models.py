@@ -97,13 +97,30 @@ class ContactMessage(models.Model):
                     'message': self,
                 })
             
-            send_mail(
+            # Send email and check return value (number of emails sent successfully)
+            emails_sent = send_mail(
                 subject,
                 body,
                 settings.DEFAULT_FROM_EMAIL,
                 ['cantinbellemare@gmail.com', 'andrebellemare@live.com'],
                 fail_silently=fail_silently,
             )
+            
+            # Check if email was actually sent (should be 1 or more)
+            if emails_sent == 0:
+                # Email failed but no exception was raised
+                error_message = 'Email sending failed: send_mail returned 0 (no emails sent)'
+                error_traceback = 'No exception raised, but send_mail returned 0'
+                
+                # Failure - update tracking
+                self.last_email_status = False
+                self.last_email_error = error_message
+                self.last_email_traceback = error_traceback
+                self.save(update_fields=['last_email_status', 'last_email_datetime', 'last_email_error', 'last_email_traceback'])
+                
+                if not fail_silently:
+                    raise Exception(error_message)
+                return False, error_message
             
             # Success - update tracking
             self.last_email_status = True

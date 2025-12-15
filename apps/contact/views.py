@@ -91,7 +91,7 @@ def purchase_inquiry(request):
             message.save()
             
             # Send email notification - check if it succeeds
-            email_sent, email_error = message.send_notification_email(fail_silently=True)
+            email_sent, email_error = message.send_notification_email(fail_silently=False)
             
             # Reload message to get updated email status
             message.refresh_from_db()
@@ -114,6 +114,15 @@ def purchase_inquiry(request):
         except Exception as e:
             # Log the error for debugging
             logger.error(f'Error saving purchase inquiry: {str(e)}', exc_info=True)
+            
+            # Check if it's an email error (message was saved but email failed)
+            if hasattr(e, '__class__') and 'email' in str(e).lower():
+                # Message is saved but email failed - inform user
+                return JsonResponse({
+                    'success': False,
+                    'error_message': 'Votre demande a été enregistrée, mais nous n\'avons pas pu envoyer la notification par courriel. '
+                                   'L\'artiste sera informé de votre demande. Si le problème persiste, contactez-nous directement.'
+                }, status=200)  # 200 because message was saved successfully
             
             return JsonResponse({
                 'success': False,

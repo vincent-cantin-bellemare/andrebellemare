@@ -121,6 +121,32 @@ class ContactMessageModelTest(TestCase):
         with patch('apps.contact.models.send_mail', side_effect=Exception('Email error')):
             with self.assertRaises(Exception):
                 message.send_notification_email(fail_silently=False)
+    
+    def test_send_notification_email_returns_zero(self):
+        """Test that email failure is detected when send_mail returns 0"""
+        message = ContactMessage.objects.create(**self.message_data)
+        
+        # Mock send_mail to return 0 (no emails sent) without raising exception
+        with patch('apps.contact.models.send_mail', return_value=0):
+            email_sent, email_error = message.send_notification_email(fail_silently=True)
+            self.assertFalse(email_sent)
+            self.assertIsNotNone(email_error)
+            self.assertIn('send_mail returned 0', email_error)
+            
+            # Check tracking fields
+            message.refresh_from_db()
+            self.assertFalse(message.last_email_status)
+            self.assertIn('send_mail returned 0', message.last_email_error)
+    
+    def test_send_notification_email_returns_zero_raises_when_not_silent(self):
+        """Test that email failure raises exception when send_mail returns 0 and fail_silently=False"""
+        message = ContactMessage.objects.create(**self.message_data)
+        
+        # Mock send_mail to return 0 (no emails sent) without raising exception
+        with patch('apps.contact.models.send_mail', return_value=0):
+            with self.assertRaises(Exception) as context:
+                message.send_notification_email(fail_silently=False)
+            self.assertIn('send_mail returned 0', str(context.exception))
 
 
 class ContactFormViewTest(TestCase):
