@@ -14,13 +14,3 @@ def site_settings(request):
         'all_categories': Category.objects.all(),
         'MEDIA_URL': settings.MEDIA_URL,
     }
-
-
-
-
-
-
-
-
-
-

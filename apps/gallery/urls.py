@@ -10,13 +10,3 @@ urlpatterns = [
     path('toile/<slug:slug>/', views.PaintingDetailView.as_view(), name='painting_detail'),
     path('recherche/', views.SearchView.as_view(), name='search'),
 ]
-
-
-
-
-
-
-
-
-
-

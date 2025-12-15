@@ -207,13 +207,3 @@ class SiteSettings(models.Model):
         """Get or create the settings instance"""
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
-
-
-
-
-
-
-
-
-
-

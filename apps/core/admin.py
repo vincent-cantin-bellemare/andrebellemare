@@ -37,5 +37,3 @@ class WordPressHoneypotAttemptAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         """Disable editing of attempts"""
         return False
-
-

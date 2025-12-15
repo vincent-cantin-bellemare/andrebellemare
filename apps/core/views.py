@@ -140,13 +140,3 @@ def custom_500_view(request):
     return render(request, 'pages/500.html', {
         'paintings': paintings,
     }, status=500)
-
-
-
-
-
-
-
-
-
-

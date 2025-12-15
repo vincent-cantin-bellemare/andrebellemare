@@ -12,13 +12,3 @@ urlpatterns = [
     path('faq/', views.FAQView.as_view(), name='faq'),
     path('robots.txt', views.robots_txt, name='robots'),
 ]
-
-
-
-
-
-
-
-
-
-

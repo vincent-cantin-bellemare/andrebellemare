@@ -157,13 +157,3 @@ def purchase_inquiry(request):
         'errors': form.errors,
         'error_message': ' '.join(error_messages) if error_messages else 'Une erreur est survenue lors de la validation du formulaire.'
     }, status=400)
-
-
-
-
-
-
-
-
-
-

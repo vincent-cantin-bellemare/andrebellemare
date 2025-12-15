@@ -33,11 +33,24 @@
                 "python.formatting.provider": "black",
                 "editor.formatOnSave": true,
                 "editor.defaultFormatter": "esbenp.prettier-vscode",
+                "editor.trimAutoWhitespace": true,
+                "files.trimTrailingWhitespace": true,
+                "files.insertFinalNewline": true,
+                "files.trimFinalNewlines": true,
                 "[python]": {
-                    "editor.defaultFormatter": "ms-python.python"
+                    "editor.defaultFormatter": "ms-python.python",
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit"
+                    }
                 },
                 "[django-html]": {
-                    "editor.defaultFormatter": "batisteo.vscode-django"
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[html]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
                 },
                 "files.associations": {
                     "**/*.html": "django-html",
@@ -50,7 +63,8 @@
                 "tailwindCSS.includeLanguages": {
                     "django-html": "html"
                 },
-                "cSpell.language": "en,fr"
+                "cSpell.language": "en,fr",
+                "prettier.requireConfig": true
             }
         }
     },
@@ -72,11 +86,6 @@
     
     "remoteUser": "root"
 }
-
-
-
-
-
 
 
 

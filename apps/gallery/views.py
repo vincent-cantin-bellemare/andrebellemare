@@ -146,13 +146,3 @@ class GalleryView(ListView):
             'sort': self.request.GET.get('sort', '-created_at'),
         }
         return context
-
-
-
-
-
-
-
-
-
-

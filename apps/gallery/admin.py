@@ -103,13 +103,3 @@ class PaintingImageAdmin(admin.ModelAdmin):
                 return format_html('<img src="{}" width="80" height="80" style="object-fit: cover; border-radius: 4px;" />', obj.image.url)
         return '-'
     image_preview.short_description = 'Aperçu'
-
-
-
-
-
-
-
-
-
-

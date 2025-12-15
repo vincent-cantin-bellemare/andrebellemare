@@ -129,12 +129,3 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 admin.site.site_header = 'André Bellemare - Administration'
 admin.site.site_title = 'André Bellemare Admin'
 admin.site.index_title = 'Gestion du site'
-
-
-
-
-
-
-
-
-

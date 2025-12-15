@@ -350,4 +350,3 @@ class PurchaseInquiryTest(TestCase):
             data = response.json()
             self.assertFalse(data['success'])
             self.assertIn('erreur', data['error_message'].lower())
-

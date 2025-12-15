@@ -180,13 +180,3 @@ class PaintingImage(models.Model):
                 is_primary=True
             ).exclude(pk=self.pk).update(is_primary=False)
         super().save(*args, **kwargs)
-
-
-
-
-
-
-
-
-
-

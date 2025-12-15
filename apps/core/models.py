@@ -16,5 +16,3 @@ class WordPressHoneypotAttempt(models.Model):
     
     def __str__(self):
         return f"{self.ip_address} - {self.url_attempted} ({self.created_at.strftime('%Y-%m-%d %H:%M')})"
-
-

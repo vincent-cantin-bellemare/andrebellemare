@@ -154,13 +154,3 @@ if not DEBUG:
 handler404 = 'apps.core.views.custom_404_view'
 handler403 = 'apps.core.views.custom_403_view'
 handler500 = 'apps.core.views.custom_500_view'
-
-
-
-
-
-
-
-
-
-
