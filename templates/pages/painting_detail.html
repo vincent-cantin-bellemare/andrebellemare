@@ -39,7 +39,7 @@
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb -->
-    <nav class="mb-8 text-sm">
+    <nav class="mb-8 text-sm scroll-fade-in">
         <ol class="flex items-center space-x-2 text-warm-500">
             <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
             <li><span>/</span></li>
@@ -53,7 +53,7 @@
     
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <!-- Images -->
-        <div class="space-y-4">
+        <div class="space-y-4 scroll-fade-in-card" data-delay="1">
             <!-- Main Image with Zoom -->
             {% if painting.primary_image %}
             <div class="zoom-container relative aspect-square bg-warm-100 dark:bg-warm-800 rounded-2xl overflow-hidden cursor-crosshair" id="main-image-container">
@@ -90,7 +90,7 @@
         </div>
         
         <!-- Details -->
-        <div class="lg:sticky lg:top-24 lg:self-start">
+        <div class="lg:sticky lg:top-24 lg:self-start scroll-fade-in-card" data-delay="2">
             <!-- Status Badge -->
             {% if painting.status == 'sold' %}
             <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Vendu</span>
@@ -100,7 +100,7 @@
             <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Disponible</span>
             {% endif %}
             
-            <h1 class="font-display text-3xl md:text-4xl text-charcoal dark:text-white mb-4">{{ painting.title }}</h1>
+            <h1 class="font-display text-3xl md:text-4xl text-charcoal dark:text-white mb-4 transition-all duration-500">{{ painting.title }}</h1>
             
             <p class="text-3xl font-semibold text-charcoal dark:text-white mb-6">{{ painting.price_cad|floatformat:0 }} $ CAD</p>
             
@@ -168,18 +168,89 @@
     
     <!-- Related Paintings -->
     {% if related_paintings %}
-    <section class="mt-20">
-        <h2 class="font-display text-2xl text-charcoal dark:text-white mb-8">Vous aimerez aussi</h2>
+    <section class="mt-20 scroll-fade-in">
+        <h2 class="font-display text-2xl text-charcoal dark:text-white mb-8 transition-all duration-500">Vous aimerez aussi</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {% for painting in related_paintings %}
-            {% include 'components/painting_card.html' with painting=painting %}
+            <div class="scroll-fade-in-card" data-delay="{{ forloop.counter0 }}">
+                {% include 'components/painting_card.html' with painting=painting %}
+            </div>
             {% endfor %}
         </div>
     </section>
     {% endif %}
 </div>
 
+{% block extra_css %}
+<style>
+    /* Scroll fade in animation */
+    .scroll-fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .scroll-fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .scroll-fade-in-card {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .scroll-fade-in-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+{% endblock %}
+
 {% block extra_js %}
+<script>
+    // Intersection Observer for scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
+        
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.dataset.delay ? parseInt(entry.target.dataset.delay) * 100 : 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        // Check if sections are already visible on load
+        function checkInitialVisibility() {
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
+                if (isVisible && !section.classList.contains('visible')) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+        
+        checkInitialVisibility();
+        setTimeout(checkInitialVisibility, 100);
+    });
+</script>
+<script>
 <script>
     let currentImageIndex = 0;
     const images = [{% for img in painting.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}];

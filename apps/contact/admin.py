@@ -1,5 +1,9 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.utils.html import format_html
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
 
 from .models import ContactMessage, FAQ, Testimonial, SiteSettings
 
@@ -12,6 +16,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
     search_fields = ['name', 'email', 'message', 'phone']
     readonly_fields = ['name', 'email', 'phone', 'message', 'message_type', 'painting', 'created_at', 'ip_address']
     date_hierarchy = 'created_at'
+    actions = ['resend_notification_email']
     
     fieldsets = (
         ('Contact', {
@@ -41,6 +46,53 @@ class ContactMessageAdmin(admin.ModelAdmin):
     
     def has_add_permission(self, request):
         return False
+    
+    def resend_notification_email(self, request, queryset):
+        """Action admin pour renvoyer les emails de notification"""
+        count = 0
+        errors = []
+        
+        for message in queryset:
+            try:
+                if message.message_type == 'purchase' and message.painting:
+                    subject = f'[André Bellemare] Demande d\'achat - {message.painting.title}'
+                    body = render_to_string('emails/purchase_notification.html', {
+                        'message': message,
+                        'painting': message.painting,
+                    })
+                else:
+                    subject = f'[André Bellemare] Nouveau message de {message.name}'
+                    body = render_to_string('emails/contact_notification.html', {
+                        'message': message,
+                    })
+                
+                send_mail(
+                    subject,
+                    body,
+                    settings.DEFAULT_FROM_EMAIL,
+                    ['cantinbellemare@gmail.com', 'andrebellemare@live.com'],
+                    fail_silently=False,
+                )
+                count += 1
+            except Exception as e:
+                errors.append(f'{message.name}: {str(e)}')
+        
+        if count > 0:
+            self.message_user(
+                request,
+                f'{count} email(s) renvoyé(s) avec succès.',
+                level=messages.SUCCESS
+            )
+        
+        if errors:
+            for error in errors:
+                self.message_user(
+                    request,
+                    f'Erreur lors de l\'envoi pour {error}',
+                    level=messages.ERROR
+                )
+    
+    resend_notification_email.short_description = 'Renvoyer l\'email de notification'
 
 
 @admin.register(FAQ)

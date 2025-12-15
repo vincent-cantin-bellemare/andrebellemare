@@ -6,7 +6,7 @@
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
-    <nav class="mb-8 text-sm">
+    <nav class="mb-8 text-sm scroll-fade-in">
         <ol class="flex items-center space-x-2 text-warm-500">
             <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
             <li><span>/</span></li>
@@ -14,12 +14,12 @@
         </ol>
     </nav>
     
-    <h1 class="font-display text-4xl text-charcoal dark:text-white mb-8">Questions fréquentes</h1>
+    <h1 class="font-display text-4xl text-charcoal dark:text-white mb-8 scroll-fade-in transition-all duration-500">Questions fréquentes</h1>
     
     {% if faqs %}
     <div class="space-y-4">
         {% for faq in faqs %}
-        <details class="group bg-white dark:bg-warm-800 rounded-xl border border-warm-200 dark:border-warm-700 overflow-hidden">
+        <details class="group bg-white dark:bg-warm-800 rounded-xl border border-warm-200 dark:border-warm-700 overflow-hidden scroll-fade-in-card" data-delay="{{ forloop.counter0 }}">
             <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
                 <h2 class="font-medium text-lg text-charcoal dark:text-white pr-8">{{ faq.question }}</h2>
                 <span class="flex-shrink-0 w-8 h-8 bg-warm-100 dark:bg-warm-700 rounded-full flex items-center justify-center group-open:rotate-180 transition-transform">
@@ -39,10 +39,10 @@
     {% endif %}
     
     <!-- Contact CTA -->
-    <div class="mt-12 bg-warm-50 dark:bg-warm-800 rounded-2xl p-8 text-center">
-        <h3 class="font-display text-2xl text-charcoal dark:text-white mb-4">Vous ne trouvez pas votre réponse?</h3>
-        <p class="text-warm-600 dark:text-warm-400 mb-6">N'hésitez pas à me contacter directement, je vous répondrai avec plaisir.</p>
-        <a href="{% url 'contact:contact' %}" class="inline-flex items-center px-6 py-3 bg-charcoal dark:bg-warm-600 text-white rounded-lg font-medium hover:bg-warm-700 transition-colors">
+    <div class="mt-12 bg-warm-50 dark:bg-warm-800 rounded-2xl p-8 text-center scroll-fade-in-card" data-delay="1">
+        <h3 class="font-display text-2xl text-charcoal dark:text-white mb-4 transition-all duration-500">Vous ne trouvez pas votre réponse?</h3>
+        <p class="text-warm-600 dark:text-warm-400 mb-6 transition-all duration-500">N'hésitez pas à me contacter directement, je vous répondrai avec plaisir.</p>
+        <a href="{% url 'contact:contact' %}" class="inline-flex items-center px-6 py-3 bg-charcoal dark:bg-warm-600 text-white rounded-lg font-medium hover:bg-warm-700 transition-all duration-300 hover:scale-105 hover:shadow-lg transform">
             Me contacter
             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -50,6 +50,77 @@
         </a>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Scroll fade in animation */
+    .scroll-fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .scroll-fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .scroll-fade-in-card {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .scroll-fade-in-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Intersection Observer for scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
+        
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.dataset.delay ? parseInt(entry.target.dataset.delay) * 100 : 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        // Check if sections are already visible on load
+        function checkInitialVisibility() {
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
+                if (isVisible && !section.classList.contains('visible')) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+        
+        checkInitialVisibility();
+        setTimeout(checkInitialVisibility, 100);
+    });
+</script>
 {% endblock %}
 
 

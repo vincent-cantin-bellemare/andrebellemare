@@ -7,7 +7,7 @@
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb -->
-    <nav class="mb-8 text-sm">
+    <nav class="mb-8 text-sm scroll-fade-in">
         <ol class="flex items-center space-x-2 text-warm-500">
             <li><a href="{% url 'core:home' %}" class="hover:text-charcoal dark:hover:text-white">Accueil</a></li>
             <li><span>/</span></li>
@@ -16,7 +16,7 @@
     </nav>
     
     <!-- Header -->
-    <div class="mb-8">
+    <div class="mb-8 scroll-fade-in transition-all duration-500">
         <h1 class="font-display text-4xl text-charcoal dark:text-white mb-4">
             Résultats pour "{{ query }}"
         </h1>
@@ -26,7 +26,7 @@
     </div>
     
     <!-- Search Form -->
-    <form action="{% url 'gallery:search' %}" method="get" class="mb-8">
+    <form action="{% url 'gallery:search' %}" method="get" class="mb-8 scroll-fade-in-card" data-delay="1">
         <div class="flex gap-4 max-w-xl">
             <input type="search" name="q" value="{{ query }}" 
                    placeholder="Rechercher une toile..." 
@@ -41,7 +41,9 @@
     {% if paintings %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
         {% for painting in paintings %}
-        {% include 'components/painting_card.html' with painting=painting %}
+        <div class="scroll-fade-in-card" data-delay="{{ forloop.counter0 }}">
+            {% include 'components/painting_card.html' with painting=painting %}
+        </div>
         {% endfor %}
     </div>
     
@@ -84,7 +86,7 @@
     {% endif %}
     
     {% else %}
-    <div class="text-center py-16">
+    <div class="text-center py-16 scroll-fade-in">
         <svg class="w-16 h-16 mx-auto text-warm-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
@@ -95,6 +97,77 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Scroll fade in animation */
+    .scroll-fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .scroll-fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .scroll-fade-in-card {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .scroll-fade-in-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Intersection Observer for scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
+        
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.dataset.delay ? parseInt(entry.target.dataset.delay) * 100 : 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        // Check if sections are already visible on load
+        function checkInitialVisibility() {
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
+                if (isVisible && !section.classList.contains('visible')) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+        
+        checkInitialVisibility();
+        setTimeout(checkInitialVisibility, 100);
+    });
+</script>
 {% endblock %}
 
 
