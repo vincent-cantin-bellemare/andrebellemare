@@ -5,6 +5,7 @@ Usage: python manage.py seed_from_json [--json-file=data/paintings_seed.json]
 
 import json
 import shutil
+import io
 from pathlib import Path
 from decimal import Decimal
 
@@ -13,6 +14,12 @@ from django.core.files import File
 from django.conf import settings
 from django.db import transaction
 from django.db.models import Max
+
+try:
+    from PIL import Image
+    HAS_PILLOW = True
+except ImportError:
+    HAS_PILLOW = False
 
 from apps.gallery.models import Category, Finish, Painting, PaintingImage
 
@@ -149,26 +156,75 @@ class Command(BaseCommand):
                             )
                             continue
 
-                        # Determine file extension
+                        # Determine file extension and convert AVIF to JPEG if needed
                         file_ext = image_path.suffix.lower()
                         if not file_ext:
                             file_ext = '.jpg'
+                        
+                        # Convert AVIF to JPEG if Pillow doesn't support AVIF or if it's AVIF format
+                        image_file = None
+                        if file_ext == '.avif' and HAS_PILLOW:
+                            try:
+                                # Try to open AVIF with Pillow
+                                img = Image.open(image_path)
+                                # Convert to RGB if necessary (AVIF might be RGBA)
+                                if img.mode in ('RGBA', 'LA', 'P'):
+                                    # Create white background for transparency
+                                    background = Image.new('RGB', img.size, (255, 255, 255))
+                                    if img.mode == 'P':
+                                        img = img.convert('RGBA')
+                                    background.paste(img, mask=img.split()[-1] if img.mode in ('RGBA', 'LA') else None)
+                                    img = background
+                                elif img.mode != 'RGB':
+                                    img = img.convert('RGB')
+                                
+                                # Save to BytesIO as JPEG
+                                output = io.BytesIO()
+                                img.save(output, format='JPEG', quality=95)
+                                output.seek(0)
+                                image_file = File(output, name=image_path.stem + '.jpg')
+                                file_ext = '.jpg'
+                                self.stdout.write(
+                                    self.style.SUCCESS(f'Converted AVIF to JPEG for {sku}')
+                                )
+                            except Exception as e:
+                                self.stdout.write(
+                                    self.style.WARNING(
+                                        f'Could not convert AVIF {image_filename} for {sku}: {str(e)}. Using original file.'
+                                    )
+                                )
+                                # Fallback to original file
+                                image_file = File(open(image_path, 'rb'), name=image_path.name)
+                        else:
+                            # Use original file for non-AVIF formats
+                            image_file = File(open(image_path, 'rb'), name=image_path.name)
 
                         # Create PaintingImage with the file
                         # The upload_to function will generate the path paintings/[id].ext
-                        with open(image_path, 'rb') as f:
-                            painting_image = PaintingImage(
-                                painting=painting,
-                                alt_text=painting.title if idx == 0 else f'{painting.title} - Vue {idx + 1}',
-                                is_primary=(idx == 0),
-                                order=idx,
-                            )
-                            # Save with original filename - upload_to will rename it
+                        painting_image = PaintingImage(
+                            painting=painting,
+                            alt_text=painting.title if idx == 0 else f'{painting.title} - Vue {idx + 1}',
+                            is_primary=(idx == 0),
+                            order=idx,
+                        )
+                        # Save with converted filename if AVIF was converted, otherwise original
+                        if file_ext == '.jpg' and image_path.suffix.lower() == '.avif':
                             painting_image.image.save(
-                                image_path.name,
-                                File(f),
+                                image_path.stem + '.jpg',
+                                image_file,
                                 save=True
                             )
+                        else:
+                            painting_image.image.save(
+                                image_path.name,
+                                image_file,
+                                save=True
+                            )
+                        
+                        # Close file if it was opened
+                        if hasattr(image_file, 'close'):
+                            image_file.close()
+                        
                         images_created += 1
 
                     if images_created == 0:
