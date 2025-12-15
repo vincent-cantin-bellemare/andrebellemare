@@ -1,4 +1,39 @@
+# ============================================================================
+# Shared Environment Variables
+# ============================================================================
+x-common-env: &common-env
+  # Django settings
+  - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-me}
+  - DEBUG=${DEBUG:-False}
+  - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
+  # Database settings
+  - POSTGRES_DB=${POSTGRES_DB:-andrebellemare}
+  - POSTGRES_USER=${POSTGRES_USER:-andrebellemare}
+  - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+  - POSTGRES_HOST=db
+  - POSTGRES_PORT=5432
+  # Email settings
+  - EMAIL_HOST=${EMAIL_HOST:-smtp.gmail.com}
+  - EMAIL_PORT=${EMAIL_PORT:-587}
+  - EMAIL_USE_TLS=${EMAIL_USE_TLS:-True}
+  - EMAIL_HOST_USER=${EMAIL_HOST_USER:-}
+  - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD:-}
+  - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-}
+  # Site settings
+  - SITE_URL=${SITE_URL:-http://localhost:8000}
+
+x-common-volumes: &common-volumes
+  - ./volumes/django/media:/app/media
+  - ./staticfiles:/app/staticfiles
+
+x-common-depends: &common-depends
+  db:
+    condition: service_healthy
+
 services:
+  # ============================================================================
+  # Database Service
+  # ============================================================================
   db:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -15,39 +50,37 @@ services:
       timeout: 5s
       retries: 5
 
+  # ============================================================================
+  # Web Service (Production - Gunicorn)
+  # ============================================================================
   web:
     build: .
     restart: unless-stopped
     ports:
       - "8000:8000"
-    environment:
-      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-me}
-      - DEBUG=${DEBUG:-False}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
-      - POSTGRES_DB=${POSTGRES_DB:-andrebellemare}
-      - POSTGRES_USER=${POSTGRES_USER:-andrebellemare}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
-      - EMAIL_HOST=${EMAIL_HOST:-smtp.gmail.com}
-      - EMAIL_PORT=${EMAIL_PORT:-587}
-      - EMAIL_USE_TLS=${EMAIL_USE_TLS:-True}
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER:-}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD:-}
-      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-}
-      - SITE_URL=${SITE_URL:-http://localhost:8000}
-    volumes:
-      - ./volumes/django/media:/app/media
-      - ./staticfiles:/app/staticfiles
-    depends_on:
-      db:
-        condition: service_healthy
+    environment: *common-env
+    volumes: *common-volumes
+    depends_on: *common-depends
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 --workers 2 config.wsgi:application"
 
-  # Cloudflare Tunnel (use: docker-compose -f docker-compose.prod.yml --profile tunnel up -d)
+  # ============================================================================
+  # Idle Service (Sleep - for manual commands)
+  # ============================================================================
+  idle:
+    build: .
+    restart: unless-stopped
+    environment: *common-env
+    volumes: *common-volumes
+    depends_on: *common-depends
+    command: sleep infinity
+
+  # ============================================================================
+  # Cloudflare Tunnel (optional)
+  # Use: docker compose -f docker-compose.prod.yml --profile tunnel up -d
+  # ============================================================================
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
@@ -62,13 +95,10 @@ services:
     profiles:
       - tunnel
 
+# ============================================================================
+# Volumes
+# ============================================================================
 volumes:
   postgres_data:
   postgres_backup:
   django_media:
-
-
-
-
-
-
