@@ -376,42 +376,8 @@
         fieldsWithErrors.forEach(function(field) {
             field.classList.add('touched');
         });
-    });
-})();
-</script>
-{% endblock %}
-
-{% block extra_css %}
-<style>
-    /* Scroll fade in animation */
-    .scroll-fade-in {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    
-    .scroll-fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .scroll-fade-in-card {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    
-    .scroll-fade-in-card.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-</style>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    // Intersection Observer for scroll animations
-    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Intersection Observer for scroll animations
         const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
         
         const observerOptions = {
@@ -449,7 +415,35 @@
         checkInitialVisibility();
         setTimeout(checkInitialVisibility, 100);
     });
+})();
 </script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Scroll fade in animation */
+    .scroll-fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .scroll-fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .scroll-fade-in-card {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .scroll-fade-in-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
 {% endblock %}
 
 
