@@ -1,7 +1,9 @@
+import traceback
 from django.db import models
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 
 class ContactMessage(models.Model):
@@ -39,6 +41,30 @@ class ContactMessage(models.Model):
     created_at = models.DateTimeField('Reçu le', auto_now_add=True)
     ip_address = models.GenericIPAddressField('Adresse IP', null=True, blank=True)
     
+    # Email tracking
+    last_email_status = models.BooleanField(
+        'Email envoyé avec succès',
+        null=True,
+        blank=True,
+        help_text='True si le dernier email a été envoyé avec succès, False sinon'
+    )
+    last_email_datetime = models.DateTimeField(
+        'Date dernier email',
+        null=True,
+        blank=True,
+        help_text='Date et heure de la dernière tentative d\'envoi d\'email'
+    )
+    last_email_error = models.TextField(
+        'Erreur dernier email',
+        blank=True,
+        help_text='Message d\'erreur de la dernière tentative d\'envoi d\'email'
+    )
+    last_email_traceback = models.TextField(
+        'Traceback dernier email',
+        blank=True,
+        help_text='Traceback complet de la dernière erreur d\'envoi d\'email'
+    )
+    
     class Meta:
         verbose_name = 'Message'
         verbose_name_plural = 'Messages'
@@ -53,6 +79,11 @@ class ContactMessage(models.Model):
         Returns:
             tuple: (success: bool, error_message: str or None)
         """
+        # Initialize tracking fields
+        self.last_email_datetime = timezone.now()
+        self.last_email_error = ''
+        self.last_email_traceback = ''
+        
         try:
             if self.message_type == 'purchase' and self.painting:
                 subject = f'[André Bellemare] Demande d\'achat - {self.painting.title}'
@@ -73,9 +104,24 @@ class ContactMessage(models.Model):
                 ['cantinbellemare@gmail.com', 'andrebellemare@live.com'],
                 fail_silently=fail_silently,
             )
+            
+            # Success - update tracking
+            self.last_email_status = True
+            self.last_email_error = ''
+            self.last_email_traceback = ''
+            self.save(update_fields=['last_email_status', 'last_email_datetime', 'last_email_error', 'last_email_traceback'])
+            
             return True, None
         except Exception as e:
             error_message = str(e)
+            error_traceback = traceback.format_exc()
+            
+            # Failure - update tracking
+            self.last_email_status = False
+            self.last_email_error = error_message
+            self.last_email_traceback = error_traceback
+            self.save(update_fields=['last_email_status', 'last_email_datetime', 'last_email_error', 'last_email_traceback'])
+            
             if not fail_silently:
                 raise
             return False, error_message

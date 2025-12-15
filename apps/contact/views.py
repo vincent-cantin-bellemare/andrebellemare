@@ -27,7 +27,10 @@ class ContactView(FormView):
             # Send email notification - check if it succeeds
             email_sent, email_error = message.send_notification_email(fail_silently=True)
             
-            if not email_sent:
+            # Reload message to get updated email status
+            message.refresh_from_db()
+            
+            if not email_sent or message.last_email_status is not True:
                 # Log the email error for debugging
                 logger.error(f'Failed to send contact notification email: {email_error}', exc_info=True)
                 
@@ -90,7 +93,10 @@ def purchase_inquiry(request):
             # Send email notification - check if it succeeds
             email_sent, email_error = message.send_notification_email(fail_silently=True)
             
-            if not email_sent:
+            # Reload message to get updated email status
+            message.refresh_from_db()
+            
+            if not email_sent or message.last_email_status is not True:
                 # Log the email error for debugging
                 logger.error(f'Failed to send purchase inquiry notification email: {email_error}', exc_info=True)
                 

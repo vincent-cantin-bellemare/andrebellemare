@@ -590,13 +590,32 @@
             
             const formData = new FormData(purchaseForm);
             
+            // Get CSRF token from cookie or form
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            
+            const csrftoken = formData.get('csrfmiddlewaretoken') || getCookie('csrftoken');
+            
             try {
                 const response = await fetch('{% url "contact:purchase_inquiry" %}', {
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                    }
+                        'X-CSRFToken': csrftoken
+                    },
+                    credentials: 'same-origin'
                 });
                 
                 const data = await response.json();

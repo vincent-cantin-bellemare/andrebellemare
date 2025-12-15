@@ -7,11 +7,12 @@ from .models import ContactMessage, FAQ, Testimonial, SiteSettings
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'message_type', 'painting_link', 'is_read', 'created_at']
-    list_filter = ['message_type', 'is_read', 'is_archived', 'created_at']
+    list_display = ['name', 'email', 'message_type', 'painting_link', 'is_read', 'email_status_display', 'last_email_datetime', 'created_at']
+    list_filter = ['message_type', 'is_read', 'is_archived', 'last_email_status', 'created_at']
     list_editable = ['is_read']
     search_fields = ['name', 'email', 'message', 'phone']
-    readonly_fields = ['name', 'email', 'phone', 'message', 'message_type', 'painting', 'created_at', 'ip_address']
+    readonly_fields = ['name', 'email', 'phone', 'message', 'message_type', 'painting', 'created_at', 'ip_address', 
+                       'last_email_status', 'last_email_datetime', 'last_email_error', 'last_email_traceback']
     date_hierarchy = 'created_at'
     actions = ['resend_notification_email']
     
@@ -25,11 +26,25 @@ class ContactMessageAdmin(admin.ModelAdmin):
         ('Statut', {
             'fields': ('is_read', 'is_archived')
         }),
+        ('Statut Email', {
+            'fields': ('last_email_status', 'last_email_datetime', 'last_email_error', 'last_email_traceback'),
+            'classes': ('collapse',)
+        }),
         ('Métadonnées', {
             'fields': ('created_at', 'ip_address'),
             'classes': ('collapse',)
         }),
     )
+    
+    def email_status_display(self, obj):
+        """Display email status with color coding"""
+        if obj.last_email_status is None:
+            return format_html('<span style="color: #6b7280;">—</span>')
+        elif obj.last_email_status is True:
+            return format_html('<span style="color: #10b981;">✓ Succès</span>')
+        else:
+            return format_html('<span style="color: #ef4444;">✗ Échec</span>')
+    email_status_display.short_description = 'Email'
     
     def painting_link(self, obj):
         if obj.painting:
