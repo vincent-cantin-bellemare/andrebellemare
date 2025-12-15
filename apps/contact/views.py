@@ -25,7 +25,7 @@ class ContactView(FormView):
             message.save()
             
             # Send email notification - check if it succeeds
-            email_sent, email_error = message.send_notification_email(fail_silently=True)
+            email_sent, email_error = message.send_notification_email(fail_silently=False)
             
             # Reload message to get updated email status
             message.refresh_from_db()
