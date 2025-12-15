@@ -5,7 +5,7 @@
 {% block meta_description %}Contactez André Bellemare, artiste peintre à Boucherville. Questions, demandes d'achat ou simplement pour échanger sur l'art.{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
     <nav class="mb-8 text-sm scroll-fade-in">
         <ol class="flex items-center space-x-2 text-warm-500">
@@ -17,7 +17,7 @@
     
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
         <!-- Contact Form -->
-        <div class="scroll-fade-in w-full">
+        <div class="scroll-fade-in w-full min-w-0">
             <h1 class="font-display text-4xl text-charcoal dark:text-white mb-4">Me contacter</h1>
             <p class="text-warm-600 dark:text-warm-400 mb-8">
                 Une question sur une toile? Un projet en tête? N'hésitez pas à m'écrire, 
@@ -56,7 +56,7 @@
             </div>
             {% endif %}
             
-            <form method="post" id="contact-form" class="space-y-5 md:space-y-6">
+            <form method="post" id="contact-form" class="space-y-5 md:space-y-6 w-full">
                 {% csrf_token %}
                 
                 <div class="field-wrapper">
