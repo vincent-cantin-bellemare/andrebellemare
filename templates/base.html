@@ -93,10 +93,27 @@
         
         /* Form styles */
         .form-input, .form-textarea {
-            @apply w-full px-5 py-4 text-base border-2 border-warm-200 rounded-xl focus:ring-2 focus:ring-warm-400 focus:border-warm-400 transition-all duration-200 bg-white dark:bg-warm-800 dark:border-warm-700 dark:text-white placeholder-warm-400 dark:placeholder-warm-500;
+            @apply w-full px-4 py-4 md:px-6 md:py-5 text-base md:text-base border-2 border-warm-200 rounded-xl focus:ring-2 focus:ring-warm-400 focus:border-warm-400 transition-all duration-200 bg-white dark:bg-warm-800 dark:border-warm-700 dark:text-white placeholder-warm-400 dark:placeholder-warm-500;
+            font-size: 16px; /* Prevents iOS zoom on focus */
         }
         .form-input:focus, .form-textarea:focus {
             @apply shadow-lg;
+        }
+        
+        /* Error states */
+        .form-input.error-field, .form-textarea.error-field {
+            @apply border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-900/20;
+        }
+        .form-input.error-field:focus, .form-textarea.error-field:focus {
+            @apply border-red-500 dark:border-red-600 ring-red-400 dark:ring-red-500;
+        }
+        
+        /* Error message */
+        .field-error {
+            @apply mt-2 text-sm text-red-600 dark:text-red-400 flex items-start;
+        }
+        .field-error-icon {
+            @apply w-4 h-4 mr-1.5 mt-0.5 flex-shrink-0;
         }
         
         /* Image loading animation */

@@ -18,6 +18,20 @@ class HomeView(TemplateView):
         ).select_related('category', 'finish').prefetch_related('images')[:12]
         context['categories'] = Category.objects.all()
         context['testimonials'] = Testimonial.objects.filter(is_active=True)[:3]
+        
+        # Get a painting for hero background image
+        # Prefer featured paintings, otherwise get any active painting with an image
+        hero_painting = Painting.objects.filter(
+            is_active=True,
+            is_featured=True
+        ).prefetch_related('images').first()
+        
+        if not hero_painting or not hero_painting.primary_image:
+            hero_painting = Painting.objects.filter(
+                is_active=True
+            ).prefetch_related('images').exclude(images__isnull=True).first()
+        
+        context['hero_painting'] = hero_painting
         return context
 
 

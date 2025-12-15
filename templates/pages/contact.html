@@ -56,47 +56,69 @@
             </div>
             {% endif %}
             
-            <form method="post" class="space-y-6">
+            <form method="post" id="contact-form" class="space-y-5 md:space-y-6">
                 {% csrf_token %}
                 
-                <div>
+                <div class="field-wrapper">
                     <label for="id_name" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Nom complet <span class="text-red-500">*</span>
                     </label>
-                    {% render_field form.name class="form-input" %}
-                    {% if form.name.errors %}
-                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.name.errors.0 }}</p>
-                    {% endif %}
+                    {% render_field form.name class="form-input" id="id_name" %}
+                    <div class="error-container" data-field="name">
+                        {% if form.name.errors %}
+                        <p class="field-error">
+                            <svg class="field-error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            {{ form.name.errors.0 }}
+                        </p>
+                        {% endif %}
+                    </div>
                 </div>
                 
-                <div>
+                <div class="field-wrapper">
                     <label for="id_email" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Courriel <span class="text-red-500">*</span>
                     </label>
-                    {% render_field form.email class="form-input" %}
-                    {% if form.email.errors %}
-                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.email.errors.0 }}</p>
-                    {% endif %}
+                    {% render_field form.email class="form-input" id="id_email" %}
+                    <div class="error-container" data-field="email">
+                        {% if form.email.errors %}
+                        <p class="field-error">
+                            <svg class="field-error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            {{ form.email.errors.0 }}
+                        </p>
+                        {% endif %}
+                    </div>
                 </div>
                 
-                <div>
+                <div class="field-wrapper">
                     <label for="id_phone" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Téléphone
                     </label>
-                    {% render_field form.phone class="form-input" %}
+                    {% render_field form.phone class="form-input" id="id_phone" %}
+                    <div class="error-container" data-field="phone"></div>
                 </div>
                 
-                <div>
+                <div class="field-wrapper">
                     <label for="id_message" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Message <span class="text-red-500">*</span>
                     </label>
-                    {% render_field form.message class="form-textarea" rows="6" %}
-                    {% if form.message.errors %}
-                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.message.errors.0 }}</p>
-                    {% endif %}
+                    {% render_field form.message class="form-textarea" rows="6" id="id_message" %}
+                    <div class="error-container" data-field="message">
+                        {% if form.message.errors %}
+                        <p class="field-error">
+                            <svg class="field-error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            {{ form.message.errors.0 }}
+                        </p>
+                        {% endif %}
+                    </div>
                 </div>
                 
-                <button type="submit" class="w-full py-4 px-6 bg-charcoal dark:bg-warm-600 text-white rounded-xl text-base font-semibold hover:bg-warm-700 dark:hover:bg-warm-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                <button type="submit" id="submit-btn" class="w-full py-4 px-6 bg-charcoal dark:bg-warm-600 text-white rounded-xl text-base font-semibold hover:bg-warm-700 dark:hover:bg-warm-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                     Envoyer le message
                 </button>
             </form>
@@ -169,5 +191,193 @@
 </div>
 {% endblock %}
 
-
+{% block extra_js %}
+<script>
+(function() {
+    const form = document.getElementById('contact-form');
+    if (!form) return;
+    
+    // Get form fields
+    const nameField = document.getElementById('id_name');
+    const emailField = document.getElementById('id_email');
+    const phoneField = document.getElementById('id_phone');
+    const messageField = document.getElementById('id_message');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // Validation functions
+    function validateName(value) {
+        value = value.trim();
+        if (!value) {
+            return 'Le nom est requis.';
+        }
+        if (value.length < 2) {
+            return 'Le nom doit contenir au moins 2 caractères.';
+        }
+        if (value.length > 100) {
+            return 'Le nom ne peut pas dépasser 100 caractères.';
+        }
+        return null;
+    }
+    
+    function validateEmail(value) {
+        value = value.trim();
+        if (!value) {
+            return 'Le courriel est requis.';
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            return 'Veuillez entrer une adresse courriel valide.';
+        }
+        return null;
+    }
+    
+    function validatePhone(value) {
+        value = value.trim();
+        if (value && value.length > 0) {
+            // Allow various phone formats: digits, spaces, dashes, parentheses, plus sign
+            const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+            if (!phoneRegex.test(value)) {
+                return 'Le format du téléphone est invalide.';
+            }
+            // Check if there are at least 7 digits (minimum for a phone number)
+            const digitCount = value.replace(/\D/g, '').length;
+            if (digitCount > 0 && digitCount < 7) {
+                return 'Le numéro de téléphone doit contenir au moins 7 chiffres.';
+            }
+            if (digitCount > 20) {
+                return 'Le numéro de téléphone ne peut pas dépasser 20 chiffres.';
+            }
+        }
+        return null;
+    }
+    
+    function validateMessage(value) {
+        value = value.trim();
+        if (!value) {
+            return 'Le message est requis.';
+        }
+        if (value.length < 10) {
+            return 'Le message doit contenir au moins 10 caractères.';
+        }
+        return null;
+    }
+    
+    // Show error function
+    function showError(field, errorMessage) {
+        const fieldWrapper = field.closest('.field-wrapper');
+        if (!fieldWrapper) return;
+        
+        field.classList.add('error-field');
+        const errorContainer = fieldWrapper.querySelector('.error-container');
+        if (errorContainer) {
+            errorContainer.innerHTML = errorMessage ? `
+                <p class="field-error">
+                    <svg class="field-error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    ${errorMessage}
+                </p>
+            ` : '';
+        }
+    }
+    
+    // Clear error function
+    function clearError(field) {
+        field.classList.remove('error-field');
+        const fieldWrapper = field.closest('.field-wrapper');
+        if (fieldWrapper) {
+            const errorContainer = fieldWrapper.querySelector('.error-container');
+            if (errorContainer) {
+                errorContainer.innerHTML = '';
+            }
+        }
+    }
+    
+    // Validate field function
+    function validateField(field, validator) {
+        const error = validator(field.value);
+        if (error) {
+            showError(field, error);
+            return false;
+        } else {
+            clearError(field);
+            return true;
+        }
+    }
+    
+    // Real-time validation on input (debounced for better UX)
+    let validationTimeouts = {};
+    
+    function setupRealTimeValidation(field, validator) {
+        field.addEventListener('input', function() {
+            // Clear previous timeout
+            if (validationTimeouts[field.id]) {
+                clearTimeout(validationTimeouts[field.id]);
+            }
+            
+            // Only validate if field has been touched (has content or was focused)
+            if (field.value.trim().length > 0 || field.classList.contains('touched')) {
+                // Debounce validation
+                validationTimeouts[field.id] = setTimeout(() => {
+                    validateField(field, validator);
+                }, 300);
+            }
+        });
+        
+        // Mark field as touched on focus
+        field.addEventListener('focus', function() {
+            field.classList.add('touched');
+        });
+        
+        // Full validation on blur
+        field.addEventListener('blur', function() {
+            field.classList.add('touched');
+            validateField(field, validator);
+        });
+    }
+    
+    // Setup validation for each field
+    setupRealTimeValidation(nameField, validateName);
+    setupRealTimeValidation(emailField, validateEmail);
+    setupRealTimeValidation(phoneField, validatePhone);
+    setupRealTimeValidation(messageField, validateMessage);
+    
+    // Form submission validation
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Validate all required fields
+        if (!validateField(nameField, validateName)) isValid = false;
+        if (!validateField(emailField, validateEmail)) isValid = false;
+        if (!validateField(phoneField, validatePhone)) isValid = false;
+        if (!validateField(messageField, validateMessage)) isValid = false;
+        
+        if (!isValid) {
+            e.preventDefault();
+            // Scroll to first error
+            const firstError = form.querySelector('.error-field');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
+            return false;
+        }
+        
+        // Disable submit button to prevent double submission
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Envoi en cours...';
+    });
+    
+    // Mark fields with server-side errors as touched on page load
+    // This allows users to see server errors first, then validate as they type
+    document.addEventListener('DOMContentLoaded', function() {
+        // If there are server-side errors, mark fields as touched so validation works properly
+        const fieldsWithErrors = form.querySelectorAll('input.error-field, textarea.error-field');
+        fieldsWithErrors.forEach(function(field) {
+            field.classList.add('touched');
+        });
+    });
+})();
+</script>
+{% endblock %}
 
