@@ -1,4 +1,4 @@
-.PHONY: help build up down logs shell migrate seed createsuperuser backup restore clean dev tunnel tunnel-down
+.PHONY: help build build-dev build-prod up up-dev up-prod down down-dev down-prod logs shell migrate seed createsuperuser backup restore clean dev prod tunnel tunnel-down
 
 # Default target
 help:
@@ -6,10 +6,12 @@ help:
 	@echo "║           André Bellemare - Commandes disponibles            ║"
 	@echo "╠══════════════════════════════════════════════════════════════╣"
 	@echo "║  make setup        - Configuration initiale complète         ║"
-	@echo "║  make build        - Construire les images Docker            ║"
-	@echo "║  make up           - Démarrer les conteneurs                 ║"
-	@echo "║  make down         - Arrêter les conteneurs                  ║"
+	@echo "║  make build-dev    - Construire l'image Docker (dev)         ║"
+	@echo "║  make build-prod   - Construire l'image Docker (prod)        ║"
 	@echo "║  make dev          - Démarrer en mode développement          ║"
+	@echo "║  make prod         - Démarrer en mode production             ║"
+	@echo "║  make down-dev     - Arrêter les conteneurs (dev)            ║"
+	@echo "║  make down-prod    - Arrêter les conteneurs (prod)           ║"
 	@echo "║  make logs         - Afficher les logs                       ║"
 	@echo "║  make shell        - Ouvrir un shell Django                  ║"
 	@echo "║  make migrate      - Appliquer les migrations                ║"
@@ -24,10 +26,12 @@ help:
 	@echo "║  make tunnel-down  - Arrêter le tunnel                       ║"
 	@echo "╚══════════════════════════════════════════════════════════════╝"
 
-# Initial setup
-setup: env build up migrate seed
-	@echo "✅ Configuration initiale terminée!"
-	@echo "📍 Site: http://localhost:8000"
+# Initial setup (dev)
+setup: env build-dev dev migrate seed
+	@echo "✅ Configuration initiale terminée (dev)!"
+	@echo "📍 Base de données: prête"
+	@echo "📍 Conteneur web: en attente (sleep infinity)"
+	@echo "💡 Utilisez: docker-compose -f docker-compose.dev.yml exec web runserver 0.0.0.0:8000"
 	@echo "📍 Admin: http://localhost:8000/alexandre/"
 	@echo "👤 Créez un superutilisateur avec: make createsuperuser"
 
@@ -47,71 +51,162 @@ dirs:
 	@echo "✅ Dossiers créés"
 
 # Build Docker images
-build: env dirs
-	docker-compose build
+build-dev: env dirs
+	docker-compose -f docker-compose.dev.yml build
+	@echo "✅ Image Docker (dev) construite"
 
-# Start containers
-up: env dirs
-	docker-compose up -d
-	@echo "✅ Conteneurs démarrés"
-	@echo "📍 Site: http://localhost:8000"
+build-prod: env dirs
+	docker-compose -f docker-compose.prod.yml build
+	@echo "✅ Image Docker (prod) construite"
 
 # Start in development mode
 dev: env dirs
-	docker-compose --profile dev up web-dev
+	docker-compose -f docker-compose.dev.yml up -d
+	@echo "✅ Conteneurs de développement démarrés"
+	@echo "📍 Base de données: prête"
+	@echo "📍 Conteneur web: en attente (sleep infinity)"
+	@echo "💡 Utilisez: docker-compose -f docker-compose.dev.yml exec web runserver 0.0.0.0:8000"
+
+# Start in production mode
+prod: env dirs
+	docker-compose -f docker-compose.prod.yml up -d
+	@echo "✅ Conteneurs de production démarrés"
+	@echo "📍 Site: http://localhost:8000"
 
 # Stop containers
-down:
-	docker-compose down
-	@echo "✅ Conteneurs arrêtés"
+down-dev:
+	docker-compose -f docker-compose.dev.yml down
+	@echo "✅ Conteneurs de développement arrêtés"
+
+down-prod:
+	docker-compose -f docker-compose.prod.yml down
+	@echo "✅ Conteneurs de production arrêtés"
+
+# Legacy aliases
+build: build-dev
+up: dev
+down: down-dev
 
 # View logs
 logs:
-	docker-compose logs -f
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml logs -f; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml logs -f; \
+	else \
+		echo "❌ Aucun conteneur en cours d'exécution"; \
+	fi
 
 # View logs for specific service
 logs-web:
-	docker-compose logs -f web
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml logs -f web; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml logs -f web; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 logs-db:
-	docker-compose logs -f db
+	@if docker-compose -f docker-compose.dev.yml ps db 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml logs -f db; \
+	elif docker-compose -f docker-compose.prod.yml ps db 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml logs -f db; \
+	else \
+		echo "❌ Aucun conteneur db en cours d'exécution"; \
+	fi
 
 # Open Django shell
 shell:
-	docker-compose exec web python manage.py shell
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web shell; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web shell; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Open bash shell in container
 bash:
-	docker-compose exec web bash
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web bash; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web bash; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Database operations
 migrate:
-	docker-compose exec web python manage.py migrate
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web migrate; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web migrate; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 makemigrations:
-	docker-compose exec web python manage.py makemigrations
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web makemigrations; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web makemigrations; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Seed database with demo data
 seed:
-	docker-compose exec web python manage.py seed
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web python manage.py seed; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web python manage.py seed; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Seed with clear (remove existing data first)
 seed-fresh:
-	docker-compose exec web python manage.py seed --clear
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web python manage.py seed --clear; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web python manage.py seed --clear; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Create superuser
 createsuperuser:
-	docker-compose exec web python manage.py createsuperuser
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web python manage.py createsuperuser; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web python manage.py createsuperuser; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Collect static files
 collectstatic:
-	docker-compose exec web python manage.py collectstatic --noinput
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web python manage.py collectstatic --noinput; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Backup database
 backup:
 	@mkdir -p volumes/postgres/backup
 	@BACKUP_FILE="volumes/postgres/backup/backup_$$(date +%Y%m%d_%H%M%S).sql"; \
-	docker-compose exec db pg_dump -U andrebellemare andrebellemare > $$BACKUP_FILE; \
+	if docker-compose -f docker-compose.dev.yml ps db 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec db pg_dump -U andrebellemare andrebellemare > $$BACKUP_FILE; \
+	elif docker-compose -f docker-compose.prod.yml ps db 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec db pg_dump -U andrebellemare andrebellemare > $$BACKUP_FILE; \
+	else \
+		echo "❌ Aucun conteneur db en cours d'exécution"; \
+		exit 1; \
+	fi; \
 	echo "✅ Sauvegarde créée: $$BACKUP_FILE"
 
 # Restore database (usage: make restore FILE=backup_file.sql)
@@ -121,7 +216,14 @@ restore:
 		echo "   Exemple: make restore FILE=volumes/postgres/backup/backup_20240101_120000.sql"; \
 		exit 1; \
 	fi
-	@docker-compose exec -T db psql -U andrebellemare andrebellemare < $(FILE)
+	@if docker-compose -f docker-compose.dev.yml ps db 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec -T db psql -U andrebellemare andrebellemare < $(FILE); \
+	elif docker-compose -f docker-compose.prod.yml ps db 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec -T db psql -U andrebellemare andrebellemare < $(FILE); \
+	else \
+		echo "❌ Aucun conteneur db en cours d'exécution"; \
+		exit 1; \
+	fi
 	@echo "✅ Base de données restaurée depuis $(FILE)"
 
 # List available backups
@@ -131,28 +233,54 @@ backups:
 
 # Clean everything
 clean:
-	docker-compose down -v --remove-orphans
+	docker-compose -f docker-compose.dev.yml down -v --remove-orphans 2>/dev/null || true
+	docker-compose -f docker-compose.prod.yml down -v --remove-orphans 2>/dev/null || true
 	@echo "✅ Conteneurs et volumes supprimés"
 
 # Clean and rebuild
-rebuild: clean build up migrate
-	@echo "✅ Reconstruction terminée"
+rebuild-dev: clean build-dev dev migrate
+	@echo "✅ Reconstruction terminée (dev)"
+
+rebuild-prod: clean build-prod prod
+	@echo "✅ Reconstruction terminée (prod)"
 
 # Check status
 status:
-	docker-compose ps
+	@echo "=== Conteneurs DEV ==="
+	@docker-compose -f docker-compose.dev.yml ps 2>/dev/null || echo "Aucun conteneur dev en cours"
+	@echo ""
+	@echo "=== Conteneurs PROD ==="
+	@docker-compose -f docker-compose.prod.yml ps 2>/dev/null || echo "Aucun conteneur prod en cours"
 
 # Run tests (if any)
 test:
-	docker-compose exec web python manage.py test
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web python manage.py test; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web python manage.py test; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Check Django configuration
 check:
-	docker-compose exec web python manage.py check
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web python manage.py check; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web python manage.py check; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Show Django URLs
 urls:
-	docker-compose exec web python manage.py show_urls 2>/dev/null || echo "Installez django-extensions pour cette commande"
+	@if docker-compose -f docker-compose.dev.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.dev.yml exec web python manage.py show_urls 2>/dev/null || echo "Installez django-extensions pour cette commande"; \
+	elif docker-compose -f docker-compose.prod.yml ps web 2>/dev/null | grep -q Up; then \
+		docker-compose -f docker-compose.prod.yml exec web python manage.py show_urls 2>/dev/null || echo "Installez django-extensions pour cette commande"; \
+	else \
+		echo "❌ Aucun conteneur web en cours d'exécution"; \
+	fi
 
 # Cloudflare Tunnel
 tunnel: env dirs
@@ -162,14 +290,14 @@ tunnel: env dirs
 		echo "   2. Copiez le token et ajoutez-le dans .env"; \
 		exit 1; \
 	fi
-	docker-compose --profile tunnel up -d
+	docker-compose -f docker-compose.prod.yml --profile tunnel up -d
 	@echo "✅ Cloudflare Tunnel démarré"
 	@echo "📍 Votre site est accessible via votre domaine Cloudflare"
 
 tunnel-down:
-	docker-compose --profile tunnel down
+	docker-compose -f docker-compose.prod.yml --profile tunnel down
 	@echo "✅ Cloudflare Tunnel arrêté"
 
 tunnel-logs:
-	docker-compose logs -f cloudflared
+	docker-compose -f docker-compose.prod.yml logs -f cloudflared
 

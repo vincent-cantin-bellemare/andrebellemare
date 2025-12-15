@@ -50,3 +50,4 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f'Successfully created user {email}')
         )
+

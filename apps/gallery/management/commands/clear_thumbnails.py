@@ -53,3 +53,4 @@ class Command(BaseCommand):
         
         self.stdout.write(self.style.SUCCESS('\n✅ Cache clearing completed!'))
         self.stdout.write('💡 Thumbnails will be regenerated automatically on next page load.')
+

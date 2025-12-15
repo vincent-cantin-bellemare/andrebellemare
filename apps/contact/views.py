@@ -133,3 +133,4 @@ def purchase_inquiry(request):
 
 
 
+

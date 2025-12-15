@@ -259,3 +259,4 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.ERROR(f'✗ {error_count} error(s) occurred')
             )
+

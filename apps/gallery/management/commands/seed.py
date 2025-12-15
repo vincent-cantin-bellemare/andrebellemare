@@ -115,17 +115,18 @@ class Command(BaseCommand):
         categories = list(Category.objects.all())
         finishes = list(Finish.objects.all())
         
-        # Check for images in /tmp
-        tmp_images = []
-        tmp_path = Path('/tmp')
-        for ext in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
-            tmp_images.extend(tmp_path.glob(ext))
+        # Check for images in /volumes/django/media/seed
+        seed_images = []
+        seed_path = Path('/volumes/django/media/seed')
+        if seed_path.exists():
+            for ext in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
+                seed_images.extend(seed_path.glob(ext))
         
-        use_tmp_images = len(tmp_images) > 0
-        if use_tmp_images:
-            self.stdout.write(f'  Found {len(tmp_images)} images in /tmp')
+        use_seed_images = len(seed_images) > 0
+        if use_seed_images:
+            self.stdout.write(f'  Found {len(seed_images)} images in /volumes/django/media/seed')
         else:
-            self.stdout.write('  No images in /tmp, generating placeholders')
+            self.stdout.write('  No images in /volumes/django/media/seed, generating placeholders')
         
         # Create paintings
         num_paintings = 18
@@ -156,9 +157,9 @@ class Command(BaseCommand):
             # Create image(s) for this painting
             num_images = random.randint(1, 3)
             for img_idx in range(num_images):
-                if use_tmp_images:
-                    # Use image from /tmp
-                    src_image = random.choice(tmp_images)
+                if use_seed_images:
+                    # Use image from /volumes/django/media/seed
+                    src_image = random.choice(seed_images)
                     self._create_image_from_file(painting, src_image, img_idx == 0)
                 elif HAS_PILLOW:
                     # Generate placeholder
@@ -329,6 +330,7 @@ Vous bénéficiez d'un reçu fiscal pour votre don, et vous repartez avec une œ
             }
         )
         self.stdout.write('  Created site settings')
+
 
 
 
