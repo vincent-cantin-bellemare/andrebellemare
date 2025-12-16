@@ -16,6 +16,12 @@ DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
+# CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://localhost:8000,http://127.0.0.1:8000,https://andrebellemare.ca,https://www.andrebellemare.ca,https://andrebellemare.com,https://www.andrebellemare.com'
+).split(',')
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -25,11 +31,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
-    
+
     # Third party
     'sorl.thumbnail',
     'widget_tweaks',
-    
+
     # Local apps
     'apps.core',
     'apps.gallery',
