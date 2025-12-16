@@ -85,7 +85,7 @@
 </section>
 
 <!-- Mission Statement -->
-<section class="py-16 bg-white dark:bg-warm-800 scroll-fade-in">
+<section class="py-10 md:py-16 bg-white dark:bg-warm-800 scroll-fade-in">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <blockquote class="font-display text-2xl md:text-3xl italic text-charcoal dark:text-warm-100 leading-relaxed transition-all duration-500">
             "Et savoir que mes toiles vont égayer vos foyers tout en offrant du réconfort à ceux qui n'ont ni toit, ni salon... me touche profondément."
@@ -132,7 +132,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for painting in featured_paintings %}
             <div class="scroll-fade-in-card" data-delay="{{ forloop.counter0 }}">
-                {% include 'components/painting_card.html' with painting=painting %}
+                {% include 'components/painting_card.html' with painting=painting eager_load=True %}
             </div>
             {% endfor %}
         </div>
@@ -150,7 +150,7 @@
 {% endif %}
 
 <!-- Categories -->
-<section class="py-16 bg-warm-50 dark:bg-warm-800 scroll-fade-in">
+<section class="py-10 md:py-16 bg-warm-50 dark:bg-warm-800 scroll-fade-in">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="font-display text-3xl md:text-4xl text-charcoal dark:text-white mb-4 transition-all duration-500">Explorer par catégorie</h2>
@@ -283,6 +283,18 @@
         transform: translateY(0);
     }
 
+    /* Disable scroll animations on mobile to prevent visibility issues */
+    @media (max-width: 639px) {
+        .scroll-fade-in,
+        .scroll-fade-in.visible,
+        .scroll-fade-in-card,
+        .scroll-fade-in-card.visible {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+    }
+
     /* Smooth transitions for interactive elements */
     a, button {
         transition: all 0.3s ease;
@@ -355,7 +367,7 @@
             observer.observe(card);
         });
 
-        // Check if sections are already visible on load (for above-the-fold content)
+        // Check if sections and cards are already visible on load (for above-the-fold content)
         function checkInitialVisibility() {
             sections.forEach(section => {
                 const rect = section.getBoundingClientRect();
@@ -364,11 +376,25 @@
                     section.classList.add('visible');
                 }
             });
+
+            // Also check cards for initial visibility
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight * 0.9 && rect.bottom > 0;
+                if (isVisible && !card.classList.contains('visible')) {
+                    const delay = index * 100;
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, delay);
+                }
+            });
         }
 
         // Check immediately and after a short delay
         checkInitialVisibility();
         setTimeout(checkInitialVisibility, 100);
+        // Additional check for mobile devices after images might have loaded
+        setTimeout(checkInitialVisibility, 500);
     });
 </script>
 {% endblock %}

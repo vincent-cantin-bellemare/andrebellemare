@@ -375,9 +375,16 @@
             return false;
         }
 
-        // Disable submit button to prevent double submission
+        // Disable submit button and make fields readonly to prevent double submission
         submitBtn.disabled = true;
         submitBtn.textContent = 'Envoi en cours...';
+
+        // Make all form fields readonly
+        const formFields = form.querySelectorAll('input, textarea');
+        formFields.forEach(field => {
+            field.readOnly = true;
+            field.classList.add('opacity-60', 'cursor-not-allowed');
+        });
     });
 
     // Mark fields with server-side errors as touched on page load

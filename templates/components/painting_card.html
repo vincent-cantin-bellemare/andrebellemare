@@ -6,7 +6,7 @@
             {% thumbnail painting.primary_image.image "400x400" crop="center" as thumb %}
             <img src="{{ thumb.url }}"
                  alt="{{ painting.title }}"
-                 loading="lazy"
+                 loading="{% if eager_load %}eager{% else %}lazy{% endif %}"
                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out">
             {% endthumbnail %}
         {% else %}
@@ -54,4 +54,3 @@
         {% endif %}
     </div>
 </article>
-

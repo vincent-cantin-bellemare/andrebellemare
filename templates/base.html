@@ -594,11 +594,18 @@
             modalError.classList.add('hidden');
             modalErrorMessage.textContent = '';
 
-            // Disable submit button
+            // Disable submit button and make fields readonly
             const submitButton = purchaseForm.querySelector('button[type="submit"]');
             const originalButtonText = submitButton.textContent;
             submitButton.disabled = true;
             submitButton.textContent = 'Envoi en cours...';
+
+            // Make all form fields readonly
+            const formFields = purchaseForm.querySelectorAll('input:not([type="hidden"]), textarea');
+            formFields.forEach(field => {
+                field.readOnly = true;
+                field.classList.add('opacity-60', 'cursor-not-allowed');
+            });
 
             const formData = new FormData(purchaseForm);
 
