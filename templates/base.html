@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ site_name }}{% endblock %}</title>
-    
+
     <!-- Meta SEO -->
     <meta name="description" content="{% block meta_description %}André Bellemare, artiste peintre à Boucherville. Découvrez ses toiles originales et uniques. Chaque achat est un don à la Maison du Père.{% endblock %}">
     <meta name="author" content="André Bellemare">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ site_url }}{% block canonical %}{{ request.path }}{% endblock %}">
-    
+
     <!-- Hreflang -->
     <link rel="alternate" hreflang="fr" href="{{ site_url }}{{ request.path }}" />
     <link rel="alternate" hreflang="fr-CA" href="{{ site_url }}{{ request.path }}" />
     <link rel="alternate" hreflang="x-default" href="{{ site_url }}{{ request.path }}" />
-    
+
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}{{ site_name }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Artiste peintre à Boucherville - Toiles originales{% endblock %}">
@@ -24,7 +24,7 @@
     <meta property="og:url" content="{{ site_url }}{{ request.path }}">
     <meta property="og:image" content="{% block og_image %}{{ site_url }}{% static 'images/og-default.jpg' %}{% endblock %}">
     <meta property="og:locale" content="fr_CA">
-    
+
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -56,12 +56,12 @@
             }
         }
     </script>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
+
     <!-- JSON-LD Structured Data -->
     {% block json_ld %}
     <script type="application/ld+json">
@@ -82,7 +82,7 @@
     }
     </script>
     {% endblock %}
-    
+
     <style>
         body {
             font-family: 'Source Sans 3', system-ui, sans-serif;
@@ -90,7 +90,7 @@
         .font-display {
             font-family: 'Playfair Display', Georgia, serif;
         }
-        
+
         /* Form styles */
         .form-input, .form-textarea {
             width: 100% !important;
@@ -137,7 +137,7 @@
         .form-input:focus, .form-textarea:focus {
             @apply shadow-lg;
         }
-        
+
         /* Error states */
         .form-input.error-field, .form-textarea.error-field {
             @apply border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-900/20;
@@ -145,13 +145,13 @@
         .form-input.error-field:focus, .form-textarea.error-field:focus {
             @apply border-red-500 dark:border-red-600 ring-red-400 dark:ring-red-500;
         }
-        
+
         /* Field wrapper - ensure full width */
         .field-wrapper {
             width: 100%;
             max-width: 100%;
         }
-        
+
         /* Error message */
         .field-error {
             @apply mt-2 text-sm text-red-600 dark:text-red-400 flex items-start;
@@ -159,7 +159,7 @@
         .field-error-icon {
             @apply w-3.5 h-3.5 mr-1.5 mt-0.5 flex-shrink-0;
         }
-        
+
         /* Image loading animation */
         .img-loading {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -170,7 +170,7 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-        
+
         /* Zoom effect */
         .zoom-container {
             position: relative;
@@ -192,7 +192,7 @@
             opacity: 1;
         }
     </style>
-    
+
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-cream dark:bg-warm-900 text-charcoal dark:text-warm-100 min-h-screen flex flex-col font-body">
@@ -204,11 +204,11 @@
                 <a href="{% url 'core:home' %}" class="font-display text-xl md:text-2xl font-semibold text-charcoal dark:text-white hover:text-warm-600 dark:hover:text-warm-300 transition-colors">
                     André Bellemare
                 </a>
-                
+
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="{% url 'core:home' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">Accueil</a>
-                    
+
                     <!-- Categories Dropdown -->
                     <div class="relative group">
                         <button class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors flex items-center">
@@ -228,13 +228,13 @@
                             {% endfor %}
                         </div>
                     </div>
-                    
+
                     <a href="{% url 'core:about' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">À propos</a>
                     <a href="{% url 'contact:contact' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">Contact</a>
-                    
+
                     <!-- Search -->
                     <form action="{% url 'gallery:search' %}" method="get" class="relative">
-                        <input type="search" name="q" placeholder="Rechercher..." 
+                        <input type="search" name="q" placeholder="Rechercher..."
                                class="w-40 pl-4 pr-10 py-2 text-sm border border-warm-200 dark:border-warm-600 rounded-full bg-white dark:bg-warm-800 focus:ring-2 focus:ring-warm-400 focus:border-transparent focus:w-56 transition-all duration-200">
                         <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-warm-400 hover:text-warm-600">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -242,7 +242,7 @@
                             </svg>
                         </button>
                     </form>
-                    
+
                     <!-- Dark Mode Toggle -->
                     <button id="theme-toggle" class="p-2 rounded-full hover:bg-warm-100 dark:hover:bg-warm-700 transition-colors">
                         <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
@@ -253,7 +253,7 @@
                         </svg>
                     </button>
                 </div>
-                
+
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-btn" class="md:hidden p-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -262,7 +262,7 @@
                 </button>
             </div>
         </div>
-        
+
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-warm-800 border-t border-warm-200 dark:border-warm-700">
             <div class="px-4 py-3 space-y-3">
@@ -279,12 +279,12 @@
             </div>
         </div>
     </nav>
-    
+
     <!-- Main Content -->
     <main class="flex-grow">
         {% block content %}{% endblock %}
     </main>
-    
+
     <!-- Footer -->
     <footer class="bg-charcoal dark:bg-warm-950 text-warm-300 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -302,7 +302,7 @@
                         Facebook
                     </a>
                 </div>
-                
+
                 <!-- Links -->
                 <div>
                     <h4 class="font-semibold text-white mb-4">Navigation</h4>
@@ -313,7 +313,7 @@
                         <li><a href="{% url 'core:faq' %}" class="text-warm-400 hover:text-white transition-colors">FAQ</a></li>
                     </ul>
                 </div>
-                
+
                 <!-- Contact -->
                 <div>
                     <h4 class="font-semibold text-white mb-4">Contact</h4>
@@ -331,14 +331,14 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="border-t border-warm-700 mt-8 pt-8 text-center text-warm-500 text-sm space-y-1">
                 <div>© 2025 - andrebellemare.com tous droits réservés</div>
                 <div>Aucun cookie de tracking n'est utilisé sur ce site</div>
             </div>
         </div>
     </footer>
-    
+
     <!-- Purchase Modal -->
     <div id="purchase-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-1 sm:p-4 bg-black/60 backdrop-blur-md">
         <div class="bg-white dark:bg-warm-800 rounded-3xl shadow-2xl w-full max-w-lg sm:max-w-lg max-h-[90vh] overflow-y-auto transform transition-all m-2 sm:m-0">
@@ -355,12 +355,12 @@
                         </svg>
                     </button>
                 </div>
-                
+
                 <!-- Painting Info Card -->
                 <div id="modal-painting-info" class="mb-8 p-5 bg-gradient-to-br from-warm-50 to-warm-100 dark:from-warm-700 dark:to-warm-800 rounded-2xl border border-warm-200 dark:border-warm-600">
                     <!-- Filled by JavaScript -->
                 </div>
-                
+
                 <!-- Error Message -->
                 <div id="modal-error" class="hidden mb-6 bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-800 rounded-xl p-4">
                     <div class="flex items-start">
@@ -373,12 +373,12 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Form -->
                 <form id="purchase-form" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="painting_id" id="modal-painting-id">
-                    
+
                     <div class="space-y-5">
                         <div>
                             <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
@@ -411,19 +411,19 @@
                             <label class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                                 Message <span class="text-warm-500 text-xs font-normal">(optionnel)</span>
                             </label>
-                            <textarea name="message" id="modal-message" rows="4" 
+                            <textarea name="message" id="modal-message" rows="4"
                                       placeholder="Votre message pour l'artiste..."
                                       class="form-textarea"></textarea>
                             <div class="error-container" data-field="message"></div>
                         </div>
                     </div>
-                    
+
                     <div class="mt-8">
                         <button type="submit" class="w-full bg-charcoal dark:bg-warm-600 text-white py-4 px-8 rounded-xl text-lg font-semibold hover:bg-warm-700 dark:hover:bg-warm-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                             Envoyer ma demande
                         </button>
                     </div>
-                    
+
                     <p class="mt-5 text-sm text-warm-500 dark:text-warm-400 text-center">
                         <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -431,7 +431,7 @@
                         L'artiste vous contactera pour finaliser l'achat
                     </p>
                 </form>
-                
+
                 <!-- Success Message -->
                 <div id="modal-success" class="hidden text-center py-12">
                     <div class="w-20 h-20 mx-auto mb-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
@@ -441,7 +441,7 @@
                     </div>
                     <h4 class="font-display text-2xl text-charcoal dark:text-white mb-3">Demande envoyée!</h4>
                     <p class="text-warm-600 dark:text-warm-400 mb-6">L'artiste vous contactera sous peu.</p>
-                    <button onclick="document.getElementById('purchase-modal').classList.add('hidden')" 
+                    <button onclick="document.getElementById('purchase-modal').classList.add('hidden')"
                             class="px-6 py-3 bg-charcoal dark:bg-warm-600 text-white rounded-xl font-medium hover:bg-warm-700 transition-colors">
                         Fermer
                     </button>
@@ -449,7 +449,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Lightbox -->
     <div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/95">
         <button id="lightbox-close" class="absolute top-4 right-4 text-white p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -470,36 +470,36 @@
         <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-[90vw] object-contain">
         <div id="lightbox-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm"></div>
     </div>
-    
+
     <!-- JavaScript -->
     <script>
         // Dark mode toggle
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
-        
-        // Check saved preference
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+
+        // Check saved preference (default to light theme)
+        if (localStorage.getItem('theme') === 'dark') {
             html.classList.add('dark');
         }
-        
+
         themeToggle.addEventListener('click', () => {
             html.classList.toggle('dark');
             localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
         });
-        
+
         // Mobile menu
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
-        
+
         // Purchase modal
         const modal = document.getElementById('purchase-modal');
         const closeModal = document.getElementById('close-modal');
         const purchaseForm = document.getElementById('purchase-form');
         const modalSuccess = document.getElementById('modal-success');
-        
+
         window.openPurchaseModal = function(paintingId, title, price, imageUrl) {
             document.getElementById('modal-painting-id').value = paintingId;
             document.getElementById('modal-painting-info').innerHTML = `
@@ -531,22 +531,22 @@
                 field.classList.remove('error-field');
             });
         };
-        
+
         closeModal.addEventListener('click', () => {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         });
-        
+
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
             }
         });
-        
+
         const modalError = document.getElementById('modal-error');
         const modalErrorMessage = document.getElementById('modal-error-message');
-        
+
         // Function to clear all field errors
         function clearFieldErrors() {
             const errorContainers = purchaseForm.querySelectorAll('.error-container');
@@ -558,12 +558,12 @@
                 field.classList.remove('error-field');
             });
         }
-        
+
         // Function to show field error
         function showFieldError(fieldName, errorMessage) {
             const field = purchaseForm.querySelector(`[name="${fieldName}"]`);
             if (!field) return;
-            
+
             field.classList.add('error-field');
             const errorContainer = purchaseForm.querySelector(`.error-container[data-field="${fieldName}"]`);
             if (errorContainer) {
@@ -574,23 +574,23 @@
                 `;
             }
         }
-        
+
         purchaseForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             // Clear previous errors
             clearFieldErrors();
             modalError.classList.add('hidden');
             modalErrorMessage.textContent = '';
-            
+
             // Disable submit button
             const submitButton = purchaseForm.querySelector('button[type="submit"]');
             const originalButtonText = submitButton.textContent;
             submitButton.disabled = true;
             submitButton.textContent = 'Envoi en cours...';
-            
+
             const formData = new FormData(purchaseForm);
-            
+
             // Get CSRF token from cookie or form
             function getCookie(name) {
                 let cookieValue = null;
@@ -606,9 +606,9 @@
                 }
                 return cookieValue;
             }
-            
+
             const csrftoken = formData.get('csrfmiddlewaretoken') || getCookie('csrftoken');
-            
+
             try {
                 const response = await fetch('{% url "contact:purchase_inquiry" %}', {
                     method: 'POST',
@@ -618,7 +618,7 @@
                     },
                     credentials: 'same-origin'
                 });
-                
+
                 const data = await response.json();
                 if (data.success) {
                     purchaseForm.classList.add('hidden');
@@ -637,7 +637,7 @@
                                 hasFieldErrors = true;
                             }
                         }
-                        
+
                         // If there are field errors, scroll to first one
                         if (hasFieldErrors) {
                             const firstErrorField = purchaseForm.querySelector('.error-field');
@@ -647,10 +647,10 @@
                             }
                         }
                     }
-                    
+
                     // Show general error message if no field-specific errors or as fallback
                     let errorText = data.error_message || 'Une erreur est survenue lors de l\'envoi de votre demande.';
-                    
+
                     // Fallback to parsing errors if error_message not available
                     if (!data.error_message && data.errors && !Object.keys(data.errors).some(field => {
                         const fieldErrors = data.errors[field];
@@ -672,7 +672,7 @@
                             errorText = errorMessages.join(' ');
                         }
                     }
-                    
+
                     // Only show general error if no field-specific errors were shown
                     if (!data.errors || Object.keys(data.errors).length === 0) {
                         modalErrorMessage.textContent = errorText;
@@ -690,7 +690,7 @@
                 submitButton.textContent = originalButtonText;
             }
         });
-        
+
         // Lightbox
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
@@ -700,7 +700,7 @@
         const lightboxCounter = document.getElementById('lightbox-counter');
         let lightboxImages = [];
         let lightboxIndex = 0;
-        
+
         window.openLightbox = function(images, index) {
             lightboxImages = images;
             lightboxIndex = index;
@@ -708,36 +708,36 @@
             lightbox.classList.remove('hidden');
             lightbox.classList.add('flex');
         };
-        
+
         function updateLightbox() {
             lightboxImg.src = lightboxImages[lightboxIndex];
             lightboxCounter.textContent = `${lightboxIndex + 1} / ${lightboxImages.length}`;
             lightboxPrev.style.display = lightboxImages.length > 1 ? 'block' : 'none';
             lightboxNext.style.display = lightboxImages.length > 1 ? 'block' : 'none';
         }
-        
+
         lightboxClose.addEventListener('click', () => {
             lightbox.classList.add('hidden');
             lightbox.classList.remove('flex');
         });
-        
+
         lightboxPrev.addEventListener('click', () => {
             lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
             updateLightbox();
         });
-        
+
         lightboxNext.addEventListener('click', () => {
             lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
             updateLightbox();
         });
-        
+
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) {
                 lightbox.classList.add('hidden');
                 lightbox.classList.remove('flex');
             }
         });
-        
+
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (!lightbox.classList.contains('hidden')) {
@@ -749,7 +749,7 @@
                 closeModal.click();
             }
         });
-        
+
         // Lazy loading with blur placeholder
         document.addEventListener('DOMContentLoaded', () => {
             const lazyImages = document.querySelectorAll('img[data-src]');
@@ -763,26 +763,26 @@
                     }
                 });
             });
-            
+
             lazyImages.forEach(img => imageObserver.observe(img));
         });
-        
+
         // Image zoom on hover
         window.initZoom = function(container, imageUrl) {
             const lens = container.querySelector('.zoom-lens');
             const img = container.querySelector('img');
-            
+
             const ratio = 2.5;
             lens.style.backgroundImage = `url(${imageUrl})`;
-            
+
             container.addEventListener('mousemove', (e) => {
                 const rect = container.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                
+
                 lens.style.left = (x - 75) + 'px';
                 lens.style.top = (y - 75) + 'px';
-                
+
                 const bgX = -((x * ratio) - 75);
                 const bgY = -((y * ratio) - 75);
                 lens.style.backgroundPosition = `${bgX}px ${bgY}px`;
@@ -790,7 +790,7 @@
             });
         };
     </script>
-    
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

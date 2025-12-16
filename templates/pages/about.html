@@ -13,86 +13,86 @@
             <li class="text-charcoal dark:text-white">À propos</li>
         </ol>
     </nav>
-    
+
     <article class="prose prose-lg prose-warm dark:prose-invert max-w-none">
         <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-white mb-8 scroll-fade-in transition-all duration-500">André Bellemare</h1>
-        
+
         <div class="mb-12 scroll-fade-in-card" data-delay="1">
-            <img src="{{ MEDIA_URL }}andre_bellemare.avif" 
+            <img src="{{ MEDIA_URL }}andre_bellemare.avif"
                  onerror="this.onerror=null; this.src='{{ MEDIA_URL }}andre_bellemare.jpg'; this.onerror=function(){this.src='{{ MEDIA_URL }}andre_bellemare.png'; this.onerror=null;}"
-                 alt="André Bellemare" 
+                 alt="André Bellemare"
                  class="w-full max-w-md mx-auto rounded-2xl shadow-lg">
         </div>
-        
+
         <div class="text-xl text-warm-600 dark:text-warm-300 mb-12 leading-relaxed scroll-fade-in transition-all duration-500">
             <p>
-                La vie est belle, même lorsque les temps sont durs. Alors ajoutons-y de la couleur, 
-                de la lumière et un peu de joie. Peindre est pour moi une façon simple et sincère 
+                La vie est belle, même lorsque les temps sont durs. Alors ajoutons-y de la couleur,
+                de la lumière et un peu de joie. Peindre est pour moi une façon simple et sincère
                 d'embellir le monde.
             </p>
         </div>
-        
+
         <div class="bg-warm-50 dark:bg-warm-800 rounded-2xl p-8 mb-12 scroll-fade-in-card" data-delay="2">
             <blockquote class="font-display text-2xl italic text-charcoal dark:text-warm-100 border-none m-0 transition-all duration-500">
                 "Je vis ma vie à ma façon, et je la peins sans prétention, pour le plaisir de vous réjouir."
             </blockquote>
         </div>
-        
+
         <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-12 scroll-fade-in transition-all duration-500">Un art engagé</h2>
         <p>
-            Chaque toile que vous accueillez chez vous est bien plus qu'une œuvre d'art. 
-            C'est un geste de générosité. Pour acquérir une de mes toiles, il vous suffit 
-            de faire un don du montant indiqué à la <strong>Maison du Père</strong>, 
+            Chaque toile que vous accueillez chez vous est bien plus qu'une œuvre d'art.
+            C'est un geste de générosité. Pour acquérir une de mes toiles, il vous suffit
+            de faire un don du montant indiqué à la <strong><a href="https://maisondupere.org/" target="_blank" rel="noopener" class="hover:text-warm-600 dark:hover:text-warm-300 transition-colors">Maison du Père</a></strong>,
             un organisme qui vient en aide aux personnes en situation d'itinérance à Montréal.
         </p>
         <p>
-            Et savoir que mes toiles vont égayer vos foyers tout en offrant du réconfort 
-            à ceux qui n'ont ni toit, ni salon... me touche profondément. Tout le monde y gagne: 
+            Et savoir que mes toiles vont égayer vos foyers tout en offrant du réconfort
+            à ceux qui n'ont ni toit, ni salon... me touche profondément. Tout le monde y gagne:
             vous recevez une œuvre unique et ensemble nous aidons ceux qui en ont le plus besoin.
         </p>
-        
+
         <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-12 scroll-fade-in transition-all duration-500">Mon univers artistique</h2>
         <p>
-            Mes toiles explorent différents univers : l'abstraction où les couleurs et les formes 
-            se libèrent, les scènes de banlieue qui capturent la poésie du quotidien, les capsules 
-            historiques qui nous connectent à notre patrimoine, et bien d'autres thèmes qui 
+            Mes toiles explorent différents univers : l'abstraction où les couleurs et les formes
+            se libèrent, les scènes de banlieue qui capturent la poésie du quotidien, les capsules
+            historiques qui nous connectent à notre patrimoine, et bien d'autres thèmes qui
             m'inspirent au fil de mes créations.
         </p>
         <p>
-            J'utilise diverses techniques et finitions, de l'époxy à l'encre sur toile et mortier, 
+            J'utilise diverses techniques et finitions, de l'époxy à l'encre sur toile et mortier,
             chaque œuvre est une exploration et une aventure artistique unique.
         </p>
-        
+
         {% if settings.video_url %}
         <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-12 scroll-fade-in transition-all duration-500">Découvrez mon atelier</h2>
         <div class="aspect-video rounded-xl overflow-hidden bg-warm-200 dark:bg-warm-700 scroll-fade-in-card" data-delay="1">
             {% if 'youtube.com' in settings.video_url or 'youtu.be' in settings.video_url %}
-            <iframe 
+            <iframe
                 src="{{ settings.video_url|cut:'watch?v='|cut:'https://www.youtube.com/'|cut:'https://youtu.be/' }}"
                 class="w-full h-full"
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
             </iframe>
             {% elif 'vimeo.com' in settings.video_url %}
-            <iframe 
+            <iframe
                 src="{{ settings.video_url }}"
                 class="w-full h-full"
-                frameborder="0" 
-                allow="autoplay; fullscreen; picture-in-picture" 
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
                 allowfullscreen>
             </iframe>
             {% endif %}
         </div>
         {% endif %}
-        
+
         <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-12 scroll-fade-in transition-all duration-500">Me rencontrer</h2>
         <p>
-            Basé à Boucherville, sur la Rive-Sud de Montréal, je suis toujours heureux d'échanger 
-            avec les amateurs d'art. N'hésitez pas à me contacter pour discuter d'une toile, 
+            Basé à Boucherville, sur la Rive-Sud de Montréal, je suis toujours heureux d'échanger
+            avec les amateurs d'art. N'hésitez pas à me contacter pour discuter d'une toile,
             organiser une visite de mon atelier ou simplement partager votre passion pour l'art.
         </p>
-        
+
         <div class="not-prose bg-charcoal dark:bg-warm-800 text-white rounded-2xl p-8 mt-12 scroll-fade-in-card" data-delay="1">
             <h3 class="font-display text-2xl mb-4 transition-all duration-500">Restons en contact</h3>
             <p class="text-warm-300 mb-6 transition-all duration-500">
@@ -122,18 +122,18 @@
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .scroll-fade-in-card {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in-card.visible {
         opacity: 1;
         transform: translateY(0);
@@ -146,12 +146,12 @@
     // Intersection Observer for scroll animations
     document.addEventListener('DOMContentLoaded', function() {
         const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
-        
+
         const observerOptions = {
             threshold: 0.15,
             rootMargin: '0px 0px -100px 0px'
         };
-        
+
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -163,11 +163,11 @@
                 }
             });
         }, observerOptions);
-        
+
         sections.forEach(section => {
             observer.observe(section);
         });
-        
+
         // Check if sections are already visible on load
         function checkInitialVisibility() {
             sections.forEach(section => {
@@ -178,7 +178,7 @@
                 }
             });
         }
-        
+
         checkInitialVisibility();
         setTimeout(checkInitialVisibility, 100);
     });
