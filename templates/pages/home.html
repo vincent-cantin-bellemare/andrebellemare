@@ -41,11 +41,21 @@
 <!-- Hero Section -->
 <section class="relative py-20 md:py-32 overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <!-- Background painting image -->
-        <img src="{% static 'images/hero-background.avif' %}"
-             alt="Image de fond"
-             class="w-full h-full object-cover"
-             style="opacity: 0.25; filter: blur(0px);">
+        <!-- Background images carousel with crossfade -->
+        <div id="hero-carousel" class="absolute inset-0">
+            <img src="{% static 'images/home_hero/38.avif' %}"
+                 alt="Image de fond"
+                 class="hero-bg-image absolute inset-0 w-full h-full object-cover opacity-70 transition-opacity duration-1000"
+                 data-index="0">
+            <img src="{% static 'images/home_hero/39.avif' %}"
+                 alt="Image de fond"
+                 class="hero-bg-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
+                 data-index="1">
+            <img src="{% static 'images/home_hero/40.avif' %}"
+                 alt="Image de fond"
+                 class="hero-bg-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
+                 data-index="2">
+        </div>
         <!-- Overlay gradient for text readability -->
         <div class="absolute inset-0 bg-gradient-to-br from-warm-100/85 via-warm-50/75 to-warm-100/85 dark:from-warm-900/90 dark:via-warm-800/85 dark:to-warm-900/90"></div>
         <!-- Fallback gradient background -->
@@ -287,6 +297,30 @@
 
 {% block extra_js %}
 <script>
+    // Hero background carousel with crossfade
+    (function() {
+        const images = document.querySelectorAll('.hero-bg-image');
+        if (images.length === 0) return;
+
+        let currentIndex = 0;
+        const interval = 5000; // 5 seconds
+        const visibleOpacity = 0.7; // Opacity for visible background images
+
+        function showNextImage() {
+            // Fade out current image
+            images[currentIndex].style.opacity = '0';
+
+            // Move to next image
+            currentIndex = (currentIndex + 1) % images.length;
+
+            // Fade in next image
+            images[currentIndex].style.opacity = visibleOpacity;
+        }
+
+        // Start the carousel
+        setInterval(showNextImage, interval);
+    })();
+
     // Intersection Observer for scroll animations
     document.addEventListener('DOMContentLoaded', function() {
         // Observe sections
