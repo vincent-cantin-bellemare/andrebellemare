@@ -266,7 +266,6 @@
     });
 </script>
 <script>
-<script>
     let currentImageIndex = 0;
     const images = [{% for img in painting.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}];
 
