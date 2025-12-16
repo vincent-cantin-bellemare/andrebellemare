@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}À propos - André Bellemare{% endblock %}
 {% block meta_description %}Découvrez André Bellemare, artiste peintre à Boucherville. Son parcours, sa vision artistique et son engagement envers la Maison du Père.{% endblock %}
@@ -18,8 +19,8 @@
         <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-white mb-8 scroll-fade-in transition-all duration-500">André Bellemare</h1>
 
         <div class="mb-12 scroll-fade-in-card" data-delay="1">
-            <img src="{{ MEDIA_URL }}andre_bellemare.avif"
-                 onerror="this.onerror=null; this.src='{{ MEDIA_URL }}andre_bellemare.jpg'; this.onerror=function(){this.src='{{ MEDIA_URL }}andre_bellemare.png'; this.onerror=null;}"
+            <img src="{% static 'images/andre_bellemare.avif' %}"
+                 onerror="this.onerror=null; this.src='{% static 'images/andre_bellemare.jpg' %}'; this.onerror=function(){this.src='{% static 'images/andre_bellemare.png' %}'; this.onerror=function(){this.style.display='none';};};"
                  alt="André Bellemare"
                  class="w-full max-w-md mx-auto rounded-2xl shadow-lg">
         </div>
