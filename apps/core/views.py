@@ -72,6 +72,8 @@ def robots_txt(request):
     lines = [
         "User-agent: *",
         "Allow: /",
+        "Disallow: /alexandre/",
+        "Disallow: /__debug__/",
         "",
         f"Sitemap: {request.build_absolute_uri('/sitemap.xml')}",
     ]
@@ -140,4 +142,3 @@ def custom_500_view(request):
     return render(request, 'pages/500.html', {
         'paintings': paintings,
     }, status=500)
-

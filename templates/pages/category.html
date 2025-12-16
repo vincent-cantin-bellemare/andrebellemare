@@ -4,6 +4,26 @@
 {% block title %}{{ category.name }} - Galerie André Bellemare{% endblock %}
 {% block meta_description %}Explorez la collection {{ category.name }} d'André Bellemare, artiste peintre à Boucherville. Toiles originales et uniques. Chaque achat soutient la Maison du Père.{% endblock %}
 
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "{{ category.name }} - Galerie André Bellemare",
+    "description": "Explorez la collection {{ category.name }} d'André Bellemare, artiste peintre à Boucherville. Toiles originales et uniques.",
+    "url": "{{ site_url }}{{ request.path }}",
+    {% if category.description %}
+    "about": "{{ category.description|escapejs }}",
+    {% endif %}
+    "isPartOf": {
+        "@type": "WebSite",
+        "name": "André Bellemare",
+        "url": "{{ site_url }}"
+    }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb -->
@@ -206,4 +226,3 @@
     });
 </script>
 {% endblock %}
-

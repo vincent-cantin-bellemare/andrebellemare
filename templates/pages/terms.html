@@ -3,6 +3,18 @@
 {% block title %}Termes et conditions - André Bellemare{% endblock %}
 {% block meta_description %}Conditions d'utilisation du site andrebellemare.com et modalités d'achat des œuvres d'art.{% endblock %}
 
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Termes et conditions - André Bellemare",
+    "description": "Conditions d'utilisation du site andrebellemare.com et modalités d'achat des œuvres d'art.",
+    "url": "{{ site_url }}{{ request.path }}"
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
@@ -117,4 +129,3 @@
     </article>
 </div>
 {% endblock %}
-

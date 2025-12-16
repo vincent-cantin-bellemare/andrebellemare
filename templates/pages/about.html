@@ -4,6 +4,29 @@
 {% block title %}À propos - André Bellemare{% endblock %}
 {% block meta_description %}Découvrez André Bellemare, artiste peintre à Boucherville. Son parcours, sa vision artistique et son engagement envers la Maison du Père.{% endblock %}
 
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "À propos - André Bellemare",
+    "description": "Découvrez André Bellemare, artiste peintre à Boucherville. Son parcours, sa vision artistique et son engagement envers la Maison du Père.",
+    "url": "{{ site_url }}{{ request.path }}",
+    "mainEntity": {
+        "@type": "Person",
+        "name": "André Bellemare",
+        "jobTitle": "Artiste peintre",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Boucherville",
+            "addressRegion": "QC",
+            "addressCountry": "CA"
+        }
+    }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->

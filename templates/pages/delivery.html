@@ -3,6 +3,18 @@
 {% block title %}Livraison et retour - André Bellemare{% endblock %}
 {% block meta_description %}Informations sur la livraison et la politique de retour des toiles d'André Bellemare.{% endblock %}
 
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Livraison et retour - André Bellemare",
+    "description": "Informations sur la livraison et la politique de retour des toiles d'André Bellemare.",
+    "url": "{{ site_url }}{{ request.path }}"
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
@@ -87,4 +99,3 @@
     </article>
 </div>
 {% endblock %}
-

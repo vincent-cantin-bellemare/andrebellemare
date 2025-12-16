@@ -4,6 +4,30 @@
 {% block title %}Contact - André Bellemare{% endblock %}
 {% block meta_description %}Contactez André Bellemare, artiste peintre à Boucherville. Questions, demandes d'achat ou simplement pour échanger sur l'art.{% endblock %}
 
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact - André Bellemare",
+    "description": "Contactez André Bellemare, artiste peintre à Boucherville. Questions, demandes d'achat ou simplement pour échanger sur l'art.",
+    "url": "{{ site_url }}{{ request.path }}",
+    "mainEntity": {
+        "@type": "Person",
+        "name": "André Bellemare",
+        "jobTitle": "Artiste peintre",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Boucherville",
+            "addressRegion": "QC",
+            "addressCountry": "CA"
+        },
+        "email": "{{ contact_email|default:'' }}"
+    }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
@@ -433,4 +457,3 @@
     }
 </style>
 {% endblock %}
-

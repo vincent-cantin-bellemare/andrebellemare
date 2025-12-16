@@ -3,6 +3,30 @@
 {% block title %}FAQ - André Bellemare{% endblock %}
 {% block meta_description %}Questions fréquentes sur l'achat de toiles, la livraison et le processus d'acquisition des œuvres d'André Bellemare.{% endblock %}
 
+{% block json_ld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "name": "FAQ - André Bellemare",
+    "description": "Questions fréquentes sur l'achat de toiles, la livraison et le processus d'acquisition des œuvres d'André Bellemare.",
+    "url": "{{ site_url }}{{ request.path }}"{% if faqs %},
+    "mainEntity": [
+        {% for faq in faqs %}
+        {
+            "@type": "Question",
+            "name": "{{ faq.question|escapejs }}",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "{{ faq.answer|striptags|escapejs }}"
+            }
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]{% endif %}
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
@@ -122,4 +146,3 @@
     });
 </script>
 {% endblock %}
-

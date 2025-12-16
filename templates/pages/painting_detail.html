@@ -9,20 +9,30 @@
 {% block og_description %}{{ painting.description|truncatewords:25 }}{% endblock %}
 {% block og_type %}product{% endblock %}
 {% block og_image %}{% if painting.primary_image %}{{ site_url }}{{ painting.primary_image.image.url }}{% endif %}{% endblock %}
+{% block og_image_alt %}{{ painting.title }} par André Bellemare{% endblock %}
+{% block twitter_title %}{{ painting.title }} - André Bellemare{% endblock %}
+{% block twitter_description %}{{ painting.description|truncatewords:25 }}{% endblock %}
+{% block twitter_image %}{% if painting.primary_image %}{{ site_url }}{{ painting.primary_image.image.url }}{% endif %}{% endblock %}
 
 {% block json_ld %}
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
     "@type": "VisualArtwork",
-    "name": "{{ painting.title }}",
+    "name": "{{ painting.title|escapejs }}",
     "description": "{{ painting.description|escapejs }}",
+    "url": "{{ site_url }}{{ painting.get_absolute_url }}",
     "creator": {
         "@type": "Person",
-        "name": "André Bellemare"
+        "name": "André Bellemare",
+        "url": "{{ site_url }}"
     },
-    "artMedium": "{% if painting.finish %}{{ painting.finish.name }}{% endif %}",
+    "artMedium": "{% if painting.finish %}{{ painting.finish.name|escapejs }}{% else %}Peinture{% endif %}",
     "artform": "Peinture",
+    "artworkSurface": "Toile",
+    {% if painting.category %}
+    "genre": "{{ painting.category.name|escapejs }}",
+    {% endif %}
     {% if painting.primary_image %}
     "image": "{{ site_url }}{{ painting.primary_image.image.url }}",
     {% endif %}
@@ -30,7 +40,12 @@
         "@type": "Offer",
         "price": "{{ painting.price_cad }}",
         "priceCurrency": "CAD",
-        "availability": "{% if painting.status == 'available' %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+        "availability": "{% if painting.status == 'available' %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+        "url": "{{ site_url }}{{ painting.get_absolute_url }}",
+        "seller": {
+            "@type": "Person",
+            "name": "André Bellemare"
+        }
     }
 }
 </script>
@@ -279,4 +294,3 @@
 </script>
 {% endblock %}
 {% endblock %}
-
