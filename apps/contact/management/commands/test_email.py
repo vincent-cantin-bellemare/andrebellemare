@@ -13,13 +13,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         recipients = ['cantinbellemare@gmail.com', 'andrebellemare@live.com']
-        
+
         self.stdout.write('Testing email configuration...')
         self.stdout.write(f'From: {settings.DEFAULT_FROM_EMAIL}')
         self.stdout.write(f'To: {", ".join(recipients)}')
         self.stdout.write(f'SMTP Host: {settings.EMAIL_HOST}:{settings.EMAIL_PORT}')
         self.stdout.write('')
-        
+
         try:
             send_mail(
                 subject='[Test] Email de test - André Bellemare',
@@ -35,3 +35,4 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.ERROR(f'✗ Failed to send email: {str(e)}')
             )
+

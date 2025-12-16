@@ -11,11 +11,11 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_filter = ['message_type', 'is_read', 'is_archived', 'last_email_status', 'created_at']
     list_editable = ['is_read']
     search_fields = ['name', 'email', 'message', 'phone']
-    readonly_fields = ['name', 'email', 'phone', 'message', 'message_type', 'painting', 'created_at', 'ip_address', 
+    readonly_fields = ['name', 'email', 'phone', 'message', 'message_type', 'painting', 'created_at', 'ip_address',
                        'last_email_status', 'last_email_datetime', 'last_email_error', 'last_email_traceback']
     date_hierarchy = 'created_at'
     actions = ['resend_notification_email']
-    
+
     fieldsets = (
         ('Contact', {
             'fields': ('name', 'email', 'phone')
@@ -35,7 +35,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     def email_status_display(self, obj):
         """Display email status with color coding"""
         if obj.last_email_status is None:
@@ -45,7 +45,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
         else:
             return format_html('<span style="color: #ef4444;">✗ Échec</span>')
     email_status_display.short_description = 'Email'
-    
+
     def painting_link(self, obj):
         if obj.painting:
             return format_html(
@@ -55,15 +55,15 @@ class ContactMessageAdmin(admin.ModelAdmin):
             )
         return '-'
     painting_link.short_description = 'Toile'
-    
+
     def has_add_permission(self, request):
         return False
-    
+
     def resend_notification_email(self, request, queryset):
         """Action admin pour renvoyer les emails de notification"""
         count = 0
         errors = []
-        
+
         for message in queryset:
             try:
                 email_sent, email_error = message.send_notification_email(fail_silently=False)
@@ -73,14 +73,14 @@ class ContactMessageAdmin(admin.ModelAdmin):
                     errors.append(f'{message.name}: {email_error or "Erreur inconnue"}')
             except Exception as e:
                 errors.append(f'{message.name}: {str(e)}')
-        
+
         if count > 0:
             self.message_user(
                 request,
                 f'{count} email(s) renvoyé(s) avec succès.',
                 level=messages.SUCCESS
             )
-        
+
         if errors:
             for error in errors:
                 self.message_user(
@@ -88,7 +88,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
                     f'Erreur lors de l\'envoi pour {error}',
                     level=messages.ERROR
                 )
-    
+
     resend_notification_email.short_description = 'Renvoyer l\'email de notification'
 
 
@@ -106,7 +106,7 @@ class TestimonialAdmin(admin.ModelAdmin):
     list_editable = ['is_active']
     list_filter = ['is_active', 'rating']
     search_fields = ['author_name', 'author_location', 'content']
-    
+
     def rating_stars(self, obj):
         stars = '★' * obj.rating + '☆' * (5 - obj.rating)
         return format_html('<span style="color: #fbbf24;">{}</span>', stars)
@@ -116,11 +116,11 @@ class TestimonialAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'video_url']
-    
+
     def has_add_permission(self, request):
         # Only allow one instance
         return not SiteSettings.objects.exists()
-    
+
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -129,3 +129,4 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 admin.site.site_header = 'André Bellemare - Administration'
 admin.site.site_title = 'André Bellemare Admin'
 admin.site.index_title = 'Gestion du site'
+

@@ -13,9 +13,9 @@
             <li class="text-charcoal dark:text-white">FAQ</li>
         </ol>
     </nav>
-    
+
     <h1 class="font-display text-4xl text-charcoal dark:text-white mb-8 scroll-fade-in transition-all duration-500">Questions fréquentes</h1>
-    
+
     {% if faqs %}
     <div class="space-y-4">
         {% for faq in faqs %}
@@ -37,7 +37,7 @@
     {% else %}
     <p class="text-warm-500">Aucune question fréquente pour le moment.</p>
     {% endif %}
-    
+
     <!-- Contact CTA -->
     <div class="mt-12 bg-warm-50 dark:bg-warm-800 rounded-2xl p-8 text-center scroll-fade-in-card" data-delay="1">
         <h3 class="font-display text-2xl text-charcoal dark:text-white mb-4 transition-all duration-500">Vous ne trouvez pas votre réponse?</h3>
@@ -60,18 +60,18 @@
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .scroll-fade-in-card {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in-card.visible {
         opacity: 1;
         transform: translateY(0);
@@ -84,12 +84,12 @@
     // Intersection Observer for scroll animations
     document.addEventListener('DOMContentLoaded', function() {
         const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
-        
+
         const observerOptions = {
             threshold: 0.15,
             rootMargin: '0px 0px -100px 0px'
         };
-        
+
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -101,11 +101,11 @@
                 }
             });
         }, observerOptions);
-        
+
         sections.forEach(section => {
             observer.observe(section);
         });
-        
+
         // Check if sections are already visible on load
         function checkInitialVisibility() {
             sections.forEach(section => {
@@ -116,9 +116,10 @@
                 }
             });
         }
-        
+
         checkInitialVisibility();
         setTimeout(checkInitialVisibility, 100);
     });
 </script>
 {% endblock %}
+

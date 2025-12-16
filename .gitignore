@@ -25,6 +25,7 @@ staticfiles/
 
 # Volumes Docker (media et données)
 volumes/
+media
 
 # IDE
 .idea/

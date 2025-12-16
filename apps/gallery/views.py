@@ -11,38 +11,38 @@ class CategoryListView(ListView):
     template_name = 'pages/category.html'
     context_object_name = 'paintings'
     paginate_by = 12
-    
+
     def get_queryset(self):
         self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
         queryset = Painting.objects.filter(
             category=self.category,
             is_active=True
         ).select_related('category', 'finish').prefetch_related('images')
-        
+
         # Apply filters
         finish = self.request.GET.get('finish')
         if finish:
             queryset = queryset.filter(finish__id=finish)
-        
+
         status = self.request.GET.get('status')
         if status:
             queryset = queryset.filter(status=status)
-        
+
         price_min = self.request.GET.get('price_min')
         if price_min:
             queryset = queryset.filter(price_cad__gte=price_min)
-        
+
         price_max = self.request.GET.get('price_max')
         if price_max:
             queryset = queryset.filter(price_cad__lte=price_max)
-        
+
         # Sorting
         sort = self.request.GET.get('sort', '-created_at')
         if sort in ['price_cad', '-price_cad', 'title', '-title', 'created_at', '-created_at']:
             queryset = queryset.order_by(sort)
-        
+
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
@@ -62,12 +62,12 @@ class PaintingDetailView(DetailView):
     model = Painting
     template_name = 'pages/painting_detail.html'
     context_object_name = 'painting'
-    
+
     def get_queryset(self):
         return Painting.objects.filter(is_active=True).select_related(
             'category', 'finish'
         ).prefetch_related('images')
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Related paintings from same category
@@ -87,7 +87,7 @@ class SearchView(ListView):
     template_name = 'pages/search.html'
     context_object_name = 'paintings'
     paginate_by = 12
-    
+
     def get_queryset(self):
         query = self.request.GET.get('q', '')
         if query:
@@ -96,7 +96,7 @@ class SearchView(ListView):
                 is_active=True
             ).select_related('category', 'finish').prefetch_related('images')
         return Painting.objects.none()
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
@@ -109,32 +109,32 @@ class GalleryView(ListView):
     template_name = 'pages/gallery.html'
     context_object_name = 'paintings'
     paginate_by = 12
-    
+
     def get_queryset(self):
         queryset = Painting.objects.filter(
             is_active=True
         ).select_related('category', 'finish').prefetch_related('images')
-        
+
         # Apply filters
         category = self.request.GET.get('category')
         if category:
             queryset = queryset.filter(category__slug=category)
-        
+
         finish = self.request.GET.get('finish')
         if finish:
             queryset = queryset.filter(finish__id=finish)
-        
+
         status = self.request.GET.get('status')
         if status:
             queryset = queryset.filter(status=status)
-        
+
         # Sorting
         sort = self.request.GET.get('sort', '-created_at')
         if sort in ['price_cad', '-price_cad', 'title', '-title', 'created_at', '-created_at']:
             queryset = queryset.order_by(sort)
-        
+
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
@@ -146,3 +146,4 @@ class GalleryView(ListView):
             'sort': self.request.GET.get('sort', '-created_at'),
         }
         return context
+

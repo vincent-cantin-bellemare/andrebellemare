@@ -50,7 +50,7 @@
             <li class="text-charcoal dark:text-white">{{ painting.title }}</li>
         </ol>
     </nav>
-    
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <!-- Images -->
         <div class="space-y-4 scroll-fade-in-card" data-delay="1">
@@ -58,7 +58,7 @@
             {% if painting.primary_image %}
             <div class="zoom-container relative aspect-square bg-warm-100 dark:bg-warm-800 rounded-2xl overflow-hidden cursor-crosshair" id="main-image-container">
                 {% thumbnail painting.primary_image.image "800x800" crop="center" as thumb %}
-                <img src="{{ thumb.url }}" 
+                <img src="{{ thumb.url }}"
                      alt="{{ painting.title }}"
                      id="main-image"
                      class="w-full h-full object-contain"
@@ -73,7 +73,7 @@
                 });
             </script>
             {% endif %}
-            
+
             <!-- Thumbnails -->
             {% if painting.images.count > 1 %}
             <div class="grid grid-cols-5 gap-2">
@@ -88,7 +88,7 @@
             </div>
             {% endif %}
         </div>
-        
+
         <!-- Details -->
         <div class="lg:sticky lg:top-24 lg:self-start scroll-fade-in-card" data-delay="2">
             <!-- Status Badge -->
@@ -99,15 +99,15 @@
             {% else %}
             <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Disponible</span>
             {% endif %}
-            
+
             <h1 class="font-display text-3xl md:text-4xl text-charcoal dark:text-white mb-4 transition-all duration-500">{{ painting.title }}</h1>
-            
+
             <p class="text-3xl font-semibold text-charcoal dark:text-white mb-6">{{ painting.price_cad|floatformat:0 }} $ CAD</p>
-            
+
             <div class="prose prose-warm dark:prose-invert mb-8">
                 <p>{{ painting.description|linebreaks }}</p>
             </div>
-            
+
             <!-- Details Table -->
             <dl class="grid grid-cols-2 gap-4 py-6 border-y border-warm-200 dark:border-warm-700 mb-8">
                 <div>
@@ -133,7 +133,7 @@
                 </div>
                 {% endif %}
             </dl>
-            
+
             <!-- Purchase Button -->
             {% if painting.status == 'available' %}
             <button onclick="openPurchaseModal({{ painting.pk }}, '{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "200x200" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
@@ -144,18 +144,18 @@
                 Le montant sera versé à la <a href="https://maisondupere.org/" target="_blank" rel="noopener" class="underline hover:text-warm-600 dark:hover:text-warm-300 transition-colors">Maison du Père</a>
             </p>
             {% endif %}
-            
+
             <!-- Share Buttons -->
             <div class="flex items-center gap-4">
                 <span class="text-sm text-warm-500">Partager:</span>
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
                    target="_blank" rel="noopener"
                    class="p-2 hover:bg-warm-100 dark:hover:bg-warm-700 rounded-full transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                 </a>
-                <a href="https://pinterest.com/pin/create/button/?url={{ request.build_absolute_uri }}&media={% if painting.primary_image %}{{ site_url }}{{ painting.primary_image.image.url }}{% endif %}&description={{ painting.title }}" 
+                <a href="https://pinterest.com/pin/create/button/?url={{ request.build_absolute_uri }}&media={% if painting.primary_image %}{{ site_url }}{{ painting.primary_image.image.url }}{% endif %}&description={{ painting.title }}"
                    target="_blank" rel="noopener"
                    class="p-2 hover:bg-warm-100 dark:hover:bg-warm-700 rounded-full transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -165,7 +165,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Related Paintings -->
     {% if related_paintings %}
     <section class="mt-20 scroll-fade-in">
@@ -189,18 +189,18 @@
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .scroll-fade-in-card {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in-card.visible {
         opacity: 1;
         transform: translateY(0);
@@ -213,12 +213,12 @@
     // Intersection Observer for scroll animations
     document.addEventListener('DOMContentLoaded', function() {
         const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
-        
+
         const observerOptions = {
             threshold: 0.15,
             rootMargin: '0px 0px -100px 0px'
         };
-        
+
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -230,11 +230,11 @@
                 }
             });
         }, observerOptions);
-        
+
         sections.forEach(section => {
             observer.observe(section);
         });
-        
+
         // Check if sections are already visible on load
         function checkInitialVisibility() {
             sections.forEach(section => {
@@ -245,7 +245,7 @@
                 }
             });
         }
-        
+
         checkInitialVisibility();
         setTimeout(checkInitialVisibility, 100);
     });
@@ -254,12 +254,12 @@
 <script>
     let currentImageIndex = 0;
     const images = [{% for img in painting.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}];
-    
+
     function changeMainImage(url, index) {
         currentImageIndex = index;
         const mainImg = document.getElementById('main-image');
         mainImg.src = url;
-        
+
         // Update thumbnail borders
         const thumbnails = document.querySelectorAll('.grid.grid-cols-5 button');
         thumbnails.forEach((thumb, i) => {
@@ -271,7 +271,7 @@
                 thumb.classList.add('border-transparent');
             }
         });
-        
+
         // Reinitialize zoom
         const container = document.getElementById('main-image-container');
         initZoom(container, url);
@@ -279,3 +279,4 @@
 </script>
 {% endblock %}
 {% endblock %}
+

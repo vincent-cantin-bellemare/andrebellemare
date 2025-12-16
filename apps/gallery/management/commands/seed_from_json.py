@@ -160,7 +160,7 @@ class Command(BaseCommand):
                         file_ext = image_path.suffix.lower()
                         if not file_ext:
                             file_ext = '.jpg'
-                        
+
                         # Convert AVIF to JPEG if Pillow doesn't support AVIF or if it's AVIF format
                         image_file = None
                         if file_ext == '.avif' and HAS_PILLOW:
@@ -177,7 +177,7 @@ class Command(BaseCommand):
                                     img = background
                                 elif img.mode != 'RGB':
                                     img = img.convert('RGB')
-                                
+
                                 # Save to BytesIO as JPEG
                                 output = io.BytesIO()
                                 img.save(output, format='JPEG', quality=95)
@@ -220,11 +220,11 @@ class Command(BaseCommand):
                                 image_file,
                                 save=True
                             )
-                        
+
                         # Close file if it was opened
                         if hasattr(image_file, 'close'):
                             image_file.close()
-                        
+
                         images_created += 1
 
                     if images_created == 0:

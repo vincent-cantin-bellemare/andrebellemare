@@ -147,6 +147,8 @@ if DEBUG:
     INSTALLED_APPS += ['debug_toolbar']
     MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
     INTERNAL_IPS = ['127.0.0.1']
+    # Allow iframe in development (useful for debugging and testing)
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Security settings for production
 if not DEBUG:

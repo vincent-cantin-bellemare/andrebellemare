@@ -21,14 +21,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         email = 'vcantin@codeshop.ca'
         username = email
-        
+
         # Check if user already exists
         if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
             self.stdout.write(
                 self.style.WARNING(f'User {email} already exists.')
             )
             return
-        
+
         # Get password
         password = options.get('password')
         if not password:
@@ -39,14 +39,15 @@ class Command(BaseCommand):
                     self.style.ERROR('Passwords do not match.')
                 )
                 return
-        
+
         # Create user
         user = User.objects.create_user(
             username=username,
             email=email,
             password=password,
         )
-        
+
         self.stdout.write(
             self.style.SUCCESS(f'Successfully created user {email}')
         )
+

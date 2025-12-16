@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load thumbnail %}
 {% load static %}
 
 {% block title %}André Bellemare - Artiste peintre à Boucherville{% endblock %}
@@ -26,15 +25,11 @@
 <!-- Hero Section -->
 <section class="relative py-20 md:py-32 overflow-hidden">
     <div class="absolute inset-0 z-0">
-        {% if hero_painting and hero_painting.primary_image %}
         <!-- Background painting image -->
-        {% thumbnail hero_painting.primary_image.image "1920x1080" crop="center" as hero_thumb %}
-        <img src="{{ hero_thumb.url }}" 
-             alt="{{ hero_painting.title }}"
+        <img src="{% static 'images/hero-background.avif' %}"
+             alt="Image de fond"
              class="w-full h-full object-cover"
              style="opacity: 0.25; filter: blur(0px);">
-        {% endthumbnail %}
-        {% endif %}
         <!-- Overlay gradient for text readability -->
         <div class="absolute inset-0 bg-gradient-to-br from-warm-100/85 via-warm-50/75 to-warm-100/85 dark:from-warm-900/90 dark:via-warm-800/85 dark:to-warm-900/90"></div>
         <!-- Fallback gradient background -->
@@ -69,25 +64,25 @@
         <blockquote class="font-display text-2xl md:text-3xl italic text-charcoal dark:text-warm-100 leading-relaxed transition-all duration-500">
             "Et savoir que mes toiles vont égayer vos foyers tout en offrant du réconfort à ceux qui n'ont ni toit, ni salon... me touche profondément."
         </blockquote>
-        
+
         <!-- Logo Maison du Père -->
         <div class="mt-8 mb-6 flex justify-center">
             <a href="https://maisondupere.org/" target="_blank" rel="noopener" class="hover:opacity-80 transition-opacity duration-300">
-                <img src="{% static 'images/maison_du_pere.svg' %}" 
-                     alt="Maison du Père" 
+                <img src="{% static 'images/maison_du_pere.svg' %}"
+                     alt="Maison du Père"
                      class="h-16 md:h-20 w-auto">
             </a>
         </div>
-        
+
         <p class="mt-8 text-warm-600 dark:text-warm-400 transition-all duration-500">
-            Pour accueillir une toile, il vous suffit de faire un don du montant indiqué à la <strong><a href="https://maisondupere.org/" target="_blank" rel="noopener" class="hover:text-warm-600 dark:hover:text-warm-300 transition-colors">Maison du Père</a></strong>. 
+            Pour accueillir une toile, il vous suffit de faire un don du montant indiqué à la <strong><a href="https://maisondupere.org/" target="_blank" rel="noopener" class="hover:text-warm-600 dark:hover:text-warm-300 transition-colors">Maison du Père</a></strong>.
             Toutes les toiles iront au refuge. Tout le monde y gagne: vous recevez une œuvre unique et ensemble nous aidons ceux qui en ont le plus besoin.
         </p>
-        
+
         <!-- Bouton de don -->
         <div class="mt-6">
-            <a href="https://wl.donorperfect.net/weblink/weblink.aspx?name=E363220QF&id=2&utm_campaign=un-toit-un-r%C3%A9seau&utm_medium=pop-up&utm_source=maison-du-p%C3%A8re" 
-               target="_blank" 
+            <a href="https://wl.donorperfect.net/weblink/weblink.aspx?name=E363220QF&id=2&utm_campaign=un-toit-un-r%C3%A9seau&utm_medium=pop-up&utm_source=maison-du-p%C3%A8re"
+               target="_blank"
                rel="noopener"
                class="inline-flex items-center px-6 py-3 bg-warm-600 dark:bg-warm-500 text-white rounded-lg font-medium hover:bg-warm-700 dark:hover:bg-warm-600 transition-all duration-300 hover:scale-105 hover:shadow-lg transform">
                 Faire un don à la Maison du Père
@@ -107,7 +102,7 @@
             <h2 class="font-display text-3xl md:text-4xl text-charcoal dark:text-white mb-4 transition-all duration-500">Toiles en vedette</h2>
             <p class="text-warm-500 dark:text-warm-400 transition-all duration-500">Une sélection de mes œuvres récentes</p>
         </div>
-        
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for painting in featured_paintings %}
             <div class="scroll-fade-in-card" data-delay="{{ forloop.counter0 }}">
@@ -115,7 +110,7 @@
             </div>
             {% endfor %}
         </div>
-        
+
         <div class="text-center mt-12">
             <a href="{% url 'gallery:gallery' %}" class="inline-flex items-center px-8 py-4 border-2 border-charcoal dark:border-warm-400 text-charcoal dark:text-warm-300 rounded-lg font-medium hover:bg-charcoal hover:text-white dark:hover:bg-warm-600 transition-all duration-300 hover:scale-105 hover:shadow-lg transform">
                 Voir toutes les toiles
@@ -135,7 +130,7 @@
             <h2 class="font-display text-3xl md:text-4xl text-charcoal dark:text-white mb-4 transition-all duration-500">Explorer par catégorie</h2>
             <p class="text-warm-500 dark:text-warm-400 transition-all duration-500">Je vis ma vie à ma façon, et je la peins sans prétention, pour le plaisir de vous réjouir</p>
         </div>
-        
+
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {% for category in categories %}
             <a href="{{ category.get_absolute_url }}" class="group block p-6 bg-white dark:bg-warm-700 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 text-center hover:scale-105 transform hover:-translate-y-1">
@@ -156,7 +151,7 @@
         <div class="text-center mb-12">
             <h2 class="font-display text-3xl md:text-4xl text-charcoal dark:text-white mb-4 transition-all duration-500">Ce qu'ils en disent</h2>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             {% for testimonial in testimonials %}
             <div class="bg-white dark:bg-warm-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 scroll-fade-in-card" data-delay="{{ forloop.counter0 }}">
@@ -214,19 +209,19 @@
         transform: translateY(30px);
         animation: fadeInUp 0.8s ease-out 0.2s forwards;
     }
-    
+
     .hero-text {
         opacity: 0;
         transform: translateY(30px);
         animation: fadeInUp 0.8s ease-out 0.4s forwards;
     }
-    
+
     .hero-buttons {
         opacity: 0;
         transform: translateY(30px);
         animation: fadeInUp 0.8s ease-out 0.6s forwards;
     }
-    
+
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -237,35 +232,35 @@
             transform: translateY(0);
         }
     }
-    
+
     /* Scroll fade in animation */
     .scroll-fade-in {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .scroll-fade-in-card {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in-card.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     /* Smooth transitions for interactive elements */
     a, button {
         transition: all 0.3s ease;
     }
-    
+
     /* Ensure cards have proper transitions */
     article {
         transition: all 0.3s ease;
@@ -280,12 +275,12 @@
         // Observe sections
         const sections = document.querySelectorAll('.scroll-fade-in');
         const cards = document.querySelectorAll('.scroll-fade-in-card');
-        
+
         const observerOptions = {
             threshold: 0.15,
             rootMargin: '0px 0px -100px 0px'
         };
-        
+
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -297,18 +292,18 @@
                 }
             });
         }, observerOptions);
-        
+
         // Observe sections
         sections.forEach(section => {
             observer.observe(section);
         });
-        
+
         // Observe cards with staggered delays
         cards.forEach((card, index) => {
             card.dataset.delay = index;
             observer.observe(card);
         });
-        
+
         // Check if sections are already visible on load (for above-the-fold content)
         function checkInitialVisibility() {
             sections.forEach(section => {
@@ -319,7 +314,7 @@
                 }
             });
         }
-        
+
         // Check immediately and after a short delay
         checkInitialVisibility();
         setTimeout(checkInitialVisibility, 100);

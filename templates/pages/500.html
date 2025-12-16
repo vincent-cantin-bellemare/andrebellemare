@@ -14,12 +14,12 @@
         <p class="text-lg text-warm-600 dark:text-warm-400 mb-8 max-w-2xl mx-auto">
             Désolé, une erreur interne s'est produite. Notre équipe a été notifiée et travaille à résoudre le problème.
         </p>
-        <a href="{% url 'core:home' %}" 
+        <a href="{% url 'core:home' %}"
            class="inline-flex items-center px-8 py-4 bg-charcoal dark:bg-warm-600 text-white rounded-xl font-semibold hover:bg-warm-700 dark:hover:bg-warm-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
             Retour à l'accueil
         </a>
     </div>
-    
+
     <!-- Paintings Grid -->
     {% if paintings %}
     <div class="mb-12">
@@ -32,7 +32,7 @@
                 <div class="relative overflow-hidden rounded-xl bg-warm-100 dark:bg-warm-800 aspect-square mb-4">
                     {% if painting.primary_image %}
                         {% thumbnail painting.primary_image.image "600x600" crop="center" as thumb %}
-                        <img src="{{ thumb.url }}" 
+                        <img src="{{ thumb.url }}"
                              alt="{{ painting.title }}"
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                         {% endthumbnail %}
@@ -55,7 +55,7 @@
         </div>
     </div>
     {% endif %}
-    
+
     <!-- Quick Links -->
     <div class="text-center">
         <p class="text-warm-600 dark:text-warm-400 mb-4">Ou explorez :</p>
@@ -73,3 +73,4 @@
     </div>
 </div>
 {% endblock %}
+

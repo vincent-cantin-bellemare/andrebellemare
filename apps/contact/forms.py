@@ -5,7 +5,7 @@ from .models import ContactMessage
 
 class ContactForm(forms.ModelForm):
     """Contact form"""
-    
+
     class Meta:
         model = ContactMessage
         fields = ['name', 'email', 'phone', 'message']
@@ -32,7 +32,7 @@ class ContactForm(forms.ModelForm):
 
 class PurchaseInquiryForm(forms.ModelForm):
     """Purchase inquiry form (modal)"""
-    
+
     class Meta:
         model = ContactMessage
         fields = ['name', 'email', 'phone', 'message']
@@ -55,7 +55,7 @@ class PurchaseInquiryForm(forms.ModelForm):
                 'rows': 3,
             }),
         }
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['message'].required = False
@@ -65,3 +65,4 @@ class PurchaseInquiryForm(forms.ModelForm):
         for field_name in ['name', 'email']:
             if field_name in self.fields:
                 self.fields[field_name].widget.attrs.pop('required', None)
+

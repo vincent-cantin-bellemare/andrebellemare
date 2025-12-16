@@ -21,15 +21,15 @@ urlpatterns = [
     # WordPress honeypot (must be before other URLs for priority)
     path('wp-admin.php', core_views.wordpress_honeypot_view, name='honeypot'),
     path('wp-login.php', core_views.wordpress_honeypot_view, name='honeypot'),
-    
+
     # Admin at /alexandre/
     path('alexandre/', admin.site.urls),
-    
+
     # Apps
     path('', include('apps.core.urls')),
     path('', include('apps.gallery.urls')),
     path('', include('apps.contact.urls')),
-    
+
     # SEO
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
@@ -44,3 +44,4 @@ if settings.DEBUG:
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
+

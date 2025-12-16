@@ -14,16 +14,16 @@
             <li class="text-charcoal dark:text-white">Contact</li>
         </ol>
     </nav>
-    
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
         <!-- Contact Form -->
         <div class="scroll-fade-in w-full min-w-0">
             <h1 class="font-display text-4xl text-charcoal dark:text-white mb-4">Me contacter</h1>
             <p class="text-warm-600 dark:text-warm-400 mb-8">
-                Une question sur une toile? Un projet en tête? N'hésitez pas à m'écrire, 
+                Une question sur une toile? Un projet en tête? N'hésitez pas à m'écrire,
                 je vous répondrai dans les plus brefs délais.
             </p>
-            
+
             {% if success %}
             <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl p-6 mb-8">
                 <div class="flex items-center">
@@ -37,7 +37,7 @@
                 </div>
             </div>
             {% endif %}
-            
+
             {% if form.non_field_errors %}
             <div class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl p-6 mb-8">
                 <div class="flex items-center">
@@ -55,10 +55,10 @@
                 </div>
             </div>
             {% endif %}
-            
+
             <form method="post" id="contact-form" class="space-y-5 md:space-y-6 w-full">
                 {% csrf_token %}
-                
+
                 <div class="field-wrapper">
                     <label for="id_name" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Nom complet <span class="text-red-500">*</span>
@@ -72,7 +72,7 @@
                         {% endif %}
                     </div>
                 </div>
-                
+
                 <div class="field-wrapper">
                     <label for="id_email" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Courriel <span class="text-red-500">*</span>
@@ -86,7 +86,7 @@
                         {% endif %}
                     </div>
                 </div>
-                
+
                 <div class="field-wrapper">
                     <label for="id_phone" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Téléphone
@@ -94,7 +94,7 @@
                     {% render_field form.phone class="form-input" id="id_phone" %}
                     <div class="error-container" data-field="phone"></div>
                 </div>
-                
+
                 <div class="field-wrapper">
                     <label for="id_message" class="block text-sm font-semibold text-charcoal dark:text-warm-200 mb-2">
                         Message <span class="text-red-500">*</span>
@@ -108,18 +108,18 @@
                         {% endif %}
                     </div>
                 </div>
-                
+
                 <button type="submit" id="submit-btn" class="w-full py-4 px-6 bg-charcoal dark:bg-warm-600 text-white rounded-xl text-base font-semibold hover:bg-warm-700 dark:hover:bg-warm-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                     Envoyer le message
                 </button>
             </form>
         </div>
-        
+
         <!-- Contact Info -->
         <div class="lg:pl-8 scroll-fade-in-card" data-delay="1">
             <div class="bg-warm-50 dark:bg-warm-800 rounded-2xl p-8 mb-8">
                 <h2 class="font-display text-2xl text-charcoal dark:text-white mb-6">Coordonnées</h2>
-                
+
                 <div class="space-y-6">
                     <div class="flex items-start">
                         <div class="flex-shrink-0 w-12 h-12 bg-white dark:bg-warm-700 rounded-full flex items-center justify-center mr-4">
@@ -133,7 +133,7 @@
                             <a href="https://www.google.com/maps/place/Docteur+Andre+Bellemare/@45.5850848,-73.4466295,17z/data=!3m1!4b1!4m6!3m5!1s0x4cc902cdf1b6b407:0xa192375f34aaefd1!8m2!3d45.5850848!4d-73.4440546!16s%2Fg%2F1ts1m7h_?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D" target="_blank" rel="noopener" class="text-warm-600 dark:text-warm-400 hover:text-charcoal dark:hover:text-white transition-colors">{{ contact_address }}</a>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0 w-12 h-12 bg-white dark:bg-warm-700 rounded-full flex items-center justify-center mr-4">
                             <svg class="w-6 h-6 text-warm-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +147,7 @@
                             </a>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-start">
                         <div class="flex-shrink-0 w-12 h-12 bg-white dark:bg-warm-700 rounded-full flex items-center justify-center mr-4">
                             <svg class="w-6 h-6 text-warm-500" fill="currentColor" viewBox="0 0 24 24">
@@ -163,7 +163,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Quick Links -->
             <div class="bg-white dark:bg-warm-800 rounded-2xl p-8 border border-warm-200 dark:border-warm-700">
                 <h3 class="font-display text-xl text-charcoal dark:text-white mb-4">Questions fréquentes</h3>
@@ -187,14 +187,14 @@
 (function() {
     const form = document.getElementById('contact-form');
     if (!form) return;
-    
+
     // Get form fields
     const nameField = document.getElementById('id_name');
     const emailField = document.getElementById('id_email');
     const phoneField = document.getElementById('id_phone');
     const messageField = document.getElementById('id_message');
     const submitBtn = document.getElementById('submit-btn');
-    
+
     // Validation functions
     function validateName(value) {
         value = value.trim();
@@ -209,7 +209,7 @@
         }
         return null;
     }
-    
+
     function validateEmail(value) {
         value = value.trim();
         if (!value) {
@@ -221,7 +221,7 @@
         }
         return null;
     }
-    
+
     function validatePhone(value) {
         value = value.trim();
         if (value && value.length > 0) {
@@ -241,7 +241,7 @@
         }
         return null;
     }
-    
+
     function validateMessage(value) {
         value = value.trim();
         if (!value) {
@@ -252,12 +252,12 @@
         }
         return null;
     }
-    
+
     // Show error function
     function showError(field, errorMessage) {
         const fieldWrapper = field.closest('.field-wrapper');
         if (!fieldWrapper) return;
-        
+
         field.classList.add('error-field');
         const errorContainer = fieldWrapper.querySelector('.error-container');
         if (errorContainer) {
@@ -268,7 +268,7 @@
             ` : '';
         }
     }
-    
+
     // Clear error function
     function clearError(field) {
         field.classList.remove('error-field');
@@ -280,7 +280,7 @@
             }
         }
     }
-    
+
     // Validate field function
     function validateField(field, validator) {
         const error = validator(field.value);
@@ -292,17 +292,17 @@
             return true;
         }
     }
-    
+
     // Real-time validation on input (debounced for better UX)
     let validationTimeouts = {};
-    
+
     function setupRealTimeValidation(field, validator) {
         field.addEventListener('input', function() {
             // Clear previous timeout
             if (validationTimeouts[field.id]) {
                 clearTimeout(validationTimeouts[field.id]);
             }
-            
+
             // Only validate if field has been touched (has content or was focused)
             if (field.value.trim().length > 0 || field.classList.contains('touched')) {
                 // Debounce validation
@@ -311,35 +311,35 @@
                 }, 300);
             }
         });
-        
+
         // Mark field as touched on focus
         field.addEventListener('focus', function() {
             field.classList.add('touched');
         });
-        
+
         // Full validation on blur
         field.addEventListener('blur', function() {
             field.classList.add('touched');
             validateField(field, validator);
         });
     }
-    
+
     // Setup validation for each field
     setupRealTimeValidation(nameField, validateName);
     setupRealTimeValidation(emailField, validateEmail);
     setupRealTimeValidation(phoneField, validatePhone);
     setupRealTimeValidation(messageField, validateMessage);
-    
+
     // Form submission validation
     form.addEventListener('submit', function(e) {
         let isValid = true;
-        
+
         // Validate all required fields
         if (!validateField(nameField, validateName)) isValid = false;
         if (!validateField(emailField, validateEmail)) isValid = false;
         if (!validateField(phoneField, validatePhone)) isValid = false;
         if (!validateField(messageField, validateMessage)) isValid = false;
-        
+
         if (!isValid) {
             e.preventDefault();
             // Scroll to first error
@@ -350,12 +350,12 @@
             }
             return false;
         }
-        
+
         // Disable submit button to prevent double submission
         submitBtn.disabled = true;
         submitBtn.textContent = 'Envoi en cours...';
     });
-    
+
     // Mark fields with server-side errors as touched on page load
     // This allows users to see server errors first, then validate as they type
     document.addEventListener('DOMContentLoaded', function() {
@@ -364,15 +364,15 @@
         fieldsWithErrors.forEach(function(field) {
             field.classList.add('touched');
         });
-        
+
         // Intersection Observer for scroll animations
         const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
-        
+
         const observerOptions = {
             threshold: 0.15,
             rootMargin: '0px 0px -100px 0px'
         };
-        
+
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -384,11 +384,11 @@
                 }
             });
         }, observerOptions);
-        
+
         sections.forEach(section => {
             observer.observe(section);
         });
-        
+
         // Check if sections are already visible on load
         function checkInitialVisibility() {
             sections.forEach(section => {
@@ -399,7 +399,7 @@
                 }
             });
         }
-        
+
         checkInitialVisibility();
         setTimeout(checkInitialVisibility, 100);
     });
@@ -415,21 +415,22 @@
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .scroll-fade-in-card {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in-card.visible {
         opacity: 1;
         transform: translateY(0);
     }
 </style>
 {% endblock %}
+

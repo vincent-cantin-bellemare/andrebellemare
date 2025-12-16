@@ -14,7 +14,7 @@
             <li class="text-charcoal dark:text-white">Recherche</li>
         </ol>
     </nav>
-    
+
     <!-- Header -->
     <div class="mb-8 scroll-fade-in transition-all duration-500">
         <h1 class="font-display text-4xl text-charcoal dark:text-white mb-4">
@@ -24,19 +24,19 @@
             {{ page_obj.paginator.count }} résultat{{ page_obj.paginator.count|pluralize }}
         </p>
     </div>
-    
+
     <!-- Search Form -->
     <form action="{% url 'gallery:search' %}" method="get" class="mb-8 scroll-fade-in-card" data-delay="1">
         <div class="flex gap-4 max-w-xl">
-            <input type="search" name="q" value="{{ query }}" 
-                   placeholder="Rechercher une toile..." 
+            <input type="search" name="q" value="{{ query }}"
+                   placeholder="Rechercher une toile..."
                    class="flex-1 px-4 py-3 border border-warm-200 dark:border-warm-600 rounded-lg bg-white dark:bg-warm-800 focus:ring-2 focus:ring-warm-400 focus:border-transparent">
             <button type="submit" class="px-6 py-3 bg-charcoal dark:bg-warm-600 text-white rounded-lg font-medium hover:bg-warm-700 transition-colors">
                 Rechercher
             </button>
         </div>
     </form>
-    
+
     <!-- Results -->
     {% if paintings %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
@@ -46,36 +46,36 @@
         </div>
         {% endfor %}
     </div>
-    
+
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
     <nav class="flex justify-center">
         <ul class="flex items-center gap-2">
             {% if page_obj.has_previous %}
             <li>
-                <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}" 
+                <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}"
                    class="px-4 py-2 rounded-lg border border-warm-200 dark:border-warm-600 hover:bg-warm-50 dark:hover:bg-warm-700">
                     Précédent
                 </a>
             </li>
             {% endif %}
-            
+
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
                 <li><span class="px-4 py-2 rounded-lg bg-charcoal dark:bg-warm-600 text-white">{{ num }}</span></li>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                 <li>
-                    <a href="?q={{ query }}&page={{ num }}" 
+                    <a href="?q={{ query }}&page={{ num }}"
                        class="px-4 py-2 rounded-lg border border-warm-200 dark:border-warm-600 hover:bg-warm-50 dark:hover:bg-warm-700">
                         {{ num }}
                     </a>
                 </li>
                 {% endif %}
             {% endfor %}
-            
+
             {% if page_obj.has_next %}
             <li>
-                <a href="?q={{ query }}&page={{ page_obj.next_page_number }}" 
+                <a href="?q={{ query }}&page={{ page_obj.next_page_number }}"
                    class="px-4 py-2 rounded-lg border border-warm-200 dark:border-warm-600 hover:bg-warm-50 dark:hover:bg-warm-700">
                     Suivant
                 </a>
@@ -84,7 +84,7 @@
         </ul>
     </nav>
     {% endif %}
-    
+
     {% else %}
     <div class="text-center py-16 scroll-fade-in">
         <svg class="w-16 h-16 mx-auto text-warm-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,18 +107,18 @@
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in.visible {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .scroll-fade-in-card {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    
+
     .scroll-fade-in-card.visible {
         opacity: 1;
         transform: translateY(0);
@@ -131,12 +131,12 @@
     // Intersection Observer for scroll animations
     document.addEventListener('DOMContentLoaded', function() {
         const sections = document.querySelectorAll('.scroll-fade-in, .scroll-fade-in-card');
-        
+
         const observerOptions = {
             threshold: 0.15,
             rootMargin: '0px 0px -100px 0px'
         };
-        
+
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -148,11 +148,11 @@
                 }
             });
         }, observerOptions);
-        
+
         sections.forEach(section => {
             observer.observe(section);
         });
-        
+
         // Check if sections are already visible on load
         function checkInitialVisibility() {
             sections.forEach(section => {
@@ -163,9 +163,10 @@
                 }
             });
         }
-        
+
         checkInitialVisibility();
         setTimeout(checkInitialVisibility, 100);
     });
 </script>
 {% endblock %}
+

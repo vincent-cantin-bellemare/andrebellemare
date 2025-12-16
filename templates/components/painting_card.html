@@ -4,7 +4,7 @@
     <a href="{{ painting.get_absolute_url }}" class="block relative aspect-square overflow-hidden">
         {% if painting.primary_image %}
             {% thumbnail painting.primary_image.image "400x400" crop="center" as thumb %}
-            <img src="{{ thumb.url }}" 
+            <img src="{{ thumb.url }}"
                  alt="{{ painting.title }}"
                  loading="lazy"
                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out">
@@ -16,7 +16,7 @@
                 </svg>
             </div>
         {% endif %}
-        
+
         <!-- Status Badge -->
         {% if painting.status == 'sold' %}
         <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -28,14 +28,14 @@
         </div>
         {% endif %}
     </a>
-    
+
     <div class="p-4">
         <a href="{{ painting.get_absolute_url }}" class="block">
             <h3 class="font-display text-lg text-charcoal dark:text-white group-hover:text-warm-600 dark:group-hover:text-warm-300 transition-colors line-clamp-1">
                 {{ painting.title }}
             </h3>
         </a>
-        
+
         <div class="flex items-center justify-between mt-2">
             <div>
                 {% if painting.category %}
@@ -45,7 +45,7 @@
             </div>
             <p class="font-semibold text-charcoal dark:text-white">{{ painting.price_cad|floatformat:0 }} $</p>
         </div>
-        
+
         {% if painting.status == 'available' %}
         <button onclick="openPurchaseModal({{ painting.pk }}, '{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "200x200" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
                 class="mt-4 w-full py-2 px-4 bg-charcoal dark:bg-warm-600 text-white rounded-lg text-sm font-medium hover:bg-warm-700 transition-all duration-300 hover:scale-105 hover:shadow-md transform">
@@ -54,3 +54,4 @@
         {% endif %}
     </div>
 </article>
+

@@ -20,3 +20,4 @@
 
 - Documentation files go in the `docs/` directory in the project root
 - Keep templates organized in `templates/` with subdirectories for components, pages, and emails
+

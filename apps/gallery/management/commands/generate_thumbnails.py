@@ -21,20 +21,20 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         sizes = [size.strip() for size in options['sizes'].split(',')]
-        
+
         paintings = Painting.objects.filter(is_active=True).prefetch_related('images')
         total_paintings = paintings.count()
-        
+
         self.stdout.write(f'Generating thumbnails for {total_paintings} paintings...')
         self.stdout.write(f'Sizes: {", ".join(sizes)}')
-        
+
         generated_count = 0
         error_count = 0
-        
+
         for painting in paintings:
             if not painting.primary_image:
                 continue
-            
+
             for size in sizes:
                 try:
                     # Generate thumbnail - this will create it if it doesn't exist
@@ -52,12 +52,12 @@ class Command(BaseCommand):
                             f'Error generating {size} for {painting.sku}: {str(e)}'
                         )
                     )
-            
+
             # Also generate thumbnails for additional images
             for image in painting.images.all():
                 if image == painting.primary_image:
                     continue
-                
+
                 for size in sizes:
                     try:
                         thumb = get_thumbnail(
@@ -74,7 +74,7 @@ class Command(BaseCommand):
                                 f'Error generating {size} for {painting.sku} image {image.id}: {str(e)}'
                             )
                         )
-        
+
         self.stdout.write('')
         self.stdout.write(
             self.style.SUCCESS(

@@ -11,7 +11,7 @@ class PaintingImageInline(admin.TabularInline):
     extra = 1
     fields = ['image', 'image_preview', 'alt_text', 'is_primary', 'order']
     readonly_fields = ['image_preview']
-    
+
     def image_preview(self, obj):
         if obj.image:
             try:
@@ -29,7 +29,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_editable = ['order']
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ['name']
-    
+
     def painting_count(self, obj):
         return obj.painting_count
     painting_count.short_description = 'Toiles'
@@ -39,7 +39,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class FinishAdmin(admin.ModelAdmin):
     list_display = ['name', 'painting_count']
     search_fields = ['name']
-    
+
     def painting_count(self, obj):
         return obj.paintings.count()
     painting_count.short_description = 'Toiles'
@@ -55,7 +55,7 @@ class PaintingAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ['created_at', 'updated_at']
     inlines = [PaintingImageInline]
-    
+
     fieldsets = (
         ('Informations principales', {
             'fields': ('sku', 'title', 'slug', 'description')
@@ -74,7 +74,7 @@ class PaintingAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     def thumbnail_preview(self, obj):
         primary = obj.primary_image
         if primary and primary.image:
@@ -93,7 +93,7 @@ class PaintingImageAdmin(admin.ModelAdmin):
     list_filter = ['is_primary', 'painting__category']
     list_editable = ['is_primary', 'order']
     search_fields = ['painting__title', 'painting__sku']
-    
+
     def image_preview(self, obj):
         if obj.image:
             try:
@@ -103,3 +103,4 @@ class PaintingImageAdmin(admin.ModelAdmin):
                 return format_html('<img src="{}" width="80" height="80" style="object-fit: cover; border-radius: 4px;" />', obj.image.url)
         return '-'
     image_preview.short_description = 'Aperçu'
+

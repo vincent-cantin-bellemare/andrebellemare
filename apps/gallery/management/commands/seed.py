@@ -44,14 +44,14 @@ class Command(BaseCommand):
             Testimonial.objects.all().delete()
 
         self.stdout.write('Seeding database...')
-        
+
         self.create_categories()
         self.create_finishes()
         self.create_paintings()
         self.create_faqs()
         self.create_testimonials()
         self.create_site_settings()
-        
+
         self.stdout.write(self.style.SUCCESS('Database seeded successfully!'))
 
     def create_categories(self):
@@ -63,10 +63,10 @@ class Command(BaseCommand):
             {'name': 'Fruits de la passion', 'description': 'Nature morte et fruits aux couleurs éclatantes.', 'order': 5},
             {'name': 'Ruelle', 'description': 'Les charmes cachés des ruelles montréalaises.', 'order': 6},
         ]
-        
+
         for data in categories_data:
             Category.objects.get_or_create(name=data['name'], defaults=data)
-        
+
         self.stdout.write(f'  Created {len(categories_data)} categories')
 
     def create_finishes(self):
@@ -77,10 +77,10 @@ class Command(BaseCommand):
             'Huile sur toile',
             'Technique mixte',
         ]
-        
+
         for name in finishes_data:
             Finish.objects.get_or_create(name=name)
-        
+
         self.stdout.write(f'  Created {len(finishes_data)} finishes')
 
     def create_paintings(self):
@@ -90,13 +90,13 @@ class Command(BaseCommand):
             'Danse', 'Silence', 'Rêve', 'Éveil', 'Flamme', 'Vague',
             'Brume', 'Aurore', 'Crépuscule', 'Harmonie', 'Écho', 'Passage'
         ]
-        
+
         nouns = [
             'd\'automne', 'nocturne', 'printanier', 'hivernal', 'd\'été',
             'urbain', 'champêtre', 'maritime', 'céleste', 'terrestre',
             'du matin', 'du soir', 'de l\'aube', 'intérieur', 'lointain'
         ]
-        
+
         descriptions = [
             "Cette œuvre capture l'essence fugace d'un moment suspendu dans le temps. Les couleurs se mêlent et se répondent dans une danse subtile.",
             "Une exploration des textures et des nuances, où chaque coup de pinceau raconte une histoire différente.",
@@ -106,38 +106,38 @@ class Command(BaseCommand):
             "Un voyage intérieur traduit en pigments et en lumière, une invitation à la contemplation.",
             "L'œuvre joue avec les perspectives et les plans pour créer une profondeur hypnotique.",
         ]
-        
+
         dimensions_options = [
-            '12" x 16"', '16" x 20"', '18" x 24"', '20" x 24"', 
+            '12" x 16"', '16" x 20"', '18" x 24"', '20" x 24"',
             '24" x 30"', '24" x 36"', '30" x 40"', '36" x 48"'
         ]
-        
+
         categories = list(Category.objects.all())
         finishes = list(Finish.objects.all())
-        
+
         # Check for images in /volumes/django/media/seed
         seed_images = []
         seed_path = Path('/volumes/django/media/seed')
         if seed_path.exists():
             for ext in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
                 seed_images.extend(seed_path.glob(ext))
-        
+
         use_seed_images = len(seed_images) > 0
         if use_seed_images:
             self.stdout.write(f'  Found {len(seed_images)} images in /volumes/django/media/seed')
         else:
             self.stdout.write('  No images in /volumes/django/media/seed, generating placeholders')
-        
+
         # Create paintings
         num_paintings = 18
         for i in range(num_paintings):
             title = f"{random.choice(adjectives)} {random.choice(nouns)}"
             sku = f"AB-{str(i + 1).zfill(4)}"
-            
+
             # Check if painting already exists
             if Painting.objects.filter(sku=sku).exists():
                 continue
-            
+
             painting = Painting.objects.create(
                 sku=sku,
                 title=title,
@@ -153,7 +153,7 @@ class Command(BaseCommand):
                     weights=[0.7, 0.2, 0.1]
                 )[0]
             )
-            
+
             # Create image(s) for this painting
             num_images = random.randint(1, 3)
             for img_idx in range(num_images):
@@ -164,19 +164,19 @@ class Command(BaseCommand):
                 elif HAS_PILLOW:
                     # Generate placeholder
                     self._create_placeholder_image(painting, img_idx == 0)
-        
+
         self.stdout.write(f'  Created {num_paintings} paintings')
 
     def _create_image_from_file(self, painting, src_path, is_primary):
         """Copy an image file to media directory and create PaintingImage"""
         media_dir = Path(settings.MEDIA_ROOT) / 'paintings' / '2024' / '12'
         media_dir.mkdir(parents=True, exist_ok=True)
-        
+
         filename = f"{painting.sku}_{random.randint(1000, 9999)}{src_path.suffix}"
         dest_path = media_dir / filename
-        
+
         shutil.copy(src_path, dest_path)
-        
+
         relative_path = f"paintings/2024/12/{filename}"
         PaintingImage.objects.create(
             painting=painting,
@@ -190,18 +190,18 @@ class Command(BaseCommand):
         """Generate a colorful abstract placeholder image"""
         media_dir = Path(settings.MEDIA_ROOT) / 'paintings' / '2024' / '12'
         media_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Create abstract gradient image
         width, height = 800, 800
         img = Image.new('RGB', (width, height))
         draw = ImageDraw.Draw(img)
-        
+
         # Random colors for gradient
         colors = [
             (random.randint(100, 255), random.randint(100, 255), random.randint(100, 255))
             for _ in range(4)
         ]
-        
+
         # Create gradient effect
         for y in range(height):
             for x in range(width):
@@ -210,7 +210,7 @@ class Command(BaseCommand):
                 g = int((colors[2][1] * (height - y) + colors[3][1] * y) / height)
                 b = int((colors[0][2] * (width - x) + colors[2][2] * x) / width)
                 draw.point((x, y), fill=(r % 256, g % 256, b % 256))
-        
+
         # Add some abstract shapes
         for _ in range(random.randint(3, 8)):
             shape_color = (
@@ -222,16 +222,16 @@ class Command(BaseCommand):
             y1 = random.randint(0, height)
             x2 = x1 + random.randint(50, 300)
             y2 = y1 + random.randint(50, 300)
-            
+
             if random.choice([True, False]):
                 draw.ellipse([x1, y1, x2, y2], fill=shape_color, outline=None)
             else:
                 draw.rectangle([x1, y1, x2, y2], fill=shape_color, outline=None)
-        
+
         filename = f"{painting.sku}_{random.randint(1000, 9999)}.jpg"
         filepath = media_dir / filename
         img.save(filepath, 'JPEG', quality=85)
-        
+
         relative_path = f"paintings/2024/12/{filename}"
         PaintingImage.objects.create(
             painting=painting,
@@ -273,10 +273,10 @@ Vous bénéficiez d'un reçu fiscal pour votre don, et vous repartez avec une œ
                 'order': 5,
             },
         ]
-        
+
         for data in faqs_data:
             FAQ.objects.get_or_create(question=data['question'], defaults=data)
-        
+
         self.stdout.write(f'  Created {len(faqs_data)} FAQs')
 
     def create_testimonials(self):
@@ -312,13 +312,13 @@ Vous bénéficiez d'un reçu fiscal pour votre don, et vous repartez avec une œ
                 'rating': 4,
             },
         ]
-        
+
         for data in testimonials_data:
             Testimonial.objects.get_or_create(
                 author_name=data['author_name'],
                 defaults=data
             )
-        
+
         self.stdout.write(f'  Created {len(testimonials_data)} testimonials')
 
     def create_site_settings(self):
@@ -330,3 +330,4 @@ Vous bénéficiez d'un reçu fiscal pour votre don, et vous repartez avec une œ
             }
         )
         self.stdout.write('  Created site settings')
+

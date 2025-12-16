@@ -174,3 +174,4 @@ echo -e "   ${BLUE}htop${NC}                      # Monitoring système"
 echo -e "   ${BLUE}swapon --show${NC}             # Voir le swap"
 echo ""
 echo -e "${GREEN}✨ Prêt à déployer!${NC}"
+

@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         cache_dir = Path(settings.MEDIA_ROOT) / 'cache'
-        
+
         if cache_dir.exists():
             self.stdout.write(f'Clearing cache directory: {cache_dir}')
             try:
@@ -34,7 +34,7 @@ class Command(BaseCommand):
             self.stdout.write('Cache directory does not exist, creating it...')
             cache_dir.mkdir(parents=True, exist_ok=True)
             self.stdout.write(self.style.SUCCESS('Cache directory created!'))
-        
+
         # Clear sorl-thumbnail database cache
         try:
             self.stdout.write('Clearing sorl-thumbnail database cache...')
@@ -42,7 +42,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS('Database cache cleared!'))
         except Exception as e:
             self.stdout.write(self.style.WARNING(f'Could not clear database cache: {e}'))
-        
+
         if options['regenerate']:
             self.stdout.write('Regenerating thumbnails...')
             try:
@@ -50,6 +50,6 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS('Thumbnails regenerated!'))
             except Exception as e:
                 self.stdout.write(self.style.WARNING(f'Could not regenerate thumbnails: {e}'))
-        
+
         self.stdout.write(self.style.SUCCESS('\n✅ Cache clearing completed!'))
         self.stdout.write('💡 Thumbnails will be regenerated automatically on next page load.')
