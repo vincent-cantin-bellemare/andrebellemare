@@ -381,6 +381,9 @@
                         <div class="flex-1">
                             <h4 class="font-semibold text-red-800 dark:text-red-200 mb-1">Erreur lors de l'envoi</h4>
                             <p id="modal-error-message" class="text-red-700 dark:text-red-300 text-sm"></p>
+                            <p class="text-red-700 dark:text-red-300 text-sm mt-2">
+                                Vous pouvez aussi joindre l'artiste directement au <a href="tel:{{ contact_phone }}" class="font-semibold underline hover:no-underline">{{ contact_phone }}</a>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -627,6 +630,10 @@
 
             const csrftoken = formData.get('csrfmiddlewaretoken') || getCookie('csrftoken');
 
+            // Create abort controller for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
             try {
                 const response = await fetch('{% url "contact:purchase_inquiry" %}', {
                     method: 'POST',
@@ -634,8 +641,11 @@
                     headers: {
                         'X-CSRFToken': csrftoken
                     },
-                    credentials: 'same-origin'
+                    credentials: 'same-origin',
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
 
                 const data = await response.json();
                 if (data.success) {
@@ -699,13 +709,25 @@
                     }
                 }
             } catch (error) {
-                modalErrorMessage.textContent = 'Une erreur est survenue. Veuillez vérifier votre connexion et réessayer.';
+                clearTimeout(timeoutId);
+
+                // Handle timeout or network errors
+                let errorText = 'Une erreur est survenue. Veuillez vérifier votre connexion et réessayer.';
+                if (error.name === 'AbortError') {
+                    errorText = 'La connexion a expiré. Veuillez vérifier votre connexion internet et réessayer.';
+                }
+
+                modalErrorMessage.textContent = errorText;
                 modalError.classList.remove('hidden');
                 modalError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } finally {
-                // Re-enable submit button
+                // Re-enable submit button and form fields
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
+                formFields.forEach(field => {
+                    field.readOnly = false;
+                    field.classList.remove('opacity-60', 'cursor-not-allowed');
+                });
             }
         });
 

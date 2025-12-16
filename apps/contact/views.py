@@ -12,10 +12,14 @@ logger = logging.getLogger(__name__)
 
 
 class ContactView(FormView):
-    """Contact page with form"""
+    """Contact page with form - supports both regular and AJAX submissions"""
     template_name = 'pages/contact.html'
     form_class = ContactForm
     success_url = '/contact/?success=1'
+
+    def is_ajax(self):
+        """Check if request is AJAX"""
+        return self.request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     def form_valid(self, form):
         try:
@@ -34,13 +38,25 @@ class ContactView(FormView):
                 # Log the email error for debugging
                 logger.error(f'Failed to send contact notification email: {email_error}', exc_info=True)
 
-                # Message is saved but email failed - inform user
-                form.add_error(
-                    None,
+                error_msg = (
                     'Votre message a été enregistré, mais nous n\'avons pas pu envoyer la notification par courriel. '
                     'L\'artiste sera informé de votre message. Si le problème persiste, contactez-nous directement.'
                 )
+
+                if self.is_ajax():
+                    return JsonResponse({
+                        'success': False,
+                        'error_message': error_msg
+                    }, status=200)
+
+                form.add_error(None, error_msg)
                 return self.form_invalid(form)
+
+            if self.is_ajax():
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Votre message a été envoyé avec succès! Je vous répondrai dans les plus brefs délais.'
+                })
 
             return super().form_valid(form)
         except Exception as e:
@@ -49,20 +65,56 @@ class ContactView(FormView):
 
             # Check if it's an email error (message was saved but email failed)
             if hasattr(e, '__class__') and ('email' in str(e).lower() or 'send_mail' in str(e).lower()):
-                # Message is saved but email failed - inform user
-                form.add_error(
-                    None,
+                error_msg = (
                     'Votre message a été enregistré, mais nous n\'avons pas pu envoyer la notification par courriel. '
                     'L\'artiste sera informé de votre message. Si le problème persiste, contactez-nous directement.'
                 )
+
+                if self.is_ajax():
+                    return JsonResponse({
+                        'success': False,
+                        'error_message': error_msg
+                    }, status=200)
+
+                form.add_error(None, error_msg)
                 return self.form_invalid(form)
 
-            # Add user-friendly error message
-            form.add_error(
-                None,
-                'Une erreur est survenue lors de l\'envoi de votre message. Veuillez réessayer. Si le problème persiste, contactez-nous directement.'
-            )
+            error_msg = 'Une erreur est survenue lors de l\'envoi de votre message. Veuillez réessayer. Si le problème persiste, contactez-nous directement.'
+
+            if self.is_ajax():
+                return JsonResponse({
+                    'success': False,
+                    'error_message': error_msg
+                }, status=500)
+
+            form.add_error(None, error_msg)
             return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        if self.is_ajax():
+            # Format errors for display
+            error_messages = []
+            if form.errors:
+                for field, errors in form.errors.items():
+                    if field == '__all__':
+                        error_messages.extend(errors)
+                    else:
+                        for error in errors:
+                            field_label = {
+                                'name': 'Nom',
+                                'email': 'Courriel',
+                                'phone': 'Téléphone',
+                                'message': 'Message',
+                            }.get(field, field)
+                            error_messages.append(f"{field_label}: {error}")
+
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors,
+                'error_message': ' '.join(error_messages) if error_messages else 'Une erreur est survenue lors de la validation du formulaire.'
+            }, status=400)
+
+        return super().form_invalid(form)
 
     def get_client_ip(self):
         x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
@@ -157,4 +209,3 @@ def purchase_inquiry(request):
         'errors': form.errors,
         'error_message': ' '.join(error_messages) if error_messages else 'Une erreur est survenue lors de la validation du formulaire.'
     }, status=400)
-
