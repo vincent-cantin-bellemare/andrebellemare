@@ -2,11 +2,13 @@
 Management command to import paintings from the old Wix website.
 Downloads images from Wix CDN and creates paintings in the database.
 
-Usage: python manage.py seed_from_wix [--dry-run]
+Usage: python manage.py seed_from_wix [--dry-run] [--force] [--skip-images]
 """
 
 import re
 import io
+import ssl
+import traceback
 import urllib.request
 import urllib.error
 from html.parser import HTMLParser
@@ -194,12 +196,13 @@ def parse_html_description(html_desc):
     return medium, finish_name, dimensions, clean_description
 
 
-def download_image(image_filename, timeout=30):
+def download_image(image_filename, timeout=60):
     """
     Download an image from Wix CDN.
     Returns: (bytes content, error_message) - content is None if failed.
     """
     url = WIX_IMAGE_BASE_URL + image_filename
+    errors = []
 
     # Try with requests library first (more reliable)
     try:
@@ -209,18 +212,19 @@ def download_image(image_filename, timeout=30):
             headers={
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
             },
-            timeout=timeout
+            timeout=timeout,
+            verify=True
         )
         if response.status_code == 200:
             return response.content, None
         else:
-            return None, f"HTTP {response.status_code}"
+            errors.append(f"requests: HTTP {response.status_code}")
     except ImportError:
-        pass  # Fall back to urllib
+        errors.append("requests: not installed")
     except Exception as e:
-        return None, f"requests error: {str(e)}"
+        errors.append(f"requests: {type(e).__name__}: {str(e)}")
 
-    # Fallback to urllib
+    # Fallback to urllib with SSL context
     try:
         req = urllib.request.Request(
             url,
@@ -228,14 +232,21 @@ def download_image(image_filename, timeout=30):
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
             }
         )
-        with urllib.request.urlopen(req, timeout=timeout) as response:
+        # Create SSL context
+        ctx = ssl.create_default_context()
+        with urllib.request.urlopen(req, timeout=timeout, context=ctx) as response:
             return response.read(), None
     except urllib.error.HTTPError as e:
-        return None, f"HTTP {e.code}: {e.reason}"
+        errors.append(f"urllib: HTTP {e.code} {e.reason}")
     except urllib.error.URLError as e:
-        return None, f"URL error: {str(e.reason)}"
+        errors.append(f"urllib: URLError {str(e.reason)}")
+    except ssl.SSLError as e:
+        errors.append(f"urllib: SSLError {str(e)}")
     except Exception as e:
-        return None, f"Error: {str(e)}"
+        errors.append(f"urllib: {type(e).__name__}: {str(e)}")
+
+    # Return all errors for debugging
+    return None, " | ".join(errors)
 
 
 class Command(BaseCommand):
@@ -252,10 +263,16 @@ class Command(BaseCommand):
             action='store_true',
             help='Skip downloading images (useful for testing)',
         )
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Delete and recreate paintings that already exist',
+        )
 
     def handle(self, *args, **options):
         dry_run = options['dry_run']
         skip_images = options['skip_images']
+        force = options['force']
 
         self.stdout.write('Parsing Wix CSV data...')
 
@@ -367,12 +384,19 @@ class Command(BaseCommand):
                 continue
 
             # Check if painting already exists
-            if Painting.objects.filter(sku=sku).exists():
-                self.stdout.write(
-                    self.style.WARNING(f'Skipping {sku} - already exists')
-                )
-                skipped_count += 1
-                continue
+            existing = Painting.objects.filter(sku=sku).first()
+            if existing:
+                if force:
+                    self.stdout.write(
+                        self.style.WARNING(f'Deleting existing {sku} (--force)')
+                    )
+                    existing.delete()
+                else:
+                    self.stdout.write(
+                        self.style.WARNING(f'Skipping {sku} - already exists (use --force to override)')
+                    )
+                    skipped_count += 1
+                    continue
 
             try:
                 with transaction.atomic():
@@ -394,7 +418,7 @@ class Command(BaseCommand):
                     painting = Painting.objects.create(
                         sku=sku,
                         title=title,
-                        description=medium or clean_desc or '',
+                        description='',
                         price_cad=price_decimal,
                         dimensions=dimensions or '',
                         category=category,
