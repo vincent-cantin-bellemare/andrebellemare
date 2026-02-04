@@ -409,7 +409,7 @@ class Command(BaseCommand):
                     if not skip_images and image_filename:
                         # Always download the image (each painting gets its own copy)
                         self.stdout.write(f'  Downloading {image_filename}...')
-                        image_data = download_image(image_filename)
+                        image_data, error_msg = download_image(image_filename)
 
                         if image_data:
                             # Save image
@@ -432,7 +432,7 @@ class Command(BaseCommand):
                         else:
                             self.stdout.write(
                                 self.style.WARNING(
-                                    f'  Failed to download image for {sku}'
+                                    f'  Failed to download image for {sku}: {error_msg}'
                                 )
                             )
 
