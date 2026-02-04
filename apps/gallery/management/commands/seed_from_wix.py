@@ -197,10 +197,30 @@ def parse_html_description(html_desc):
 def download_image(image_filename, timeout=30):
     """
     Download an image from Wix CDN.
-    Returns: bytes content or None if failed.
+    Returns: (bytes content, error_message) - content is None if failed.
     """
     url = WIX_IMAGE_BASE_URL + image_filename
 
+    # Try with requests library first (more reliable)
+    try:
+        import requests
+        response = requests.get(
+            url,
+            headers={
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+            },
+            timeout=timeout
+        )
+        if response.status_code == 200:
+            return response.content, None
+        else:
+            return None, f"HTTP {response.status_code}"
+    except ImportError:
+        pass  # Fall back to urllib
+    except Exception as e:
+        return None, f"requests error: {str(e)}"
+
+    # Fallback to urllib
     try:
         req = urllib.request.Request(
             url,
@@ -209,13 +229,13 @@ def download_image(image_filename, timeout=30):
             }
         )
         with urllib.request.urlopen(req, timeout=timeout) as response:
-            return response.read()
+            return response.read(), None
     except urllib.error.HTTPError as e:
-        return None
+        return None, f"HTTP {e.code}: {e.reason}"
     except urllib.error.URLError as e:
-        return None
+        return None, f"URL error: {str(e.reason)}"
     except Exception as e:
-        return None
+        return None, f"Error: {str(e)}"
 
 
 class Command(BaseCommand):
