@@ -10,7 +10,7 @@ class CategoryListView(ListView):
     model = Painting
     template_name = 'pages/category.html'
     context_object_name = 'paintings'
-    paginate_by = 12
+    paginate_by = 48
 
     def get_queryset(self):
         self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
@@ -85,17 +85,17 @@ class PaintingDetailView(DetailView):
 
 
 class SearchView(ListView):
-    """Search paintings by title"""
+    """Search paintings by title, description, or SKU"""
     model = Painting
     template_name = 'pages/search.html'
     context_object_name = 'paintings'
-    paginate_by = 12
+    paginate_by = 48
 
     def get_queryset(self):
         query = self.request.GET.get('q', '')
         if query:
             return Painting.objects.filter(
-                Q(title__icontains=query) | Q(description__icontains=query),
+                Q(title__icontains=query) | Q(description__icontains=query) | Q(sku__icontains=query),
                 is_active=True
             ).select_related('category', 'finish').prefetch_related('images')
         return Painting.objects.none()
@@ -111,7 +111,7 @@ class GalleryView(ListView):
     model = Painting
     template_name = 'pages/gallery.html'
     context_object_name = 'paintings'
-    paginate_by = 12
+    paginate_by = 48
 
     def get_queryset(self):
         queryset = Painting.objects.filter(
