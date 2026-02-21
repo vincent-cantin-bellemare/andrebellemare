@@ -71,12 +71,12 @@
         <div class="space-y-4 scroll-fade-in-card" data-delay="1">
             <!-- Main Image with Zoom -->
             {% if painting.primary_image %}
-            <div class="zoom-container relative aspect-square bg-warm-100 dark:bg-warm-800 rounded-2xl overflow-hidden cursor-crosshair" id="main-image-container">
-                {% thumbnail painting.primary_image.image "800x800" crop="center" as thumb %}
+            <div class="zoom-container relative bg-warm-100 dark:bg-warm-800 rounded-2xl overflow-hidden cursor-crosshair" id="main-image-container">
+                {% thumbnail painting.primary_image.image "800" as thumb %}
                 <img src="{{ thumb.url }}"
                      alt="{{ painting.title }}"
                      id="main-image"
-                     class="w-full h-full object-contain"
+                     class="w-full h-auto"
                      onclick="openLightbox([{% for img in painting.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}], 0)">
                 {% endthumbnail %}
                 <div class="zoom-lens"></div>
