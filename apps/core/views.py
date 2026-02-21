@@ -17,7 +17,7 @@ class HomeView(TemplateView):
             is_active=True,
             is_featured=True
         ).select_related('category', 'finish').prefetch_related('images')[:12]
-        context['categories'] = Category.objects.all()
+        context['categories'] = Category.objects.filter(is_active=True)
         context['testimonials'] = Testimonial.objects.filter(is_active=True)[:3]
 
         # Get a painting for hero background image

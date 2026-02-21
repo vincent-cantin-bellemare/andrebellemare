@@ -34,4 +34,4 @@ class CategorySitemap(Sitemap):
     changefreq = 'weekly'
 
     def items(self):
-        return Category.objects.all()
+        return Category.objects.filter(is_active=True)

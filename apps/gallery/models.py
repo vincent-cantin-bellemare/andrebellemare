@@ -24,6 +24,7 @@ class Category(models.Model):
     slug = models.SlugField('Slug', max_length=100, unique=True, blank=True)
     description = models.TextField('Description', blank=True)
     order = models.PositiveIntegerField('Ordre', default=0)
+    is_active = models.BooleanField('Active', default=True, help_text='Visible sur le site')
 
     class Meta:
         verbose_name = 'Catégorie'

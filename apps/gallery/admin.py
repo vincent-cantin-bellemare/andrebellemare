@@ -25,8 +25,9 @@ class PaintingImageInline(admin.TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'painting_count', 'order']
-    list_editable = ['order']
+    list_display = ['name', 'slug', 'painting_count', 'order', 'is_active']
+    list_editable = ['order', 'is_active']
+    list_filter = ['is_active']
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ['name']
 

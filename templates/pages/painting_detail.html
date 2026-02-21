@@ -72,7 +72,7 @@
             <!-- Main Image with Zoom -->
             {% if painting.primary_image %}
             <div class="zoom-container relative bg-warm-100 dark:bg-warm-800 rounded-2xl overflow-hidden cursor-crosshair" id="main-image-container">
-                {% thumbnail painting.primary_image.image "800" as thumb %}
+                {% thumbnail painting.primary_image.image "1600" as thumb %}
                 <img src="{{ thumb.url }}"
                      alt="{{ painting.title }}"
                      id="main-image"
@@ -95,7 +95,7 @@
                 {% for image in painting.images.all %}
                 <button onclick="changeMainImage('{{ image.image.url }}', {{ forloop.counter0 }})"
                         class="aspect-square rounded-lg overflow-hidden border-2 {% if image.is_primary %}border-charcoal dark:border-warm-400{% else %}border-transparent{% endif %} hover:border-warm-400 transition-colors">
-                    {% thumbnail image.image "100x100" crop="center" as thumb %}
+                    {% thumbnail image.image "200x200" crop="center" as thumb %}
                     <img src="{{ thumb.url }}" alt="" class="w-full h-full object-cover">
                     {% endthumbnail %}
                 </button>
@@ -153,7 +153,7 @@
 
             <!-- Purchase / Contact Section -->
             {% if painting.status == 'available_direct' %}
-            <button onclick="openPurchaseModal({{ painting.pk }}, '{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "200x200" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
+            <button onclick="openPurchaseModal({{ painting.pk }}, '{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "400x400" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
                     class="w-full py-4 px-8 bg-charcoal dark:bg-warm-600 text-white rounded-xl text-lg font-medium hover:bg-warm-700 transition-colors mb-4">
                 Acheter cette toile
             </button>
@@ -162,7 +162,7 @@
             </p>
             {% elif painting.status == 'available_maison_pere' %}
             {% load static %}
-            <button onclick="openMaisonPereModal('{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "200x200" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
+            <button onclick="openMaisonPereModal('{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "400x400" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
                     class="w-full py-4 px-8 bg-charcoal dark:bg-warm-600 text-white rounded-xl text-lg font-medium hover:bg-warm-700 transition-colors mb-4 flex items-center justify-center gap-3">
                 <img src="{% static 'images/maison_du_pere.svg' %}" alt="" class="h-7 w-auto brightness-0 invert">
                 Acheter cette toile
