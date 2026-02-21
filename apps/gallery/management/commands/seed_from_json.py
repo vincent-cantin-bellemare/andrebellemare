@@ -128,7 +128,7 @@ class Command(BaseCommand):
                         dimensions=painting_data.get('dimensions', ''),
                         category=category,
                         finish=finish,
-                        status=painting_data.get('status', 'available'),
+                        status=painting_data.get('status', 'available_maison_pere'),
                         is_featured=painting_data.get('is_featured', False),
                         is_active=True,
                     )

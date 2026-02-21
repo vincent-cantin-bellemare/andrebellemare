@@ -64,7 +64,8 @@ class Painting(models.Model):
     """A painting/artwork by André Bellemare"""
 
     STATUS_CHOICES = [
-        ('available', 'Disponible'),
+        ('available_maison_pere', 'À vendre (Maison du Père)'),
+        ('available_direct', 'À vendre (directement)'),
         ('sold', 'Vendu'),
         ('not_for_sale', 'Non à vendre'),
     ]
@@ -100,7 +101,7 @@ class Painting(models.Model):
     # Status
     is_active = models.BooleanField('Actif', default=True, help_text='Visible sur le site')
     is_featured = models.BooleanField('Vedette', default=False, help_text='Afficher sur la page d\'accueil')
-    status = models.CharField('Statut', max_length=20, choices=STATUS_CHOICES, default='available')
+    status = models.CharField('Statut', max_length=25, choices=STATUS_CHOICES, default='available_maison_pere')
 
     # Metadata
     created_at = models.DateTimeField('Créé le', auto_now_add=True)
@@ -138,13 +139,14 @@ class Painting(models.Model):
 
     @property
     def is_available(self):
-        return self.status == 'available' and self.is_active
+        return self.status in ('available_maison_pere', 'available_direct') and self.is_active
 
     @property
     def status_display_class(self):
         """CSS class for status badge"""
         return {
-            'available': 'bg-green-100 text-green-800',
+            'available_maison_pere': 'bg-green-100 text-green-800',
+            'available_direct': 'bg-green-100 text-green-800',
             'sold': 'bg-red-100 text-red-800',
             'not_for_sale': 'bg-gray-100 text-gray-800',
         }.get(self.status, 'bg-gray-100 text-gray-800')

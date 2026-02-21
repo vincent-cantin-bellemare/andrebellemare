@@ -46,11 +46,16 @@
             <p class="font-semibold text-charcoal dark:text-white">{{ painting.price_cad|floatformat:0 }} $</p>
         </div>
 
-        {% if painting.status == 'available' %}
+        {% if painting.status == 'available_direct' %}
         <button onclick="openPurchaseModal({{ painting.pk }}, '{{ painting.title|escapejs }}', '{{ painting.price_cad|floatformat:0 }}', '{% if painting.primary_image %}{% thumbnail painting.primary_image.image "200x200" crop="center" as thumb %}{{ thumb.url }}{% endthumbnail %}{% endif %}')"
                 class="mt-4 w-full py-2 px-4 bg-charcoal dark:bg-warm-600 text-white rounded-lg text-sm font-medium hover:bg-warm-700 transition-all duration-300 hover:scale-105 hover:shadow-md transform">
             Acheter
         </button>
+        {% else %}
+        <a href="{{ painting.get_absolute_url }}"
+           class="mt-4 w-full py-2 px-4 border border-warm-300 dark:border-warm-600 text-charcoal dark:text-warm-200 rounded-lg text-sm font-medium hover:bg-warm-100 dark:hover:bg-warm-700 transition-all duration-300 block text-center">
+            Découvrir
+        </a>
         {% endif %}
     </div>
 </article>

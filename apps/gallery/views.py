@@ -26,7 +26,10 @@ class CategoryListView(ListView):
 
         status = self.request.GET.get('status')
         if status:
-            queryset = queryset.filter(status=status)
+            if status == 'available':
+                queryset = queryset.filter(status__in=['available_maison_pere', 'available_direct'])
+            else:
+                queryset = queryset.filter(status=status)
 
         price_min = self.request.GET.get('price_min')
         if price_min:
@@ -126,7 +129,10 @@ class GalleryView(ListView):
 
         status = self.request.GET.get('status')
         if status:
-            queryset = queryset.filter(status=status)
+            if status == 'available':
+                queryset = queryset.filter(status__in=['available_maison_pere', 'available_direct'])
+            else:
+                queryset = queryset.filter(status=status)
 
         # Sorting
         sort = self.request.GET.get('sort', '-created_at')

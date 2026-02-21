@@ -149,8 +149,8 @@ class Command(BaseCommand):
                 is_active=True,
                 is_featured=i < 8,  # First 8 are featured
                 status=random.choices(
-                    ['available', 'sold', 'not_for_sale'],
-                    weights=[0.7, 0.2, 0.1]
+                    ['available_maison_pere', 'available_direct', 'sold', 'not_for_sale'],
+                    weights=[0.4, 0.3, 0.2, 0.1]
                 )[0]
             )
 
