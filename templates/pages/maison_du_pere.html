@@ -78,6 +78,19 @@
             </div>
         </div>
 
+        <!-- Section navigation -->
+        <nav class="sticky top-16 z-10 flex flex-wrap gap-4 py-4 -mx-4 px-4 -mb-4 bg-white dark:bg-warm-900/95 backdrop-blur-sm border-y border-warm-200 dark:border-warm-700 scroll-fade-in" aria-label="Navigation des sections">
+            <a href="#toiles-disponibles" class="inline-flex items-center px-4 py-2 rounded-lg bg-warm-100 dark:bg-warm-700/50 text-charcoal dark:text-warm-200 hover:bg-warm-200 dark:hover:bg-warm-600 transition-colors text-sm font-medium">
+                Toiles à vendre
+            </a>
+            <a href="#toiles-vendues" class="inline-flex items-center px-4 py-2 rounded-lg bg-warm-100 dark:bg-warm-700/50 text-charcoal dark:text-warm-200 hover:bg-warm-200 dark:hover:bg-warm-600 transition-colors text-sm font-medium">
+                Toiles vendues
+            </a>
+            <a href="#nos-acheteurs" class="inline-flex items-center px-4 py-2 rounded-lg bg-warm-100 dark:bg-warm-700/50 text-charcoal dark:text-warm-200 hover:bg-warm-200 dark:hover:bg-warm-600 transition-colors text-sm font-medium">
+                Témoignages
+            </a>
+        </nav>
+
         {% if available_paintings %}
         <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-6 mt-16 scroll-fade-in transition-all duration-500">Toiles disponibles</h2>
         <p class="text-warm-600 dark:text-warm-400 mb-6 scroll-fade-in transition-all duration-500">Découvrez les toiles en vente au profit de la Maison du Père</p>
@@ -86,6 +99,7 @@
 </div>
 
 <!-- Available Paintings Gallery -->
+<section id="toiles-disponibles" class="scroll-mt-28">
 {% if available_paintings %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16">
@@ -97,6 +111,7 @@
     </div>
 </div>
 {% endif %}
+</section>
 
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <article class="prose prose-lg prose-warm dark:prose-invert max-w-none">
@@ -108,6 +123,7 @@
 </div>
 
 <!-- Sold Paintings Gallery -->
+<section id="toiles-vendues" class="scroll-mt-28">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
     {% if sold_paintings %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
@@ -165,8 +181,10 @@
     </div>
     {% endif %}
 </div>
+</section>
 
 <!-- Nos acheteurs -->
+<section id="nos-acheteurs" class="scroll-mt-28">
 {% if buyers_paintings %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <h2 class="font-display text-3xl md:text-4xl font-semibold text-charcoal dark:text-white mb-8 scroll-fade-in transition-all duration-500">Nos acheteurs</h2>
@@ -200,6 +218,7 @@
     </div>
 </div>
 {% endif %}
+</section>
 {% endblock %}
 
 {% block extra_css %}
