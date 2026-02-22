@@ -67,7 +67,8 @@ class Painting(models.Model):
     STATUS_CHOICES = [
         ('available_maison_pere', 'À vendre (Maison du Père)'),
         ('available_direct', 'À vendre (directement)'),
-        ('sold', 'Vendu'),
+        ('sold_maison_pere', 'Vendu (Maison du Père)'),
+        ('sold_direct', 'Vendu (vente directe)'),
         ('not_for_sale', 'Non à vendre'),
     ]
 
@@ -103,6 +104,12 @@ class Painting(models.Model):
     is_active = models.BooleanField('Actif', default=True, help_text='Visible sur le site')
     is_featured = models.BooleanField('Vedette', default=False, help_text='Afficher sur la page d\'accueil')
     status = models.CharField('Statut', max_length=25, choices=STATUS_CHOICES, default='available_maison_pere')
+
+    # Purchase info (optional, shown on La Maison du Père page when status is sold_maison_pere)
+    purchaser_name = models.CharField('Nom de l\'acheteur', max_length=200, blank=True)
+    purchaser_city = models.CharField('Ville de l\'acheteur', max_length=100, blank=True)
+    purchase_comment = models.TextField('Commentaire', blank=True)
+    purchase_date = models.DateField('Date d\'achat', null=True, blank=True)
 
     # Metadata
     created_at = models.DateTimeField('Créé le', auto_now_add=True)
@@ -143,12 +150,23 @@ class Painting(models.Model):
         return self.status in ('available_maison_pere', 'available_direct') and self.is_active
 
     @property
+    def is_sold(self):
+        return self.status in ('sold_maison_pere', 'sold_direct')
+
+    @property
+    def has_purchase_info(self):
+        return bool(
+            self.purchaser_name or self.purchaser_city or self.purchase_comment or self.purchase_date
+        )
+
+    @property
     def status_display_class(self):
         """CSS class for status badge"""
         return {
             'available_maison_pere': 'bg-green-100 text-green-800',
             'available_direct': 'bg-green-100 text-green-800',
-            'sold': 'bg-red-100 text-red-800',
+            'sold_maison_pere': 'bg-red-100 text-red-800',
+            'sold_direct': 'bg-red-100 text-red-800',
             'not_for_sale': 'bg-gray-100 text-gray-800',
         }.get(self.status, 'bg-gray-100 text-gray-800')
 

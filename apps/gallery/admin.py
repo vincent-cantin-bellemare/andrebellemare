@@ -70,6 +70,11 @@ class PaintingAdmin(admin.ModelAdmin):
         ('Statut', {
             'fields': ('is_active', 'is_featured', 'status')
         }),
+        ('Vente (affiché sur la page La Maison du Père)', {
+            'fields': ('purchaser_name', 'purchaser_city', 'purchase_comment', 'purchase_date'),
+            'classes': ('collapse',),
+            'description': 'Optionnel — affiché sous la toile sur la page La Maison du Père'
+        }),
         ('Métadonnées', {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)

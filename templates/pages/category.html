@@ -67,7 +67,8 @@
                     <option value="available" {% if current_filters.status == 'available' %}selected{% endif %}>Disponible</option>
                     <option value="available_maison_pere" {% if current_filters.status == 'available_maison_pere' %}selected{% endif %}>Disponible (Maison du Père)</option>
                     <option value="available_direct" {% if current_filters.status == 'available_direct' %}selected{% endif %}>Disponible (vente directe)</option>
-                    <option value="sold" {% if current_filters.status == 'sold' %}selected{% endif %}>Vendu</option>
+                    <option value="sold_maison_pere" {% if current_filters.status == 'sold_maison_pere' %}selected{% endif %}>Vendu (Maison du Père)</option>
+                    <option value="sold_direct" {% if current_filters.status == 'sold_direct' %}selected{% endif %}>Vendu (vente directe)</option>
                 </select>
             </div>
 

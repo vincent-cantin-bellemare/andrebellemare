@@ -358,9 +358,9 @@ class Command(BaseCommand):
 
             # Determine status based on inventory
             if inventory == 'InStock':
-                status = 'available'
+                status = 'available_maison_pere'
             else:
-                status = 'sold'
+                status = 'sold_maison_pere'
 
             # Format dimensions if found
             if dimensions:

@@ -1,5 +1,6 @@
+from django.db.models import Q
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.http import HttpResponse
 
 from apps.gallery.models import Painting, Category
@@ -44,6 +45,34 @@ class AboutView(TemplateView):
         context = super().get_context_data(**kwargs)
         from apps.contact.models import SiteSettings
         context['settings'] = SiteSettings.get_settings()
+        return context
+
+
+class MaisonDuPereView(ListView):
+    """La Maison du Père page with text, available/sold paintings and buyers section"""
+    model = Painting
+    template_name = 'pages/maison_du_pere.html'
+    context_object_name = 'sold_paintings'
+    paginate_by = 24
+
+    def get_queryset(self):
+        return Painting.objects.filter(
+            status='sold_maison_pere',
+            is_active=True
+        ).select_related('category', 'finish').prefetch_related('images').order_by('-updated_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['available_paintings'] = Painting.objects.filter(
+            status='available_maison_pere',
+            is_active=True
+        ).select_related('category', 'finish').prefetch_related('images').order_by('-created_at')
+        context['buyers_paintings'] = Painting.objects.filter(
+            status='sold_maison_pere',
+            is_active=True
+        ).filter(
+            Q(purchaser_name__gt='') | Q(purchaser_city__gt='') | Q(purchase_comment__gt='') | Q(purchase_date__isnull=False)
+        ).select_related('category', 'finish').prefetch_related('images').order_by('-purchase_date', '-updated_at')
         return context
 
 

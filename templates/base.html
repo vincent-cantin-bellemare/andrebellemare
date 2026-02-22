@@ -240,6 +240,7 @@
                     </div>
 
                     <a href="{% url 'core:about' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">À propos</a>
+                    <a href="{% url 'core:maison_du_pere' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">Maison du Père</a>
                     <a href="{% url 'contact:contact' %}" class="text-charcoal dark:text-warm-200 hover:text-warm-600 dark:hover:text-white transition-colors">Contact</a>
 
                     <!-- Search -->
@@ -282,6 +283,7 @@
                 <a href="{{ cat.get_absolute_url }}" class="block py-2 pl-4 text-warm-500 dark:text-warm-400">{{ cat.name }}</a>
                 {% endfor %}
                 <a href="{% url 'core:about' %}" class="block py-2 text-charcoal dark:text-warm-200">À propos</a>
+                <a href="{% url 'core:maison_du_pere' %}" class="block py-2 text-charcoal dark:text-warm-200">Maison du Père</a>
                 <a href="{% url 'contact:contact' %}" class="block py-2 text-charcoal dark:text-warm-200">Contact</a>
                 <form action="{% url 'gallery:search' %}" method="get" class="pt-2">
                     <input type="search" name="q" placeholder="Rechercher..." class="w-full px-4 py-2 border border-warm-200 rounded-lg">
@@ -319,6 +321,7 @@
                     <ul class="space-y-2">
                         <li><a href="{% url 'gallery:gallery' %}" class="text-warm-400 hover:text-white transition-colors">Galerie</a></li>
                         <li><a href="{% url 'core:about' %}" class="text-warm-400 hover:text-white transition-colors">À propos</a></li>
+                        <li><a href="{% url 'core:maison_du_pere' %}" class="text-warm-400 hover:text-white transition-colors">Maison du Père</a></li>
                         <li><a href="{% url 'contact:contact' %}" class="text-warm-400 hover:text-white transition-colors">Contact</a></li>
                         <li><a href="{% url 'core:faq' %}" class="text-warm-400 hover:text-white transition-colors">FAQ</a></li>
                     </ul>

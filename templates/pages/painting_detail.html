@@ -107,7 +107,9 @@
         <!-- Details -->
         <div class="lg:sticky lg:top-24 lg:self-start scroll-fade-in-card" data-delay="2">
             <!-- Status Badge -->
-            {% if painting.status == 'sold' %}
+            {% if painting.status == 'sold_maison_pere' %}
+            <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Vendu — Maison du Père</span>
+            {% elif painting.status == 'sold_direct' %}
             <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Vendu</span>
             {% elif painting.status == 'not_for_sale' %}
             <span class="inline-block bg-warm-100 text-warm-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Collection privée</span>
@@ -150,6 +152,18 @@
                 </div>
                 {% endif %}
             </dl>
+
+            {% if painting.is_sold and painting.has_purchase_info %}
+            <div class="bg-warm-50 dark:bg-warm-800 rounded-xl p-6 mb-8">
+                <h3 class="text-sm font-medium text-warm-500 mb-2">Acquise par</h3>
+                <p class="text-charcoal dark:text-warm-100">
+                    {% if painting.purchaser_name %}{{ painting.purchaser_name }}{% endif %}
+                    {% if painting.purchaser_city %}{% if painting.purchaser_name %} — {% endif %}{{ painting.purchaser_city }}{% endif %}
+                    {% if painting.purchase_comment %}{% if painting.purchaser_name or painting.purchaser_city %} — {% endif %}{{ painting.purchase_comment }}{% endif %}
+                    {% if painting.purchase_date %}{% if painting.purchaser_name or painting.purchaser_city or painting.purchase_comment %} — {% endif %}{{ painting.purchase_date|date:"F Y" }}{% endif %}
+                </p>
+            </div>
+            {% endif %}
 
             <!-- Purchase / Contact Section -->
             {% if painting.status == 'available_direct' %}
