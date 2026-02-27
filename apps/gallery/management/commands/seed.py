@@ -245,16 +245,14 @@ class Command(BaseCommand):
         faqs_data = [
             {
                 'question': 'Comment puis-je acheter une toile?',
-                'answer': '''Pour acquérir une toile, cliquez sur le bouton "Acheter" de l'œuvre qui vous intéresse et remplissez le formulaire avec vos coordonnées. Je vous contacterai ensuite pour organiser les détails.
-
-Le montant affiché correspond au don à effectuer à la Maison du Père. Une fois le don effectué et le reçu présenté, la toile vous sera remise.''',
+                'answer': '''Pour acquérir une toile, contactez la Fondation de la Maison du Père au 514-845-0168 poste 358.''',
                 'order': 1,
             },
             {
                 'question': 'Pourquoi le paiement se fait-il par don à la Maison du Père?',
                 'answer': '''C'est ma façon de donner un sens plus profond à mon art. Chaque toile vendue permet d'aider les personnes en situation d'itinérance à Montréal.
 
-Vous bénéficiez d'un reçu fiscal pour votre don, et vous repartez avec une œuvre originale. Tout le monde y gagne!''',
+Vous repartez avec une œuvre originale. Tout le monde y gagne!''',
                 'order': 2,
             },
             {
@@ -266,6 +264,7 @@ Vous bénéficiez d'un reçu fiscal pour votre don, et vous repartez avec une œ
                 'question': 'Livrez-vous à l\'extérieur de Boucherville?',
                 'answer': '''Oui! La livraison est gratuite à Boucherville et dans les municipalités avoisinantes. Pour les autres régions du Québec, des frais de livraison s'appliquent selon la destination. Contactez-moi pour obtenir un estimé.''',
                 'order': 4,
+                'is_active': False,
             },
             {
                 'question': 'Acceptez-vous les commandes personnalisées?',
